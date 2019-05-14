@@ -38,6 +38,10 @@ export function reducer(state: State = initState, action: Actions) {
       state.socket.send(JSON.stringify(send))
       return state
     }
+    case 'message:receive:ping': {
+      state.socket.send('pong')
+      return state
+    }
     case 'message:receive': {
       state.messages = [...state.messages, action.payload]
       return { ...state }
@@ -110,6 +114,10 @@ export function sendMessage(message: string): Actions {
 }
 
 export function onMessage(e: MessageEvent): Actions {
+  if (e.data === 'ping') {
+    return { type: 'message:receive:ping' }
+  }
+
   try {
     const parsed: ReceiveMessage = JSON.parse(e.data)
     if (parsed.cmd === 'rooms') {

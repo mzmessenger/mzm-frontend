@@ -7,14 +7,13 @@ function init(
   initSocket: typeof actions.initSocket,
   onMessage: typeof actions.onMessage
 ) {
-  let ws = new WebSocket(url)
+  const ws = new WebSocket(url)
   initSocket(ws)
 
   ws.addEventListener('message', e => {
     onMessage(e)
   })
   ws.addEventListener('close', () => {
-    ws = new WebSocket(url)
     init(url, initSocket, onMessage)
   })
   ws.addEventListener('error', () => {

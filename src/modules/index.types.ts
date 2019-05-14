@@ -50,6 +50,9 @@ export type Actions =
       payload: string
     }
   | {
+      type: 'message:receive:ping'
+    }
+  | {
       type: 'message:receive'
       payload: Message
     }
