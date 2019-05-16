@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
+import { withRouter, RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components'
 import Modal from '@material-ui/core/Modal'
 import * as actions from '../modules/index'
@@ -17,15 +18,13 @@ const ModalInner = styled.form`
   box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2),
     0px 5px 8px 0px rgba(0, 0, 0, 0.14), 0px 1px 14px 0px rgba(0, 0, 0, 0.12);
   outline: none;
-`
-
-const Header = styled.h4`
-  margin: 0;
-  padding: 20px;
-`
-
-const Body = styled.div`
-  padding: 0 20px 20px;
+  h4 {
+    margin: 0;
+    padding: 20px;
+  }
+  .body {
+    padding: 0 20px 20px;
+  }
 `
 
 const InputTextWrap = styled.div`
@@ -57,30 +56,31 @@ const Buttons = styled.div`
     height: 40px;
     width: 100px;
   }
+  button.send {
+    background-color: #5ca3ff;
+    border-color: #6486b3;
+    color: #ffffff;
+    border-radius: 3px;
+  }
+  button.cancel {
+    color: #ffffff;
+    border-color: transparent;
+    background-color: transparent;
+  }
 `
 
-const SendButton = styled.button`
-  background-color: #5ca3ff;
-  border-color: #6486b3;
-  color: #ffffff;
-  border-radius: 3px;
-`
-
-const CancelButton = styled.button`
-  color: #ffffff;
-  border-color: transparent;
-  background-color: transparent;
-`
-
-function RoomNavi({
-  open,
-  onClose,
-  createRoom
-}: {
+type Props = {
   open: boolean
   onClose: () => void
   createRoom: ReturnType<typeof actions.createRoom>
-}) {
+} & RouteComponentProps
+
+const ModalCraeteRoom: React.FC<Props> = ({
+  history,
+  open,
+  onClose,
+  createRoom
+}) => {
   const [txt, setTxt] = useState('')
   const [error, setErrorTxt] = useState('')
 
@@ -91,6 +91,7 @@ function RoomNavi({
       .then(data => {
         if (data.status === 200) {
           onClose()
+          history.push(`/rooms/${txt}`)
         } else {
           setErrorTxt('なにかエラーが発生しました')
         }
@@ -103,8 +104,8 @@ function RoomNavi({
   return (
     <Modal open={open} onClose={onClose}>
       <ModalInner onSubmit={handleSubmit}>
-        <Header>部屋を作成</Header>
-        <Body>
+        <h4>部屋を作成</h4>
+        <div className="body">
           <p style={{ margin: '0 0 3px 0', fontSize: '15px' }}>部屋名</p>
           <InputTextWrap>
             <input
@@ -114,22 +115,30 @@ function RoomNavi({
             />
           </InputTextWrap>
           <p style={{ display: error ? 'block' : 'none' }}>{error}</p>
-        </Body>
+        </div>
         <Buttons>
-          <CancelButton onClick={onClose} style={{ marginRight: '5px' }}>
+          <button
+            className="cancel"
+            onClick={onClose}
+            style={{ marginRight: '5px' }}
+          >
             キャンセル
-          </CancelButton>
-          <SendButton type="submit">送信</SendButton>
+          </button>
+          <button className="send" type="submit">
+            送信
+          </button>
         </Buttons>
       </ModalInner>
     </Modal>
   )
 }
-export default connect(
-  () => ({}),
-  dispatch => {
-    return {
-      createRoom: actions.createRoom(dispatch)
+export default withRouter(
+  connect(
+    () => ({}),
+    dispatch => {
+      return {
+        createRoom: actions.createRoom(dispatch)
+      }
     }
-  }
-)(RoomNavi)
+  )(ModalCraeteRoom)
+)

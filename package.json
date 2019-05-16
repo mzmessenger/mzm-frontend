@@ -20,6 +20,7 @@
     "@types/react": "^16.8.14",
     "@types/react-dom": "^16.8.4",
     "@types/react-redux": "^7.0.8",
+    "@types/react-router-dom": "^4.3.3",
     "@types/styled-components": "^4.1.14",
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "babel-loader": "^8.0.5",
@@ -41,6 +42,7 @@
   "dependencies": {
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
+    "dayjs": "^1.8.14",
     "normalize.css": "^8.0.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

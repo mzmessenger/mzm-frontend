@@ -69,6 +69,15 @@ export function reducer(state: State = initState, action: Actions) {
         currentRoomName: name ? name : state.currentRoomName
       }
     }
+    case 'messages:get:room:before': {
+      const send: SendMessage = {
+        cmd: 'messages:room',
+        room: state.currentRoom,
+        id: action.payload
+      }
+      state.socket.send(JSON.stringify(send))
+      return state
+    }
     case 'rooms:set:current': {
       const currentRoom = action.payload
       state.rooms.forEach(e => {
@@ -87,6 +96,10 @@ export function reducer(state: State = initState, action: Actions) {
     }
     case 'messages:room': {
       state.messages = action.payload
+      return { ...state }
+    }
+    case 'messages:room:before': {
+      state.messages = [...action.payload, ...state.messages]
       return { ...state }
     }
     case 'me:set': {
@@ -125,6 +138,9 @@ export function onMessage(e: MessageEvent): Actions {
     } else if (parsed.cmd === 'message:receive') {
       return { type: 'message:receive', payload: parsed.message }
     } else if (parsed.cmd === 'messages:room') {
+      if (parsed.id) {
+        return { type: 'messages:room:before', payload: parsed.messages }
+      }
       return { type: 'messages:room', payload: parsed.messages }
     }
   } catch (e) {
@@ -165,4 +181,8 @@ export function createRoom(dispatch) {
     }
     return res
   }
+}
+
+export function getBeforeMessages(id: string) {
+  return { type: 'messages:get:room:before', payload: id }
 }

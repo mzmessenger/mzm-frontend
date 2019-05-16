@@ -24,6 +24,7 @@ export type ReceiveMessage =
   | {
       cmd: 'messages:room'
       messages: Message[]
+      id?: string
     }
 
 export type SendMessage =
@@ -35,6 +36,7 @@ export type SendMessage =
   | {
       cmd: 'messages:room'
       room: string
+      id?: string
     }
   | {
       cmd: 'rooms:get'
@@ -69,11 +71,19 @@ export type Actions =
       payload: Message[]
     }
   | {
+      type: 'messages:room:before'
+      payload: Message[]
+    }
+  | {
       type: 'me:set'
       payload: MyInfo
     }
   | {
       type: 'rooms:create'
+    }
+  | {
+      type: 'messages:get:room:before'
+      payload: string
     }
 
 export type State = {

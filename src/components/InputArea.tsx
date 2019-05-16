@@ -5,12 +5,11 @@ import * as actions from '../modules/index'
 
 const Wrap = styled.div`
   padding: 0 15px;
+  .form-wrap {
+    padding: 20px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+  }
 `
-const FormWrap = styled.div`
-  padding: 20px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.3);
-`
-
 const Form = styled.form`
   display: flex;
   justify-content: center;
@@ -43,11 +42,9 @@ const SendButton = styled.button`
   border-radius: 3px;
 `
 
-function InputArea({
-  sendMessage
-}: {
+const InputArea: React.FC<{
   sendMessage: typeof actions.sendMessage
-}) {
+}> = ({ sendMessage }) => {
   const [txt, setTxt] = useState('')
 
   const handleSubmit = evt => {
@@ -58,14 +55,14 @@ function InputArea({
 
   return (
     <Wrap>
-      <FormWrap>
+      <div className="form-wrap">
         <Form onSubmit={handleSubmit}>
           <TextAreaWrap>
             <textarea value={txt} onChange={e => setTxt(e.target.value)} />
           </TextAreaWrap>
           <SendButton type="submit">投稿</SendButton>
         </Form>
-      </FormWrap>
+      </div>
     </Wrap>
   )
 }

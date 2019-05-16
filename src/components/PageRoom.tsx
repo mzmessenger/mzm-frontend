@@ -11,8 +11,13 @@ import MyInfo from './MyInfo'
 const MessageBody = styled(Body)`
   grid-template-areas:
     'room-info'
-    'message'
+    'messages'
     'input';
+
+  .messages {
+    grid-area: messages;
+    overflow: auto;
+  }
 `
 export default function SelectedRoom() {
   return (
@@ -21,7 +26,7 @@ export default function SelectedRoom() {
         <div style={{ gridArea: 'room-info' }}>
           <RoomInfo />
         </div>
-        <div style={{ gridArea: 'message' }}>
+        <div className="messages">
           <Messages />
         </div>
         <div style={{ gridArea: 'input' }}>

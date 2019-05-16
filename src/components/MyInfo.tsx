@@ -23,13 +23,10 @@ const Profile = styled.div`
   line-height: 25px;
 `
 
-function MyInfo({
-  me,
-  getMyInfo
-}: {
+const MyInfo: React.FC<{
   me: State['me']
   getMyInfo: ReturnType<typeof actions.getMyInfo>
-}) {
+}> = ({ me, getMyInfo }) => {
   const m = me ? me.account : ''
   useMemo(() => {
     getMyInfo()

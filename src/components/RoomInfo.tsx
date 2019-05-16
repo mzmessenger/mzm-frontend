@@ -9,12 +9,11 @@ const Wrap = styled.div`
   padding: 10px 15px;
   flex-direction: center;
   background: #2f3136;
-`
-
-const RoomName = styled.span`
-  font-size: 22px;
-  line-height: 30px;
-  color: #ffffff;
+  .room-name {
+    font-size: 22px;
+    line-height: 30px;
+    color: #ffffff;
+  }
 `
 
 function RoomInfo({
@@ -29,7 +28,7 @@ function RoomInfo({
         style={{ color: '#ffffff', marginRight: '15px' }}
         fontSize="large"
       />
-      <RoomName>{name}</RoomName>
+      <span className="room-name">{name}</span>
     </Wrap>
   )
 }

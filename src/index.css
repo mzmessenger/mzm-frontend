@@ -1,3 +1,10 @@
+body {
+  font-family: Arial, 'ヒラギノ角ゴ ProN W3', 'Hiragino Kaku Gothic ProN W3',
+    HiraKakuProN-W3, 'メイリオ', Osaka, 'ＭＳ Ｐゴシック', 'MS PGothic',
+    Helvetica, sans-serif;
+  font-size: 14px;
+}
+
 #root {
   width: 100vw;
   height: 100vh;

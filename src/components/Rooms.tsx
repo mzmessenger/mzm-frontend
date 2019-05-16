@@ -12,35 +12,27 @@ const RoomWrap = styled.div`
   color: #8e9297;
   height: 34px;
   padding: 3px 8px 0;
+  .room-name {
+    font-size: 16px;
+    line-height: 20px;
+  }
 `
 
-const RoomName = styled.div`
-  font-size: 16px;
-  line-height: 20px;
-`
-
-const Room = ({ name }: { name: string }) => {
+const Room: React.FC<{ name: string }> = ({ name }) => {
   return (
     <RoomWrap>
       <Home style={{ margin: '0 5px 0 0' }} />
-      <RoomName>{name}</RoomName>
+      <div className="room-name">{name}</div>
     </RoomWrap>
   )
 }
 
-const Wrap = styled.div`
-  padding: 5px 0;
-`
-
-function Rooms({
-  rooms,
-  setCurrentRooms
-}: {
+const Rooms: React.FC<{
   rooms: State['rooms']
   setCurrentRooms: typeof actions.setCurrentRooms
-}) {
+}> = ({ rooms, setCurrentRooms }) => {
   return (
-    <Wrap>
+    <div style={{ padding: '5px 0' }}>
       {rooms.map(r => (
         <Link
           to={`/rooms/${r.name}`}
@@ -51,7 +43,7 @@ function Rooms({
           <Room name={r.name} />
         </Link>
       ))}
-    </Wrap>
+    </div>
   )
 }
 
