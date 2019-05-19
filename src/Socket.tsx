@@ -11,6 +11,10 @@ function init(
   initSocket(ws)
 
   ws.addEventListener('message', e => {
+    if (e.data === 'ping') {
+      ws.send('pong')
+      return
+    }
     onMessage(e)
   })
   ws.addEventListener('close', () => {

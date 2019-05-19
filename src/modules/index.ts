@@ -25,7 +25,13 @@ export function reducer(state: State = initState, action: Actions) {
   switch (action.type) {
     case 'websocket:init': {
       state.socket = action.payload
-      return state
+      return {
+        ...state,
+        socket: action.payload,
+        messages: initState.messages,
+        rooms: initState.rooms,
+        existHistory: initState.existHistory
+      }
     }
     case 'message:send': {
       if (!state.currentRoom) {
@@ -37,10 +43,6 @@ export function reducer(state: State = initState, action: Actions) {
         room: state.currentRoom
       }
       state.socket.send(JSON.stringify(send))
-      return state
-    }
-    case 'message:receive:ping': {
-      state.socket.send('pong')
       return state
     }
     case 'message:receive': {
@@ -127,10 +129,6 @@ export function sendMessage(message: string): Actions {
 }
 
 export function onMessage(e: MessageEvent): Actions {
-  if (e.data === 'ping') {
-    return { type: 'message:receive:ping' }
-  }
-
   try {
     const parsed: ReceiveMessage = JSON.parse(e.data)
     if (parsed.cmd === 'rooms') {
