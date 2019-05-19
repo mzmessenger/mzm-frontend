@@ -22,6 +22,7 @@ function Messages({
             key={m.id}
             userId={m.userId}
             userAccount={m.userAccount}
+            icon={m.icon}
             message={m.message}
             createdAt={m.createdAt}
           />

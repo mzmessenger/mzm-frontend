@@ -2,7 +2,6 @@ import React, { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import Person from '@material-ui/icons/Person'
 import * as actions from '../modules/index'
 import { State } from '../modules/index.types'
 
@@ -18,6 +17,13 @@ const LinkWrap = styled(Link)`
   }
 `
 
+const Icon = styled.img`
+  margin: 0 5px 0 0;
+  width: 25px;
+  height: 25px;
+  border-radius: 2px;
+`
+
 const Profile = styled.div`
   font-size: 22px;
   line-height: 25px;
@@ -25,8 +31,9 @@ const Profile = styled.div`
 
 const MyInfo: React.FC<{
   me: State['me']
+  icon: State['icon']
   getMyInfo: ReturnType<typeof actions.getMyInfo>
-}> = ({ me, getMyInfo }) => {
+}> = ({ me, icon, getMyInfo }) => {
   const m = me ? me.account : ''
   useMemo(() => {
     getMyInfo()
@@ -34,7 +41,7 @@ const MyInfo: React.FC<{
   return (
     <Wrap>
       <LinkWrap to="/">
-        <Person style={{ margin: '0 5px 0 0' }} />
+        <Icon src={icon} width="20" height="20" />
         <Profile>{m}</Profile>
       </LinkWrap>
     </Wrap>
@@ -43,7 +50,8 @@ const MyInfo: React.FC<{
 
 export default connect(
   (state: State) => ({
-    me: state.me
+    me: state.me,
+    icon: state.icon
   }),
   dispatch => {
     return {

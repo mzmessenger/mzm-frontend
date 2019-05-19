@@ -11,7 +11,8 @@ module.exports = {
     project: './tsconfig.json'
   },
   env: {
-    browser: true
+    browser: true,
+    es6: true
   },
   rules: {
     'no-console': 'warn',

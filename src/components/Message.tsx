@@ -6,9 +6,10 @@ const MessageWrap = styled.div`
   padding: 20px 15px 0;
   color: #dcddde;
   display: grid;
+  grid-template-columns: auto 1fr;
   grid-template-areas:
-    'message-header'
-    'message-body';
+    'icon message-header'
+    'icon message-body';
 `
 
 const MessageHeader = styled.div`
@@ -30,10 +31,19 @@ const MessageBody = styled.div`
   }
 `
 
+const Icon = styled.img`
+  grid-area: icon;
+  margin: 5px 10px 0 0;
+  width: 25px;
+  height: 25px;
+  border-radius: 2px;
+`
+
 type Props = {
   message: string
   userId: string
   userAccount: string
+  icon: string
   createdAt: string
 }
 
@@ -41,12 +51,14 @@ export default function Message({
   message,
   userId,
   userAccount,
+  icon,
   createdAt
 }: Props) {
   const date = dayjs(new Date(createdAt)).format('YYYY/MM/DD HH:mm:ss')
   const account = userAccount ? userAccount : userId
   return (
     <MessageWrap>
+      <Icon src={icon} />
       <MessageHeader>
         <div style={{ flex: 1 }}>{account}</div>
         <time>{date}</time>

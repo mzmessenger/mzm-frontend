@@ -1,4 +1,5 @@
 import { State, Actions, SendMessage, ReceiveMessage } from './index.types'
+import identicon from '../lib/identicon'
 
 const splited = location.pathname.split('/')
 const initCurrentRoomName = splited[1] === 'rooms' ? splited[2] : ''
@@ -10,8 +11,11 @@ const initState: State = {
   rooms: [],
   currentRoom: '',
   currentRoomName: initCurrentRoomName,
-  me: null
+  me: null,
+  icon: null
 }
+
+const icons = new Map<string, string>()
 
 function getMessages(socket: WebSocket, currentRoom: string) {
   const send: SendMessage = {
@@ -44,10 +48,6 @@ export function reducer(state: State = initState, action: Actions) {
       }
       state.socket.send(JSON.stringify(send))
       return state
-    }
-    case 'message:receive': {
-      state.messages = [...state.messages, action.payload]
-      return { ...state }
     }
     case 'rooms:receive': {
       // historyで初期値が設定された時用の処理
@@ -101,12 +101,39 @@ export function reducer(state: State = initState, action: Actions) {
         currentRoomName: state.currentRoomName
       }
     }
+    case 'message:receive': {
+      if (icons.has(action.payload.id)) {
+        action.payload.icon = icons.get(action.payload.id)
+      } else {
+        identicon(action.payload.userId, 100, (err, data) => {
+          if (!err) {
+            action.payload.icon = data
+          }
+        })
+      }
+      state.messages = [...state.messages, action.payload]
+      return { ...state }
+    }
     case 'messages:room': {
+      for (const message of action.payload.messages) {
+        if (icons.has(message.userAccount)) {
+          message.icon = icons.get(message.userAccount)
+        } else {
+          identicon(message.userAccount, 100, (err, data) => {
+            if (!err) {
+              message.icon = data
+            }
+          })
+        }
+      }
       const messages = [...action.payload.messages, ...state.messages]
       return { ...state, existHistory: action.payload.existHistory, messages }
     }
     case 'me:set': {
       return { ...state, me: action.payload }
+    }
+    case 'me:set:icon': {
+      return { ...state, icon: action.payload }
     }
     case 'rooms:create': {
       const send: SendMessage = {
@@ -158,9 +185,17 @@ export function getMyInfo(dispatch) {
   return async function() {
     const res = await fetch('/api/user/@me')
     if (res.status === 200) {
-      const payload = await res.json()
+      const payload: { account: string; id: string } = await res.json()
       const setMe: Actions = { type: 'me:set', payload }
       dispatch(setMe)
+
+      if (!icons.get(payload.account)) {
+        identicon(payload.account, 100, (err, data) => {
+          if (!err) {
+            dispatch({ type: 'me:set:icon', payload: data })
+          }
+        })
+      }
     }
   }
 }

@@ -1,6 +1,7 @@
 type Message = {
   id: string
   userId: string
+  icon?: string
   userAccount: string
   message: string
   createdAt: string
@@ -73,6 +74,10 @@ export type Actions =
       payload: MyInfo
     }
   | {
+      type: 'me:set:icon'
+      payload: string
+    }
+  | {
       type: 'rooms:create'
     }
   | {
@@ -92,4 +97,5 @@ export type State = {
   currentRoom: string
   currentRoomName: string
   me: MyInfo
+  icon: string
 }
