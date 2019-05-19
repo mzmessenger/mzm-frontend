@@ -24,7 +24,8 @@ export type ReceiveMessage =
   | {
       cmd: 'messages:room'
       messages: Message[]
-      id?: string
+      room: string
+      existHistory: boolean
     }
 
 export type SendMessage =
@@ -68,11 +69,7 @@ export type Actions =
     }
   | {
       type: 'messages:room'
-      payload: Message[]
-    }
-  | {
-      type: 'messages:room:before'
-      payload: Message[]
+      payload: { room: string; existHistory: boolean; messages: Message[] }
     }
   | {
       type: 'me:set'
@@ -82,13 +79,14 @@ export type Actions =
       type: 'rooms:create'
     }
   | {
-      type: 'messages:get:room:before'
+      type: 'messages:get:room:history'
       payload: string
     }
 
 export type State = {
   socket: WebSocket
   messages: Message[]
+  existHistory: boolean
   rooms: {
     id: string
     name: string

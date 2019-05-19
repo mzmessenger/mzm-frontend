@@ -1,30 +1,21 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
-import * as actions from '../modules/index'
 import { State } from '../modules/index.types'
 import Message from './Message'
+import GetHistoryButton from './ButtonGetHistory'
 
-type Props = {
-  oldestId: string
-  getBeforeMessages: typeof actions.getBeforeMessages
-}
-
-const BeforeButton = connect(
-  () => ({}),
-  {
-    getBeforeMessages: actions.getBeforeMessages
-  }
-)(function({ oldestId, getBeforeMessages }: Props) {
-  const onClick = useCallback(() => {
-    getBeforeMessages(oldestId)
-  }, [])
-  return <button onClick={onClick}>before</button>
-})
-
-function Messages({ messages }: { messages: State['messages'] }) {
+function Messages({
+  existHistory,
+  messages
+}: {
+  existHistory: boolean
+  messages: State['messages']
+}) {
   return (
-    <div style={{ padding: '0 10px 20px 0' }}>
-      {messages.length >= 20 && <BeforeButton oldestId={messages[0].id} />}
+    <div style={{ padding: '0 0 20px 0' }}>
+      {messages.length > 0 && existHistory && (
+        <GetHistoryButton oldestId={messages[0].id} />
+      )}
       {messages.map(m => {
         return (
           <Message
@@ -41,6 +32,9 @@ function Messages({ messages }: { messages: State['messages'] }) {
 }
 
 export default connect(
-  (state: State) => ({ messages: state.messages }),
+  (state: State) => ({
+    existHistory: state.existHistory,
+    messages: state.messages
+  }),
   {}
 )(Messages)

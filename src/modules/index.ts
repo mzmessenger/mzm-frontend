@@ -6,6 +6,7 @@ const initCurrentRoomName = splited[1] === 'rooms' ? splited[2] : ''
 const initState: State = {
   socket: null,
   messages: [],
+  existHistory: false,
   rooms: [],
   currentRoom: '',
   currentRoomName: initCurrentRoomName,
@@ -69,7 +70,7 @@ export function reducer(state: State = initState, action: Actions) {
         currentRoomName: name ? name : state.currentRoomName
       }
     }
-    case 'messages:get:room:before': {
+    case 'messages:get:room:history': {
       const send: SendMessage = {
         cmd: 'messages:room',
         room: state.currentRoom,
@@ -80,6 +81,9 @@ export function reducer(state: State = initState, action: Actions) {
     }
     case 'rooms:set:current': {
       const currentRoom = action.payload
+      if (currentRoom === state.currentRoom) {
+        return state
+      }
       state.rooms.forEach(e => {
         if (e.id === action.payload) {
           state.currentRoomName = e.name
@@ -90,21 +94,17 @@ export function reducer(state: State = initState, action: Actions) {
       return {
         ...state,
         rooms: [...state.rooms],
+        messages: [],
         currentRoom,
         currentRoomName: state.currentRoomName
       }
     }
     case 'messages:room': {
-      state.messages = action.payload
-      return { ...state }
-    }
-    case 'messages:room:before': {
-      state.messages = [...action.payload, ...state.messages]
-      return { ...state }
+      const messages = [...action.payload.messages, ...state.messages]
+      return { ...state, existHistory: action.payload.existHistory, messages }
     }
     case 'me:set': {
-      state.me = action.payload
-      return { ...state }
+      return { ...state, me: action.payload }
     }
     case 'rooms:create': {
       const send: SendMessage = {
@@ -138,10 +138,14 @@ export function onMessage(e: MessageEvent): Actions {
     } else if (parsed.cmd === 'message:receive') {
       return { type: 'message:receive', payload: parsed.message }
     } else if (parsed.cmd === 'messages:room') {
-      if (parsed.id) {
-        return { type: 'messages:room:before', payload: parsed.messages }
+      return {
+        type: 'messages:room',
+        payload: {
+          room: parsed.room,
+          existHistory: parsed.existHistory,
+          messages: parsed.messages
+        }
       }
-      return { type: 'messages:room', payload: parsed.messages }
     }
   } catch (e) {
     console.error(e)
@@ -183,6 +187,6 @@ export function createRoom(dispatch) {
   }
 }
 
-export function getBeforeMessages(id: string) {
-  return { type: 'messages:get:room:before', payload: id }
+export function getHistory(id: string) {
+  return { type: 'messages:get:room:history', payload: id }
 }
