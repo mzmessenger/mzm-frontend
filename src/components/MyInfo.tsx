@@ -1,8 +1,7 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import * as actions from '../modules/index'
 import { State } from '../modules/index.types'
 
 const Wrap = styled.div`
@@ -32,12 +31,8 @@ const Profile = styled.div`
 const MyInfo: React.FC<{
   me: State['me']
   icon: State['icon']
-  getMyInfo: ReturnType<typeof actions.getMyInfo>
-}> = ({ me, icon, getMyInfo }) => {
+}> = ({ me, icon }) => {
   const m = me ? me.account : ''
-  useMemo(() => {
-    getMyInfo()
-  }, [])
   return (
     <Wrap>
       <LinkWrap to="/">
@@ -53,9 +48,5 @@ export default connect(
     me: state.me,
     icon: state.icon
   }),
-  dispatch => {
-    return {
-      getMyInfo: actions.getMyInfo(dispatch)
-    }
-  }
+  () => {}
 )(MyInfo)

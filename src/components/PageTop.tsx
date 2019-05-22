@@ -7,7 +7,9 @@ import MyInfo from './MyInfo'
 export default function Index() {
   return (
     <>
-      <Body>top</Body>
+      <Body>
+        <a href="/auth/logout">logout</a>
+      </Body>
       <Right>
         <MyInfo />
         <RoomNavi />

@@ -5,6 +5,7 @@ const splited = location.pathname.split('/')
 const initCurrentRoomName = splited[1] === 'rooms' ? splited[2] : ''
 
 const initState: State = {
+  login: false,
   socket: null,
   messages: [],
   existHistory: false,
@@ -27,6 +28,9 @@ function getMessages(socket: WebSocket, currentRoom: string) {
 
 export function reducer(state: State = initState, action: Actions) {
   switch (action.type) {
+    case 'logout': {
+      return { ...initState }
+    }
     case 'websocket:init': {
       state.socket = action.payload
       return {
@@ -130,7 +134,7 @@ export function reducer(state: State = initState, action: Actions) {
       return { ...state, existHistory: action.payload.existHistory, messages }
     }
     case 'me:set': {
-      return { ...state, me: action.payload }
+      return { ...state, login: true, me: action.payload }
     }
     case 'me:set:icon': {
       return { ...state, icon: action.payload }
@@ -196,6 +200,8 @@ export function getMyInfo(dispatch) {
           }
         })
       }
+    } else {
+      dispatch({ type: 'logout' })
     }
   }
 }
@@ -222,4 +228,8 @@ export function createRoom(dispatch) {
 
 export function getHistory(id: string) {
   return { type: 'messages:get:room:history', payload: id }
+}
+
+export function logout() {
+  return { type: 'logout' }
 }

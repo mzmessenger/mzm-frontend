@@ -84,8 +84,12 @@ export type Actions =
       type: 'messages:get:room:history'
       payload: string
     }
+  | {
+      type: 'logout'
+    }
 
 export type State = {
+  login: boolean
   socket: WebSocket
   messages: Message[]
   existHistory: boolean

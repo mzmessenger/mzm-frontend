@@ -4,6 +4,7 @@ import * as actions from './modules/index'
 
 function init(
   url: string,
+  logout: typeof actions.logout,
   initSocket: typeof actions.initSocket,
   onMessage: typeof actions.onMessage
 ) {
@@ -18,25 +19,24 @@ function init(
     onMessage(e)
   })
   ws.addEventListener('close', () => {
-    init(url, initSocket, onMessage)
+    init(url, logout, initSocket, onMessage)
   })
   ws.addEventListener('error', () => {
-    location.href = '/auth/twitter'
+    logout()
   })
   return ws
 }
 
-function Socket({
-  url,
-  initSocket,
-  onMessage
-}: {
+type Props = {
   url: string
+  logout: typeof actions.logout
   initSocket: typeof actions.initSocket
   onMessage: typeof actions.onMessage
-}) {
+}
+
+const Socket: React.FC<Props> = ({ url, logout, initSocket, onMessage }) => {
   useMemo(() => {
-    init(url, initSocket, onMessage)
+    init(url, logout, initSocket, onMessage)
   }, [url])
   return <></>
 }
@@ -44,6 +44,7 @@ function Socket({
 export default connect(
   () => ({}),
   {
+    logout: actions.logout,
     initSocket: actions.initSocket,
     onMessage: actions.onMessage
   }
