@@ -1,14 +1,15 @@
 import React, { useMemo } from 'react'
+import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as actions from './modules/index'
+import { logout, initSocket, onMessage } from '../modules/index.action'
 
 // @todo loginしていない間は再接続処理をしない
 
 function init(
   url: string,
-  logout: typeof actions.logout,
-  initSocket: typeof actions.initSocket,
-  onMessage: typeof actions.onMessage
+  logout: Props['logout'],
+  initSocket: Props['initSocket'],
+  onMessage: Props['onMessage']
 ) {
   const ws = new WebSocket(url)
 
@@ -33,10 +34,7 @@ function init(
 
 type Props = {
   url: string
-  logout: typeof actions.logout
-  initSocket: typeof actions.initSocket
-  onMessage: typeof actions.onMessage
-}
+} & ReturnType<typeof mapDispatchToProps>
 
 const Socket: React.FC<Props> = ({ url, logout, initSocket, onMessage }) => {
   useMemo(() => {
@@ -45,11 +43,18 @@ const Socket: React.FC<Props> = ({ url, logout, initSocket, onMessage }) => {
   return <></>
 }
 
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(
+    {
+      logout,
+      initSocket,
+      onMessage
+    },
+    dispatch
+  )
+}
+
 export default connect(
   () => ({}),
-  {
-    logout: actions.logout,
-    initSocket: actions.initSocket,
-    onMessage: actions.onMessage
-  }
+  mapDispatchToProps
 )(Socket)

@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Home from '@material-ui/icons/Home'
 import { State } from '../modules/index.types'
-import * as actions from '../modules/index'
+import { setCurrentRooms } from '../modules/index.action'
 
 const RoomWrap = styled.div`
   display: flex;
@@ -53,12 +53,7 @@ function mapStateToProps(state: State) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(
-    {
-      setCurrentRooms: actions.setCurrentRooms
-    },
-    dispatch
-  )
+  return bindActionCreators({ setCurrentRooms }, dispatch)
 }
 
 export default connect(

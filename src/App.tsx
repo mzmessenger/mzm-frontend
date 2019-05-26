@@ -2,10 +2,11 @@ import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
-import * as actions from './modules/index'
+import { getMyInfo } from './modules/index.action'
 import { State } from './modules/index.types'
 import PageTop from './components/PageTop'
 import PageRoom from './components/PageRoom'
+import RouterListener from './components/RouterListener'
 
 const Wrap = styled.div`
   background-color: #202225;
@@ -40,6 +41,7 @@ const App: React.FC<Props> = ({ login, getMyInfo }) => {
       <Router>
         <Route path="/" exact component={Top} />
         <Route path="/rooms" component={Room} />
+        <RouterListener />
       </Router>
     </Wrap>
   )
@@ -47,13 +49,14 @@ const App: React.FC<Props> = ({ login, getMyInfo }) => {
 
 function mapStateToProps(state: State) {
   return {
-    login: state.login
+    login: state.login,
+    currentRoom: state.currentRoom
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    getMyInfo: () => actions.getMyInfo()(dispatch)
+    getMyInfo: () => getMyInfo()(dispatch)
   }
 }
 

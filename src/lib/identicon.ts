@@ -205,6 +205,8 @@ function render_identicon(ctx, code, size) {
   )
 }
 
+const icons = new Map<string, string>()
+
 function _gen(str, size, callback) {
   const hash = crypto
     .createHash('sha1')
@@ -224,10 +226,15 @@ function _gen(str, size, callback) {
   render_identicon(ctx, code, size)
 
   ctx.getImageData(0, 0, size, size)
-  callback(null, canvas.toDataURL('image/png'))
+  const icon = canvas.toDataURL('image/png')
+  icons.set(str, icon)
+  callback(null, icon)
 }
 
 export default function(str: string, size: number, callback) {
   // @todo webworker
+  if (icons.has(str)) {
+    return callback(null, icons.get(str))
+  }
   return _gen(str, size, callback)
 }

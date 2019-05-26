@@ -99,6 +99,13 @@ export type Action =
   | {
       type: 'logout'
     }
+  | {
+      type: 'rooms:exit'
+    }
+  | {
+      type: 'rooms:create'
+      payload: { id: string; name: string }
+    }
 
 export type State = {
   login: boolean

@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import * as actions from '../modules/index'
+import { getHistory } from '../modules/index.action'
 
 const Wrap = styled.div`
   width: 100%;
@@ -33,7 +33,7 @@ const ButtonGetHistory: React.FC<Props> = ({ oldestId, getHistory }) => {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ getHistory: actions.getHistory }, dispatch)
+  return bindActionCreators({ getHistory }, dispatch)
 }
 
 export default connect(

@@ -5,8 +5,8 @@ import { Provider } from 'react-redux'
 import 'normalize.css'
 import './index.css'
 import { reducer } from './modules/index'
+import Socket from './components/Socket'
 import App from './App'
-import Socket from './Socket'
 
 export const store = createStore(reducer)
 

@@ -17,8 +17,12 @@ module.exports = {
   rules: {
     'no-console': 'warn',
     'prefer-const': 'error',
+    'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     'react/jsx-uses-vars': 'error',
     'react/jsx-uses-react': 'error',
-    '@typescript-eslint/no-unused-vars': ['error', { args: 'none' }]
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      { args: 'none', argsIgnorePattern: '^_' }
+    ]
   }
 }

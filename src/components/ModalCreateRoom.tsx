@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
-import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components'
 import Modal from '@material-ui/core/Modal'
-import * as actions from '../modules/index'
+import { createRoom } from '../modules/index.action'
 
 const ModalInner = styled.form`
   position: absolute;
@@ -138,7 +137,7 @@ const ModalCraeteRoom: React.FC<Props> = ({
 
 function mapDispatchToProps(dispatch) {
   return {
-    createRoom: (name: string) => actions.createRoom(name)(dispatch)
+    createRoom: (name: string) => createRoom(name)(dispatch)
   }
 }
 

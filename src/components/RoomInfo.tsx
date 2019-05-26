@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { State } from '../modules/index.types'
-import * as actions from '../modules/index'
+import { exitRoom } from '../modules/index.action'
 import Home from '@material-ui/icons/Home'
 import DirectionsRun from '@material-ui/icons/DirectionsRun'
 
@@ -55,7 +55,7 @@ function mapStateToProps(state: State) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    exitRoom: (roomId: string) => actions.exitRoom(roomId)(dispatch)
+    exitRoom: (roomId: string) => exitRoom(roomId)(dispatch)
   }
 }
 

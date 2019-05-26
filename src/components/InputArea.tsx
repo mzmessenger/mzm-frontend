@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import * as actions from '../modules/index'
+import { sendMessage } from '../modules/index.action'
 
 const Wrap = styled.div`
   padding: 0 15px;
@@ -69,7 +69,7 @@ const InputArea: React.FC<Props> = ({ sendMessage }) => {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ sendMessage: actions.sendMessage }, dispatch)
+  return bindActionCreators({ sendMessage }, dispatch)
 }
 
 export default connect(
