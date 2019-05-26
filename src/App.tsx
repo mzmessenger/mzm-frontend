@@ -24,10 +24,10 @@ const Login = () => {
   )
 }
 
-const App: React.FC<{
-  login: boolean,
-  getMyInfo: ReturnType<typeof actions.getMyInfo>
-}> = ({ login, getMyInfo }) => {
+type Props = ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps>
+
+const App: React.FC<Props> = ({ login, getMyInfo }) => {
   useMemo(() => {
     getMyInfo()
   }, [])
@@ -45,11 +45,19 @@ const App: React.FC<{
   )
 }
 
-export default connect(
-  (state: State) => ({ login: state.login }),
-  dispatch => {
-    return {
-      getMyInfo: actions.getMyInfo(dispatch)
-    }
+function mapStateToProps(state: State) {
+  return {
+    login: state.login
   }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    getMyInfo: () => actions.getMyInfo()(dispatch)
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
 )(App)

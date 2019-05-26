@@ -1,4 +1,5 @@
-import { State, Actions, SendMessage, ReceiveMessage } from './index.types'
+import { Dispatch } from 'redux'
+import { State, Action, SendMessage, ReceiveMessage } from './index.types'
 import identicon from '../lib/identicon'
 
 const splited = location.pathname.split('/')
@@ -18,21 +19,30 @@ const initState: State = {
 
 const icons = new Map<string, string>()
 
+function send(socket: WebSocket, message: SendMessage) {
+  socket.send(JSON.stringify(message))
+}
+
 function getMessages(socket: WebSocket, currentRoom: string) {
-  const send: SendMessage = {
+  const message: SendMessage = {
     cmd: 'messages:room',
     room: currentRoom
   }
-  socket.send(JSON.stringify(send))
+  send(socket, message)
 }
 
-export function reducer(state: State = initState, action: Actions) {
+export function reducer(state: State = initState, action: Action) {
   switch (action.type) {
     case 'logout': {
       return { ...initState }
     }
     case 'websocket:init': {
-      state.socket = action.payload
+      const socket = action.payload
+      state.socket = socket
+      const splited = location.pathname.split('/')
+      const name = splited[1] === 'rooms' ? splited[2] : ''
+      send(socket, { cmd: 'rooms:enter', name })
+
       return {
         ...state,
         socket: action.payload,
@@ -45,16 +55,17 @@ export function reducer(state: State = initState, action: Actions) {
       if (!state.currentRoom) {
         return state
       }
-      const send: SendMessage = {
+      const message: SendMessage = {
         cmd: 'message:send',
         message: action.payload,
         room: state.currentRoom
       }
-      state.socket.send(JSON.stringify(send))
+      send(state.socket, message)
       return state
     }
     case 'rooms:receive': {
       // historyで初期値が設定された時用の処理
+      /*
       let id = null
       let name = null
       action.payload.forEach(e => {
@@ -66,43 +77,42 @@ export function reducer(state: State = initState, action: Actions) {
         }
         return { ...e, current }
       })
-      if (id) {
-        getMessages(state.socket, id)
+      */
+      if (state.currentRoom) {
+        getMessages(state.socket, state.currentRoom)
       }
       return {
         ...state,
-        rooms: [...action.payload],
-        currentRoom: id ? id : state.currentRoom,
-        currentRoomName: name ? name : state.currentRoomName
+        rooms: [...action.payload]
+        // currentRoom: id ? id : state.currentRoom,
+        // currentRoomName: name ? name : state.currentRoomName
       }
     }
     case 'messages:get:room:history': {
-      const send: SendMessage = {
+      const message: SendMessage = {
         cmd: 'messages:room',
         room: state.currentRoom,
         id: action.payload
       }
-      state.socket.send(JSON.stringify(send))
+      send(state.socket, message)
       return state
     }
     case 'rooms:set:current': {
-      const currentRoom = action.payload
-      if (currentRoom === state.currentRoom) {
-        return state
-      }
-      state.rooms.forEach(e => {
-        if (e.id === action.payload) {
-          state.currentRoomName = e.name
+      const id = action.payload.id
+      getMessages(state.socket, id)
+      let name = action.payload.name
+      state.rooms.forEach(room => {
+        room.current = room.id === id
+        if (!name && room.id === id) {
+          name = room.name
         }
-        e.current = e.id === action.payload
       })
-      getMessages(state.socket, currentRoom)
       return {
         ...state,
         rooms: [...state.rooms],
         messages: [],
-        currentRoom,
-        currentRoomName: state.currentRoomName
+        currentRoom: id,
+        currentRoomName: name
       }
     }
     case 'message:receive': {
@@ -139,11 +149,8 @@ export function reducer(state: State = initState, action: Actions) {
     case 'me:set:icon': {
       return { ...state, icon: action.payload }
     }
-    case 'rooms:create': {
-      const send: SendMessage = {
-        cmd: 'rooms:get'
-      }
-      state.socket.send(JSON.stringify(send))
+    case 'rooms:get': {
+      send(state.socket, { cmd: 'rooms:get' })
       return state
     }
     default:
@@ -151,15 +158,15 @@ export function reducer(state: State = initState, action: Actions) {
   }
 }
 
-export function initSocket(socket: WebSocket): Actions {
+export function initSocket(socket: WebSocket): Action {
   return { type: 'websocket:init', payload: socket }
 }
 
-export function sendMessage(message: string): Actions {
+export function sendMessage(message: string): Action {
   return { type: 'message:send', payload: message }
 }
 
-export function onMessage(e: MessageEvent): Actions {
+export function onMessage(e: MessageEvent): Action {
   try {
     const parsed: ReceiveMessage = JSON.parse(e.data)
     if (parsed.cmd === 'rooms') {
@@ -175,23 +182,30 @@ export function onMessage(e: MessageEvent): Actions {
           messages: parsed.messages
         }
       }
+    } else if (parsed.cmd === 'rooms:enter:success') {
+      return {
+        type: 'rooms:set:current',
+        payload: {
+          id: parsed.id,
+          name: parsed.name
+        }
+      }
     }
   } catch (e) {
     console.error(e)
   }
 }
 
-export function setCurrentRooms(roomId: string): Actions {
-  return { type: 'rooms:set:current', payload: roomId }
+export function setCurrentRooms(roomId: string): Action {
+  return { type: 'rooms:set:current', payload: { id: roomId } }
 }
 
-export function getMyInfo(dispatch) {
-  return async function() {
+export function getMyInfo() {
+  return async function(dispatch: Dispatch<Action>) {
     const res = await fetch('/api/user/@me')
     if (res.status === 200) {
       const payload: { account: string; id: string } = await res.json()
-      const setMe: Actions = { type: 'me:set', payload }
-      dispatch(setMe)
+      dispatch({ type: 'me:set', payload })
 
       if (!icons.get(payload.account)) {
         identicon(payload.account, 100, (err, data) => {
@@ -206,8 +220,8 @@ export function getMyInfo(dispatch) {
   }
 }
 
-export function createRoom(dispatch) {
-  return async function(name: string) {
+export function createRoom(name: string) {
+  return async function(dispatch: Dispatch<Action>) {
     const res = await fetch('/api/rooms', {
       method: 'POST',
       mode: 'cors',
@@ -217,10 +231,30 @@ export function createRoom(dispatch) {
       body: JSON.stringify({ name })
     })
     if (res.status === 200) {
-      const room = await res.json()
-      const create: Actions = { type: 'rooms:create' }
-      dispatch(create)
-      dispatch({ type: 'rooms:set:current', payload: room.id })
+      const room: { id: string; name: string } = await res.json()
+      dispatch({ type: 'rooms:get' })
+      dispatch({
+        type: 'rooms:set:current',
+        payload: { id: room.id, name: room.name }
+      })
+    }
+    return res
+  }
+}
+
+export function exitRoom(roomId: string) {
+  return async function(dispatch: Dispatch<Action>) {
+    const res = await fetch('/api/rooms/enter', {
+      method: 'DELETE',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8'
+      },
+      body: JSON.stringify({ room: roomId })
+    })
+    if (res.status === 200) {
+      dispatch({ type: 'rooms:get' })
+      // todo: clear current
     }
     return res
   }

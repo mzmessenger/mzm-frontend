@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components'
@@ -72,8 +73,8 @@ const Buttons = styled.div`
 type Props = {
   open: boolean
   onClose: () => void
-  createRoom: ReturnType<typeof actions.createRoom>
-} & RouteComponentProps
+} & ReturnType<typeof mapDispatchToProps> &
+  RouteComponentProps
 
 const ModalCraeteRoom: React.FC<Props> = ({
   history,
@@ -92,6 +93,8 @@ const ModalCraeteRoom: React.FC<Props> = ({
         if (data.status === 200) {
           onClose()
           history.push(`/rooms/${txt}`)
+          setTxt('')
+          setErrorTxt('')
         } else {
           setErrorTxt('なにかエラーが発生しました')
         }
@@ -132,13 +135,16 @@ const ModalCraeteRoom: React.FC<Props> = ({
     </Modal>
   )
 }
+
+function mapDispatchToProps(dispatch) {
+  return {
+    createRoom: (name: string) => actions.createRoom(name)(dispatch)
+  }
+}
+
 export default withRouter(
   connect(
     () => ({}),
-    dispatch => {
-      return {
-        createRoom: actions.createRoom(dispatch)
-      }
-    }
+    mapDispatchToProps
   )(ModalCraeteRoom)
 )

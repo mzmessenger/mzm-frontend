@@ -28,10 +28,9 @@ const Profile = styled.div`
   line-height: 25px;
 `
 
-const MyInfo: React.FC<{
-  me: State['me']
-  icon: State['icon']
-}> = ({ me, icon }) => {
+type Props = ReturnType<typeof mapStateToProps>
+
+const MyInfo: React.FC<Props> = ({ me, icon }) => {
   const m = me ? me.account : ''
   return (
     <Wrap>
@@ -43,10 +42,11 @@ const MyInfo: React.FC<{
   )
 }
 
-export default connect(
-  (state: State) => ({
+function mapStateToProps(state: State) {
+  return {
     me: state.me,
     icon: state.icon
-  }),
-  () => {}
-)(MyInfo)
+  }
+}
+
+export default connect(mapStateToProps)(MyInfo)

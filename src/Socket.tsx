@@ -2,6 +2,8 @@ import React, { useMemo } from 'react'
 import { connect } from 'react-redux'
 import * as actions from './modules/index'
 
+// @todo loginしていない間は再接続処理をしない
+
 function init(
   url: string,
   logout: typeof actions.logout,
@@ -9,8 +11,10 @@ function init(
   onMessage: typeof actions.onMessage
 ) {
   const ws = new WebSocket(url)
-  initSocket(ws)
 
+  ws.addEventListener('open', () => {
+    initSocket(ws)
+  })
   ws.addEventListener('message', e => {
     if (e.data === 'ping') {
       ws.send('pong')

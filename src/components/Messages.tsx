@@ -4,13 +4,9 @@ import { State } from '../modules/index.types'
 import Message from './Message'
 import GetHistoryButton from './ButtonGetHistory'
 
-function Messages({
-  existHistory,
-  messages
-}: {
-  existHistory: boolean
-  messages: State['messages']
-}) {
+type Props = ReturnType<typeof mapStateToProps>
+
+const Messages: React.FC<Props> = ({ existHistory, messages }) => {
   return (
     <div style={{ padding: '0 0 20px 0' }}>
       {messages.length > 0 && existHistory && (
@@ -32,10 +28,11 @@ function Messages({
   )
 }
 
-export default connect(
-  (state: State) => ({
+function mapStateToProps(state: State) {
+  return {
     existHistory: state.existHistory,
     messages: state.messages
-  }),
-  {}
-)(Messages)
+  }
+}
+
+export default connect(mapStateToProps)(Messages)

@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Home from '@material-ui/icons/Home'
@@ -27,10 +28,10 @@ const Room: React.FC<{ name: string }> = ({ name }) => {
   )
 }
 
-const Rooms: React.FC<{
-  rooms: State['rooms']
-  setCurrentRooms: typeof actions.setCurrentRooms
-}> = ({ rooms, setCurrentRooms }) => {
+type Props = ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps>
+
+const Rooms: React.FC<Props> = ({ rooms, setCurrentRooms }) => {
   return (
     <div style={{ padding: '5px 0' }}>
       {rooms.map(r => (
@@ -47,9 +48,20 @@ const Rooms: React.FC<{
   )
 }
 
+function mapStateToProps(state: State) {
+  return { rooms: state.rooms }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(
+    {
+      setCurrentRooms: actions.setCurrentRooms
+    },
+    dispatch
+  )
+}
+
 export default connect(
-  (state: State) => ({ rooms: state.rooms }),
-  {
-    setCurrentRooms: actions.setCurrentRooms
-  }
+  mapStateToProps,
+  mapDispatchToProps
 )(Rooms)

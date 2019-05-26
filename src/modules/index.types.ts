@@ -28,6 +28,11 @@ export type ReceiveMessage =
       room: string
       existHistory: boolean
     }
+  | {
+      cmd: 'rooms:enter:success'
+      id: string
+      name: string
+    }
 
 export type SendMessage =
   | {
@@ -43,8 +48,12 @@ export type SendMessage =
   | {
       cmd: 'rooms:get'
     }
+  | {
+      cmd: 'rooms:enter'
+      name: string
+    }
 
-export type Actions =
+export type Action =
   | {
       type: 'websocket:init'
       payload: WebSocket
@@ -63,7 +72,10 @@ export type Actions =
     }
   | {
       type: 'rooms:set:current'
-      payload: string
+      payload: {
+        id: string
+        name?: string
+      }
     }
   | {
       type: 'messages:room'
@@ -78,7 +90,7 @@ export type Actions =
       payload: string
     }
   | {
-      type: 'rooms:create'
+      type: 'rooms:get'
     }
   | {
       type: 'messages:get:room:history'

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import * as actions from '../modules/index'
@@ -42,9 +43,9 @@ const SendButton = styled.button`
   border-radius: 3px;
 `
 
-const InputArea: React.FC<{
-  sendMessage: typeof actions.sendMessage
-}> = ({ sendMessage }) => {
+type Props = ReturnType<typeof mapDispatchToProps>
+
+const InputArea: React.FC<Props> = ({ sendMessage }) => {
   const [txt, setTxt] = useState('')
 
   const handleSubmit = evt => {
@@ -67,7 +68,11 @@ const InputArea: React.FC<{
   )
 }
 
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ sendMessage: actions.sendMessage }, dispatch)
+}
+
 export default connect(
   () => ({}),
-  { sendMessage: actions.sendMessage }
+  mapDispatchToProps
 )(InputArea)
