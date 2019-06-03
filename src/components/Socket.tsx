@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { logout, initSocket, onMessage } from '../modules/index.action'
+import { State } from '../modules/index.types'
 
 // @todo loginしていない間は再接続処理をしない
 
@@ -34,13 +35,26 @@ function init(
 
 type Props = {
   url: string
-} & ReturnType<typeof mapDispatchToProps>
+} & ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps>
 
-const Socket: React.FC<Props> = ({ url, logout, initSocket, onMessage }) => {
+const Socket: React.FC<Props> = ({
+  url,
+  login,
+  logout,
+  initSocket,
+  onMessage
+}) => {
   useMemo(() => {
-    init(url, logout, initSocket, onMessage)
-  }, [url])
+    if (login) {
+      init(url, logout, initSocket, onMessage)
+    }
+  }, [url, login])
   return <></>
+}
+
+function mapStateToProps(state: State) {
+  return { login: state.login }
 }
 
 function mapDispatchToProps(dispatch) {
@@ -55,6 +69,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(
-  () => ({}),
+  mapStateToProps,
   mapDispatchToProps
 )(Socket)
