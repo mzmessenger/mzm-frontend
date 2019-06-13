@@ -1,16 +1,16 @@
 import React, { useCallback } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { State } from '../modules/index.types'
-import { exitRoom } from '../modules/index.action'
 import Home from '@material-ui/icons/Home'
 import DirectionsRun from '@material-ui/icons/DirectionsRun'
+import { State } from '../modules/index.types'
+import { exitRoom } from '../modules/index.action'
 
 const Wrap = styled.div`
   display: flex;
   padding: 10px 15px;
   align-items: center;
-  background: #2f3136;
+  background-color: hsl(0, 0%, 16.5%);
   .room-name {
     font-size: 22px;
     line-height: 30px;

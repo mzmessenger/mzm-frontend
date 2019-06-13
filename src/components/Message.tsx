@@ -3,7 +3,9 @@ import dayjs from 'dayjs'
 import styled from 'styled-components'
 
 const MessageWrap = styled.div`
-  padding: 20px 15px 0;
+  padding: 10px 15px 10px;
+  border-radius: 1px;
+  background-color: hsl(0, 0%, 14%);
   color: #dcddde;
   display: grid;
   grid-template-columns: auto 1fr;

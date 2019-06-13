@@ -2,15 +2,15 @@ import React from 'react'
 import styled from 'styled-components'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 import Home from '@material-ui/icons/Home'
 import { State } from '../modules/index.types'
 import { setCurrentRooms } from '../modules/index.action'
+import Link from './atoms/Link'
 
 const RoomWrap = styled.div`
   display: flex;
   flex-direction: center;
-  color: #8e9297;
+  color: #aaaaaa;
   height: 34px;
   padding: 3px 8px 0;
   .room-name {
@@ -38,7 +38,6 @@ const Rooms: React.FC<Props> = ({ rooms, setCurrentRooms }) => {
         <Link
           to={`/rooms/${r.name}`}
           key={r.id}
-          style={{ textDecoration: 'none' }}
           onClick={() => setCurrentRooms(r.id)}
         >
           <Room name={r.name} />

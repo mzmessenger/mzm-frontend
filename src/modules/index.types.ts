@@ -106,6 +106,9 @@ export type Action =
       type: 'rooms:create'
       payload: { id: string; name: string }
     }
+  | {
+      type: 'remove:user'
+    }
 
 export type State = {
   login: boolean

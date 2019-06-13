@@ -107,3 +107,19 @@ export function getHistory(id: string) {
 export function logout() {
   return { type: 'logout' }
 }
+
+export function removeUser() {
+  return async function(dispatch: Dispatch<Action>) {
+    const res = await fetch('/auth/user', {
+      method: 'DELETE',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8'
+      }
+    })
+    if (res.status === 200) {
+      dispatch({ type: 'remove:user' })
+    }
+    return res
+  }
+}

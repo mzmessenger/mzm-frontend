@@ -3,12 +3,12 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { sendMessage } from '../modules/index.action'
+import Button from './atoms/Button'
 
 const Wrap = styled.div`
   padding: 0 15px;
   .form-wrap {
     padding: 20px 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
   }
 `
 const Form = styled.form`
@@ -34,13 +34,9 @@ const TextAreaWrap = styled.div`
   }
 `
 
-const SendButton = styled.button`
+const SendButton = styled(Button)`
   height: 40px;
   width: 100px;
-  background-color: #5ca3ff;
-  border-color: #6486b3;
-  color: #ffffff;
-  border-radius: 3px;
 `
 
 type Props = ReturnType<typeof mapDispatchToProps>

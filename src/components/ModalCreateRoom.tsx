@@ -4,6 +4,7 @@ import { withRouter, RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components'
 import Modal from '@material-ui/core/Modal'
 import { createRoom } from '../modules/index.action'
+import Button from './atoms/Button'
 
 const ModalInner = styled.form`
   position: absolute;
@@ -52,15 +53,8 @@ const Buttons = styled.div`
   justify-content: flex-end;
   background: #2f3136;
   button {
-    cursor: pointer;
     height: 40px;
     width: 100px;
-  }
-  button.send {
-    background-color: #5ca3ff;
-    border-color: #6486b3;
-    color: #ffffff;
-    border-radius: 3px;
   }
   button.cancel {
     color: #ffffff;
@@ -119,16 +113,14 @@ const ModalCraeteRoom: React.FC<Props> = ({
           <p style={{ display: error ? 'block' : 'none' }}>{error}</p>
         </div>
         <Buttons>
-          <button
+          <Button
             className="cancel"
             onClick={onClose}
             style={{ marginRight: '5px' }}
           >
             キャンセル
-          </button>
-          <button className="send" type="submit">
-            送信
-          </button>
+          </Button>
+          <Button type="submit">送信</Button>
         </Buttons>
       </ModalInner>
     </Modal>

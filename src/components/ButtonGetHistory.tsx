@@ -6,7 +6,6 @@ import { getHistory } from '../modules/index.action'
 
 const Wrap = styled.div`
   width: 100%;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   button {
     width: 100%;
     height: 40px;

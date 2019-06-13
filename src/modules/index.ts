@@ -47,9 +47,9 @@ function setCurrent(
 
 export function reducer(state: State = initState, action: Action) {
   switch (action.type) {
-    case 'logout': {
+    case 'logout':
+    case 'remove:user':
       return { ...initState }
-    }
     case 'websocket:init': {
       const socket = action.payload
       state.socket = socket
@@ -94,8 +94,12 @@ export function reducer(state: State = initState, action: Action) {
       }
     }
     case 'rooms:receive': {
+      if (state.currentRoom) {
+        send(state.socket, { cmd: 'messages:room', room: state.currentRoom })
+      }
       return {
         ...state,
+        messages: [],
         rooms: [...action.payload]
       }
     }
@@ -134,6 +138,9 @@ export function reducer(state: State = initState, action: Action) {
     }
     case 'messages:room': {
       for (const message of action.payload.messages) {
+        if (!message.userAccount) {
+          continue
+        }
         identicon(message.userAccount, 100, (err, data) => {
           if (!err) {
             message.icon = data
