@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { State } from '../modules/index.types'
 
-type Props = ReturnType<typeof mapStateToProps> & RouteComponentProps
+function RouterListener({ history }: RouteComponentProps) {
+  const currentRoomName = useSelector((state: State) => state.currentRoomName)
 
-const RouterListener: React.FC<Props> = ({ history, currentRoomName }) => {
   useMemo(() => {
     if (currentRoomName === '') {
       history.push('/')
@@ -15,10 +15,4 @@ const RouterListener: React.FC<Props> = ({ history, currentRoomName }) => {
   return <></>
 }
 
-function mapStateToProps(state: State) {
-  return {
-    currentRoomName: state.currentRoomName
-  }
-}
-
-export default withRouter(connect(mapStateToProps)(RouterListener))
+export default withRouter(RouterListener)

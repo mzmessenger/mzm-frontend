@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import Home from '@material-ui/icons/Home'
 import DirectionsRun from '@material-ui/icons/DirectionsRun'
@@ -21,15 +21,16 @@ const Wrap = styled.div`
   }
 `
 
-type Props = ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps>
+export default function RoomInfo() {
+  const id = useSelector((state: State) => state.currentRoom)
+  const name = useSelector((state: State) => state.currentRoomName) || ''
 
-const RoomInfo: React.FC<Props> = ({ id, name, exitRoom }) => {
-  name = name ? name : ''
+  const dispatch = useDispatch()
+
   // @todo create modal
   const onClick = useCallback(() => {
-    exitRoom(id)
-  }, [id])
+    exitRoom(id)(dispatch)
+  }, [id, dispatch])
 
   return (
     <Wrap>
@@ -45,21 +46,3 @@ const RoomInfo: React.FC<Props> = ({ id, name, exitRoom }) => {
     </Wrap>
   )
 }
-
-function mapStateToProps(state: State) {
-  return {
-    id: state.currentRoom,
-    name: state.currentRoomName
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    exitRoom: (roomId: string) => exitRoom(roomId)(dispatch)
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RoomInfo)

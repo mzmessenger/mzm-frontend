@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { State } from '../modules/index.types'
 
 const Wrap = styled.div`
@@ -28,9 +28,10 @@ const Profile = styled.div`
   line-height: 25px;
 `
 
-type Props = ReturnType<typeof mapStateToProps>
+export default function MyInfo() {
+  const me = useSelector((state: State) => state.me)
+  const icon = useSelector((state: State) => state.icon)
 
-const MyInfo: React.FC<Props> = ({ me, icon }) => {
   const m = me ? me.account : ''
   return (
     <Wrap>
@@ -41,12 +42,3 @@ const MyInfo: React.FC<Props> = ({ me, icon }) => {
     </Wrap>
   )
 }
-
-function mapStateToProps(state: State) {
-  return {
-    me: state.me,
-    icon: state.icon
-  }
-}
-
-export default connect(mapStateToProps)(MyInfo)

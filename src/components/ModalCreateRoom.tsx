@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components'
 import Modal from '@material-ui/core/Modal'
@@ -66,22 +66,17 @@ const Buttons = styled.div`
 type Props = {
   open: boolean
   onClose: () => void
-} & ReturnType<typeof mapDispatchToProps> &
-  RouteComponentProps
+} & RouteComponentProps
 
-const ModalCraeteRoom: React.FC<Props> = ({
-  history,
-  open,
-  onClose,
-  createRoom
-}) => {
+function ModalCraeteRoom({ history, open, onClose }: Props) {
   const [txt, setTxt] = useState('')
   const [error, setErrorTxt] = useState('')
+  const dispatch = useDispatch()
 
   const handleSubmit = evt => {
     evt.preventDefault()
     // @todo エラー時の処理
-    createRoom(txt)
+    createRoom(txt)(dispatch)
       .then(data => {
         if (data.status === 200) {
           onClose()
@@ -127,15 +122,4 @@ const ModalCraeteRoom: React.FC<Props> = ({
   )
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    createRoom: (name: string) => createRoom(name)(dispatch)
-  }
-}
-
-export default withRouter(
-  connect(
-    () => ({}),
-    mapDispatchToProps
-  )(ModalCraeteRoom)
-)
+export default withRouter(ModalCraeteRoom)

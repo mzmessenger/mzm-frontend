@@ -1,74 +1,50 @@
 import React, { useMemo } from 'react'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-import { logout, initSocket, onMessage } from '../modules/index.action'
+import { Dispatch } from 'redux'
+import { useSelector, useDispatch } from 'react-redux'
+import {
+  logout as actionLogout,
+  initSocket as actionInitSocket,
+  onMessage as actionOnMessage
+} from '../modules/index.action'
 import { State } from '../modules/index.types'
 
-// @todo loginしていない間は再接続処理をしない
-
 function init(
+  dispatch: Dispatch,
   url: string,
-  logout: Props['logout'],
-  initSocket: Props['initSocket'],
-  onMessage: Props['onMessage']
+  logout: typeof actionLogout,
+  initSocket: typeof actionInitSocket,
+  onMessage: typeof actionOnMessage
 ) {
   const ws = new WebSocket(url)
 
   ws.addEventListener('open', () => {
-    initSocket(ws)
+    dispatch(initSocket(ws))
   })
   ws.addEventListener('message', e => {
     if (e.data === 'ping') {
       ws.send('pong')
       return
     }
-    onMessage(e)
+    dispatch(onMessage(e))
   })
   ws.addEventListener('close', () => {
-    init(url, logout, initSocket, onMessage)
+    init(dispatch, url, logout, initSocket, onMessage)
   })
   ws.addEventListener('error', () => {
-    logout()
+    dispatch(logout())
   })
   return ws
 }
 
-type Props = {
-  url: string
-} & ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps>
+export default function Socket({ url }: { url: string }) {
+  const login = useSelector((state: State) => state.login)
+  const dispatch = useDispatch()
 
-const Socket: React.FC<Props> = ({
-  url,
-  login,
-  logout,
-  initSocket,
-  onMessage
-}) => {
   useMemo(() => {
     if (login) {
-      init(url, logout, initSocket, onMessage)
+      init(dispatch, url, actionLogout, actionInitSocket, actionOnMessage)
     }
   }, [url, login])
+
   return <></>
 }
-
-function mapStateToProps(state: State) {
-  return { login: state.login }
-}
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(
-    {
-      logout,
-      initSocket,
-      onMessage
-    },
-    dispatch
-  )
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Socket)

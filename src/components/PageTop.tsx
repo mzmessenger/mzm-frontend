@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Body, Right } from '../styles'
 import Rooms from './Rooms'
 import RoomNavi from './RoomNavi'
@@ -7,14 +7,14 @@ import MyInfo from './MyInfo'
 import { removeUser } from '../modules/index.action'
 import Button from './atoms/Button'
 
-type Props = ReturnType<typeof mapDispatchToProps>
+export default function Index() {
+  const dispatch = useDispatch()
 
-const Index: React.FC<Props> = ({ removeUser }) => {
   const onClick = useCallback(() => {
     if (window.confirm('本当にアカウントを削除しますか？')) {
-      removeUser()
+      removeUser()(dispatch)
     }
-  }, [])
+  }, [dispatch])
 
   return (
     <>
@@ -32,14 +32,3 @@ const Index: React.FC<Props> = ({ removeUser }) => {
     </>
   )
 }
-
-function mapDispatchToProps(dispatch) {
-  return {
-    removeUser: () => removeUser()(dispatch)
-  }
-}
-
-export default connect(
-  () => ({}),
-  mapDispatchToProps
-)(Index)

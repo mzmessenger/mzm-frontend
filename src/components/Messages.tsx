@@ -1,11 +1,9 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { State } from '../modules/index.types'
 import Message from './Message'
 import GetHistoryButton from './ButtonGetHistory'
-
-type Props = ReturnType<typeof mapStateToProps>
 
 const Wrap = styled.div`
   .message {
@@ -19,7 +17,10 @@ const Wrap = styled.div`
   }
 `
 
-const Messages: React.FC<Props> = ({ existHistory, messages }) => {
+export default function Messages() {
+  const existHistory = useSelector((state: State) => state.existHistory)
+  const messages = useSelector((state: State) => state.messages)
+
   return (
     <Wrap>
       {messages.length > 0 && existHistory && (
@@ -41,12 +42,3 @@ const Messages: React.FC<Props> = ({ existHistory, messages }) => {
     </Wrap>
   )
 }
-
-function mapStateToProps(state: State) {
-  return {
-    existHistory: state.existHistory,
-    messages: state.messages
-  }
-}
-
-export default connect(mapStateToProps)(Messages)
