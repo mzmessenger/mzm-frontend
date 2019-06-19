@@ -8,16 +8,19 @@ import { exitRoom } from '../modules/index.action'
 
 const Wrap = styled.div`
   display: flex;
-  padding: 10px 15px;
+  height: var(--navi-height);
+  padding: 0 15px;
   align-items: center;
   background-color: hsl(0, 0%, 16.5%);
   .room-name {
-    font-size: 22px;
+    flex: 1;
+    font-size: 18px;
     line-height: 30px;
     color: #ffffff;
   }
   .icon {
     color: #ffffff;
+    margin: 0 15px 0 0;
   }
 `
 
@@ -34,7 +37,7 @@ export default function RoomInfo() {
 
   return (
     <Wrap>
-      <Home style={{ marginRight: '15px' }} className="icon" fontSize="large" />
+      <Home className="icon" fontSize="small" />
       <span style={{ flex: 1 }} className="room-name">
         {name}
       </span>

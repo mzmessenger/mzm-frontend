@@ -1,0 +1,37 @@
+import React from 'react'
+import styled from 'styled-components'
+import Link from './atoms/Link'
+import MyInfo from './MyInfo'
+
+const Wrap = styled.header`
+  display: flex;
+  color: #ffffff;
+  .logo {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+`
+
+const LinkWrap = styled(Link)`
+  display: flex;
+  text-decoration: none;
+  color: #8e9297;
+  :visited {
+    color: #8e9297;
+  }
+`
+
+export default function Header() {
+  return (
+    <Wrap>
+      <LinkWrap className="logo" to="/">
+        <div>MZM</div>
+      </LinkWrap>
+      <div style={{ flex: 1 }}></div>
+      <MyInfo />
+    </Wrap>
+  )
+}

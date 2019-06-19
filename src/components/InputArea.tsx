@@ -7,13 +7,13 @@ import Button from './atoms/Button'
 const Wrap = styled.div`
   padding: 0 15px;
   .form-wrap {
-    padding: 20px 0;
+    padding: 10px 0;
   }
-`
-const Form = styled.form`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `
 
 const TextAreaWrap = styled.div`
@@ -23,7 +23,6 @@ const TextAreaWrap = styled.div`
   display: flex;
   margin-right: 10px;
   textarea {
-    padding: 10px;
     color: #dcddde;
     background-color: transparent;
     resize: none;
@@ -34,8 +33,8 @@ const TextAreaWrap = styled.div`
 `
 
 const SendButton = styled(Button)`
-  height: 40px;
-  width: 100px;
+  height: 33px;
+  width: 80px;
 `
 
 export default function InputArea() {
@@ -51,12 +50,12 @@ export default function InputArea() {
   return (
     <Wrap>
       <div className="form-wrap">
-        <Form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <TextAreaWrap>
             <textarea value={txt} onChange={e => setTxt(e.target.value)} />
           </TextAreaWrap>
           <SendButton type="submit">投稿</SendButton>
-        </Form>
+        </form>
       </div>
     </Wrap>
   )

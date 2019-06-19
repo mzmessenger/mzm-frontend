@@ -13,8 +13,10 @@ const Wrap = styled.div`
   height: 100%;
   display: grid;
   grid-template-columns: 1fr 240px;
-  grid-template-rows: 1fr;
-  grid-template-areas: 'body right';
+  grid-template-rows: var(--header-height) 1fr;
+  grid-template-areas:
+    'header header'
+    'body right';
 `
 
 const Login = () => {

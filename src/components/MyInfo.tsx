@@ -1,11 +1,11 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { State } from '../modules/index.types'
+import Link from './atoms/Link'
 
 const Wrap = styled.div`
-  padding: 20px 10px 20px;
+  padding: 8px;
 `
 const LinkWrap = styled(Link)`
   display: flex;
@@ -24,7 +24,7 @@ const Icon = styled.img`
 `
 
 const Profile = styled.div`
-  font-size: 22px;
+  font-size: 18px;
   line-height: 25px;
 `
 

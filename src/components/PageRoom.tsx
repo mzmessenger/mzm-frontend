@@ -6,13 +6,14 @@ import Messages from './Messages'
 import Rooms from './Rooms'
 import RoomNavi from './RoomNavi'
 import RoomInfo from './RoomInfo'
-import MyInfo from './MyInfo'
+import Header from './Header'
 
 const MessageBody = styled(Body)`
   grid-template-areas:
     'room-info'
     'messages'
     'input';
+  height: calc(100vh - var(--header-height));
 
   .messages {
     grid-area: messages;
@@ -22,6 +23,9 @@ const MessageBody = styled(Body)`
 export default function SelectedRoom() {
   return (
     <>
+      <div style={{ gridArea: 'header' }}>
+        <Header />
+      </div>
       <MessageBody>
         <div style={{ gridArea: 'room-info' }}>
           <RoomInfo />
@@ -34,7 +38,6 @@ export default function SelectedRoom() {
         </div>
       </MessageBody>
       <Right>
-        <MyInfo />
         <RoomNavi />
         <Rooms />
       </Right>

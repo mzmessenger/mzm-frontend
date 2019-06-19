@@ -5,11 +5,12 @@ import CreateRoom from './ModalCreateRoom'
 
 const Wrap = styled.div`
   display: flex;
-  padding: 13px 10px 3px;
+  align-items: center;
+  padding: 0 10px;
+  height: var(--navi-height);
   flex-direction: center;
   background-color: hsl(0, 0%, 18.5%);
   color: #8e9297;
-  height: 30px;
   cursor: pointer;
 `
 

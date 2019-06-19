@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { Body, Right } from '../styles'
 import Rooms from './Rooms'
 import RoomNavi from './RoomNavi'
-import MyInfo from './MyInfo'
+import Header from './Header'
 import { removeUser } from '../modules/index.action'
 import Button from './atoms/Button'
 
@@ -18,6 +18,9 @@ export default function Index() {
 
   return (
     <>
+      <div style={{ gridArea: 'header' }}>
+        <Header />
+      </div>
       <Body>
         <div>
           <a href="/auth/logout">logout</a>
@@ -25,7 +28,6 @@ export default function Index() {
         </div>
       </Body>
       <Right>
-        <MyInfo />
         <RoomNavi />
         <Rooms />
       </Right>
