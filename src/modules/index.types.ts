@@ -55,6 +55,10 @@ export type SendMessage =
 
 export type Action =
   | {
+      type: 'signup'
+      payload: { account?: string }
+    }
+  | {
       type: 'websocket:init'
       payload: WebSocket
     }
@@ -111,6 +115,8 @@ export type Action =
     }
 
 export type State = {
+  signup: boolean
+  signupAccount: string
   login: boolean
   socket: WebSocket
   scrollBottomMessage: boolean

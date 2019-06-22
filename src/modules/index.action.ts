@@ -61,6 +61,7 @@ export function getMyInfo() {
     } else {
       dispatch({ type: 'logout' })
     }
+    return res
   }
 }
 

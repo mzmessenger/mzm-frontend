@@ -5,6 +5,8 @@ const splited = location.pathname.split('/')
 const initCurrentRoomName = splited[1] === 'rooms' ? splited[2] : ''
 
 const initState: State = {
+  signup: false,
+  signupAccount: '',
   login: false,
   socket: null,
   scrollBottomMessage: false,
@@ -48,6 +50,13 @@ function setCurrent(
 
 export function reducer(state: State = initState, action: Action) {
   switch (action.type) {
+    case 'signup': {
+      return {
+        ...initState,
+        signup: true,
+        signupAccount: action.payload.account
+      }
+    }
     case 'logout':
     case 'remove:user':
       return { ...initState }

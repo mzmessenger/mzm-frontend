@@ -21,7 +21,7 @@ const MessageBody = styled(Body)`
     overflow: auto;
   }
 `
-export default function SelectedRoom() {
+export default function PageRoom() {
   return (
     <PageWrapper>
       <Header style={{ gridArea: 'header' }} />

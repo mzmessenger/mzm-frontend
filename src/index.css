@@ -1,7 +1,11 @@
 :root {
   --header-height: 40px;
   --navi-height: 40px;
+  --color-primary: rgb(29, 161, 242);
+  --color-on-primary: hsl(0, 100%, 100%, 0.9);
+  --color-link: rgb(27, 149, 224);
   --color-input-background: hsl(200, 12%, 85%, 0.24);
+  --color-input: hsl(0, 100%, 100%, 0.9);
   --color-background: hsl(0, 0%, 7%);
   --color-on-background: hsl(0, 0%, 66%);
   --color-surface: hsl(0, 0%, 11%);

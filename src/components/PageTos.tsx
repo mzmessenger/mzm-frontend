@@ -1,63 +1,19 @@
 import React from 'react'
 import styled from 'styled-components'
-import TwitterIcon from '../assets/twitter-icon-blue.svg'
+import Header from './atoms/LoginHeader'
 
 const Wrap = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
 
-  .header {
-    width: 100vw;
-    height: 3em;
-    color: var(--color-on-background);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: 500;
-  }
-
-  .login {
-    color: var(--color-on-background);
-    .link {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    a {
-      height: 40px;
-      padding: 0 14px 0 10px;
-      font-size: 1rem;
-      background-color: var(--color-guide);
-      color: var(--color-on-guide);
-      border-radius: 4px;
-      height: 40px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .icon {
-      width: 24px;
-      height: 24px;
-      background-size: contain;
-      margin: 0 4px 0 0;
-    }
-    .twitter {
-      .icon {
-        background-image: url(${TwitterIcon});
-      }
-    }
-  }
-
-  .attention,
   .terms {
+    margin: 20px;
     max-width: 90vw;
     padding: 20px;
     background-color: var(--color-surface);
     color: var(--color-on-surface);
-    width: 700px;
-    margin: 40px 0 0 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -65,25 +21,10 @@ const Wrap = styled.div`
   }
 `
 
-function Login() {
+export default function Tos() {
   return (
     <Wrap>
-      <header className="header">MZM (β)</header>
-      <div className="login">
-        <h4>利用規約に同意してログイン。</h4>
-        <div className="link">
-          <a href="/auth/twitter" className="twitter">
-            <figure className="icon" />
-            Twitter
-          </a>
-        </div>
-      </div>
-      <div className="attention">
-        <h2>注意事項</h2>
-        <p>
-          MZMはβリリース中です。エラーの発生や予告なくデータの削除等が発生する可能性があります。
-        </p>
-      </div>
+      <Header />
       <div className="terms">
         <h2>利用規約</h2>
         <p>
@@ -269,5 +210,3 @@ function Login() {
     </Wrap>
   )
 }
-
-export default Login
