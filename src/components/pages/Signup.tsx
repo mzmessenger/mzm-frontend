@@ -62,6 +62,9 @@ const Wrapper = styled.div`
   }
 `
 
+const ERROR_TXT =
+  '入力された値が半角英数字以外か、すでに存在するアカウントです。'
+
 function Signup({ history }: RouteComponentProps) {
   const signupAccount = useSelector((state: State) => state.signupAccount)
   if (!signupAccount) {
@@ -75,14 +78,22 @@ function Signup({ history }: RouteComponentProps) {
 
   const onChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setTxt(e.target.value)
-      setErrorTxt('')
+      const value = e.target.value
+      setTxt(value)
+      if (/^[a-zA-Z\d]+$/.test(value)) {
+        setErrorTxt('')
+      } else {
+        setErrorTxt(ERROR_TXT)
+      }
     },
     [setTxt]
   )
 
   const onSubmit = async evt => {
     evt.preventDefault()
+    if (errorTxt) {
+      return
+    }
 
     const res = await fetch('/api/user/signup', {
       method: 'POST',
@@ -96,9 +107,7 @@ function Signup({ history }: RouteComponentProps) {
     if (res.status === 200) {
       return await getMyInfo()(dispatch)
     } else if (res.status === 400) {
-      setErrorTxt(
-        'アカウントに利用できない文字列が存在するか、すでに存在するアカウントです'
-      )
+      setErrorTxt(ERROR_TXT)
       return
     } else if (res.status === 401) {
       history.push('/')
