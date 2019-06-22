@@ -2,23 +2,15 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components'
-import Modal from '@material-ui/core/Modal'
 import { createRoom } from '../modules/index.action'
 import Button from './atoms/Button'
+import Modal, { ModalProps } from './atoms/Modal'
 
 const ModalInner = styled.form`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translateY(-50%) translateX(-50%);
-  margin: auto;
   width: 440px;
-  border-radius: 5px;
-  color: #fff;
-  background: #3c4250;
-  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2),
-    0px 5px 8px 0px rgba(0, 0, 0, 0.14), 0px 1px 14px 0px rgba(0, 0, 0, 0.12);
-  outline: none;
+  border-radius: 3px;
+  background-color: var(--color-surface);
+  color: var(--color-on-background);
   h4 {
     margin: 0;
     padding: 20px;
@@ -30,14 +22,12 @@ const ModalInner = styled.form`
 
 const InputTextWrap = styled.div`
   flex: 1;
-  border-radius: 5px;
-  background-color: #546780;
   display: flex;
   height: 40px;
 
   input {
-    color: #dcddde;
-    background-color: transparent;
+    border-radius: 3px;
+    background-color: var(--color-input-background);
     resize: none;
     border: none;
     appearance: none;
@@ -48,25 +38,22 @@ const InputTextWrap = styled.div`
 `
 
 const Buttons = styled.div`
-  padding: 20px;
+  padding: 14px 20px;
   display: flex;
   justify-content: flex-end;
-  background: #2f3136;
+  background: var(--color-guide);
   button {
     height: 40px;
     width: 100px;
   }
   button.cancel {
-    color: #ffffff;
+    color: var(--color-on-background);
     border-color: transparent;
     background-color: transparent;
   }
 `
 
-type Props = {
-  open: boolean
-  onClose: () => void
-} & RouteComponentProps
+type Props = ModalProps & RouteComponentProps
 
 function ModalCraeteRoom({ history, open, onClose }: Props) {
   const [txt, setTxt] = useState('')

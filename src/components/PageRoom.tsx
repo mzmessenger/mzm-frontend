@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Body, Right } from '../styles'
+import PageWrapper from './PageWrapper'
 import InputArea from './InputArea'
 import Messages from './Messages'
 import Rooms from './Rooms'
@@ -22,10 +23,8 @@ const MessageBody = styled(Body)`
 `
 export default function SelectedRoom() {
   return (
-    <>
-      <div style={{ gridArea: 'header' }}>
-        <Header />
-      </div>
+    <PageWrapper>
+      <Header style={{ gridArea: 'header' }} />
       <MessageBody>
         <div style={{ gridArea: 'room-info' }}>
           <RoomInfo />
@@ -41,6 +40,6 @@ export default function SelectedRoom() {
         <RoomNavi />
         <Rooms />
       </Right>
-    </>
+    </PageWrapper>
   )
 }

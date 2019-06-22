@@ -11,15 +11,15 @@ const Wrap = styled.div`
   height: var(--navi-height);
   padding: 0 15px;
   align-items: center;
-  background-color: hsl(0, 0%, 16.5%);
+  background-color: var(--color-guide);
   .room-name {
+    color: var(--color-on-guide);
     flex: 1;
     font-size: 18px;
     line-height: 30px;
-    color: #ffffff;
   }
   .icon {
-    color: #ffffff;
+    color: var(--color-on-guide);
     margin: 0 15px 0 0;
   }
 `

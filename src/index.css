@@ -1,6 +1,15 @@
 :root {
   --header-height: 40px;
   --navi-height: 40px;
+  --color-input-background: hsl(200, 12%, 85%, 0.24);
+  --color-background: hsl(0, 0%, 7%);
+  --color-on-background: hsl(0, 0%, 66%);
+  --color-surface: hsl(0, 0%, 11%);
+  --color-on-surface: hsl(0, 0%, 66%);
+  --color-guide: hsl(0, 0%, 16.5%);
+  --color-on-guide: hsla(0, 0%, 100%, 0.7);
+  --color-warning: hsl(349, 100%, 34%);
+  --color-on-warning: hsl(0, 0%, 7%);
 }
 
 body {

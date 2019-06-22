@@ -4,8 +4,9 @@ import Link from './atoms/Link'
 import MyInfo from './MyInfo'
 
 const Wrap = styled.header`
+  background-color: var(--color-surface);
   display: flex;
-  color: #ffffff;
+  color: var(--color-on-surface);
   .logo {
     display: flex;
     align-items: center;
@@ -24,9 +25,9 @@ const LinkWrap = styled(Link)`
   }
 `
 
-export default function Header() {
+export default function Header({ style }: { style?: any }) {
   return (
-    <Wrap>
+    <Wrap style={style}>
       <LinkWrap className="logo" to="/">
         <div>MZM</div>
       </LinkWrap>

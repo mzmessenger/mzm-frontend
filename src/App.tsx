@@ -1,23 +1,11 @@
 import React, { useMemo } from 'react'
-import styled from 'styled-components'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { getMyInfo } from './modules/index.action'
 import { State } from './modules/index.types'
 import PageTop from './components/PageTop'
 import PageRoom from './components/PageRoom'
 import RouterListener from './components/RouterListener'
-
-const Wrap = styled.div`
-  background-color: #202225;
-  height: 100%;
-  display: grid;
-  grid-template-columns: 1fr 240px;
-  grid-template-rows: var(--header-height) 1fr;
-  grid-template-areas:
-    'header header'
-    'body right';
-`
 
 const Login = () => {
   return (
@@ -27,42 +15,24 @@ const Login = () => {
   )
 }
 
-type Props = ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps>
+function App() {
+  const login = useSelector((state: State) => state.login)
+  const dispatch = useDispatch()
 
-const App: React.FC<Props> = ({ login, getMyInfo }) => {
   useMemo(() => {
-    getMyInfo()
+    getMyInfo()(dispatch)
   }, [])
 
   const Top = login ? PageTop : Login
   const Room = login ? PageRoom : Login
 
   return (
-    <Wrap>
-      <Router>
-        <Route path="/" exact component={Top} />
-        <Route path="/rooms" component={Room} />
-        <RouterListener />
-      </Router>
-    </Wrap>
+    <Router>
+      <Route path="/" exact component={Top} />
+      <Route path="/rooms" component={Room} />
+      <RouterListener />
+    </Router>
   )
 }
 
-function mapStateToProps(state: State) {
-  return {
-    login: state.login,
-    currentRoom: state.currentRoom
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    getMyInfo: () => getMyInfo()(dispatch)
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App)
+export default App

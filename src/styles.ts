@@ -10,5 +10,5 @@ export const Body = styled.div`
 
 export const Right = styled.div`
   grid-area: right;
-  background-color: hsl(0, 0%, 11%);
+  background-color: var(--color-surface);
 `

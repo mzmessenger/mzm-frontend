@@ -8,8 +8,8 @@ import Link from './atoms/Link'
 
 const RoomWrap = styled.div`
   display: flex;
-  flex-direction: center;
-  color: #aaaaaa;
+  align-items: center;
+  color: var(--color-on-surface);
   height: 34px;
   padding: 3px 8px 0;
   .room-name {

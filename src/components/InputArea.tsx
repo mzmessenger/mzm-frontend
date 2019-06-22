@@ -19,7 +19,7 @@ const Wrap = styled.div`
 const TextAreaWrap = styled.div`
   flex: 1;
   border-radius: 5px;
-  background-color: #546780;
+  background-color: var(--color-input-background);
   display: flex;
   margin-right: 10px;
   textarea {

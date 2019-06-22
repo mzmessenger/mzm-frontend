@@ -8,7 +8,7 @@ const Wrap = styled.div`
   align-items: center;
   padding: 0 10px;
   height: var(--navi-height);
-  flex-direction: center;
+  align-items: center;
   background-color: hsl(0, 0%, 18.5%);
   color: #8e9297;
   cursor: pointer;
