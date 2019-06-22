@@ -5,6 +5,10 @@ const Wrap = styled.div`
   display: flex;
   min-height: 40px;
 
+  &.error {
+    border: solid 1px var(--color-error);
+  }
+
   input {
     border-radius: 3px;
     background-color: var(--color-input-background);
@@ -21,14 +25,16 @@ const Wrap = styled.div`
 export default function Signup({
   value,
   onChange,
+  error,
   style
 }: {
   value: string
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
+  error?: boolean
   style: any
 }) {
   return (
-    <Wrap style={style}>
+    <Wrap style={style} className={error ? 'error' : ''}>
       <input type="text" value={value} onChange={onChange} />
     </Wrap>
   )

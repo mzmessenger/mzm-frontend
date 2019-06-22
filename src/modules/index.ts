@@ -59,7 +59,7 @@ export function reducer(state: State = initState, action: Action) {
     }
     case 'logout':
     case 'remove:user':
-      return { ...initState }
+      return { ...initState, login: false }
     case 'websocket:init': {
       const socket = action.payload
       state.socket = socket

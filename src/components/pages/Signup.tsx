@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { State } from '../../modules/index.types'
 import { getMyInfo } from '../../modules/index.action'
@@ -15,15 +14,15 @@ const Wrapper = styled.div`
   align-items: center;
 
   label {
+    width: 100%;
     color: var(--color-on-surface);
     font-size: 1em;
+    &.error input {
+      border-color: var(--color-error);
+    }
   }
 
   .signup {
-    a {
-      color: var(--color-link);
-    }
-
     max-width: 400px;
     padding: 20px;
     background-color: var(--color-surface);
@@ -50,6 +49,16 @@ const Wrapper = styled.div`
   .attention {
     color: var(--color-on-background);
     margin: 20px 0 0 0;
+
+    a {
+      color: var(--color-link);
+    }
+  }
+
+  .error-txt {
+    color: var(--color-error);
+    margin: 5px 0 0 0;
+    font-weight: 300;
   }
 `
 
@@ -62,9 +71,12 @@ function Signup({ history }: RouteComponentProps) {
   const dispatch = useDispatch()
 
   const [txt, setTxt] = useState(signupAccount ? signupAccount : '')
+  const [errorTxt, setErrorTxt] = useState('')
+
   const onChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setTxt(e.target.value)
+      setErrorTxt('')
     },
     [setTxt]
   )
@@ -81,12 +93,17 @@ function Signup({ history }: RouteComponentProps) {
       body: JSON.stringify({ account: txt })
     })
 
-    // @todo validation
     if (res.status === 200) {
       return await getMyInfo()(dispatch)
+    } else if (res.status === 400) {
+      setErrorTxt(
+        'アカウントに利用できない文字列が存在するか、すでに存在するアカウントです'
+      )
+      return
     } else if (res.status === 401) {
       history.push('/')
     }
+    setErrorTxt('')
   }
 
   return (
@@ -94,13 +111,15 @@ function Signup({ history }: RouteComponentProps) {
       <Header />
       <form className="signup" onSubmit={onSubmit}>
         <h2>アカウントを作成</h2>
-        <label>
+        <label className={errorTxt ? 'error' : ''}>
           アカウント
           <InputTxt
             style={{ margin: '5px 0 0 0' }}
             value={txt}
+            error={!!errorTxt}
             onChange={onChange}
           />
+          {errorTxt && <p className="error-txt">{errorTxt}</p>}
         </label>
         <div className="footer">
           <Button className="create">作成</Button>
