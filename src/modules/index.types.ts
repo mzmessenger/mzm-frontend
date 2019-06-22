@@ -113,6 +113,7 @@ export type Action =
 export type State = {
   login: boolean
   socket: WebSocket
+  scrollBottomMessage: boolean
   messages: Message[]
   existHistory: boolean
   rooms: {

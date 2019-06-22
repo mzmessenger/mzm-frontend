@@ -7,6 +7,7 @@ const initCurrentRoomName = splited[1] === 'rooms' ? splited[2] : ''
 const initState: State = {
   login: false,
   socket: null,
+  scrollBottomMessage: false,
   messages: [],
   existHistory: false,
   rooms: [],
@@ -133,8 +134,11 @@ export function reducer(state: State = initState, action: Action) {
           action.payload.icon = data
         }
       })
-      state.messages = [...state.messages, action.payload]
-      return { ...state }
+      return {
+        ...state,
+        messages: [...state.messages, action.payload],
+        scrollBottomMessage: false
+      }
     }
     case 'messages:room': {
       for (const message of action.payload.messages) {
@@ -148,7 +152,12 @@ export function reducer(state: State = initState, action: Action) {
         })
       }
       const messages = [...action.payload.messages, ...state.messages]
-      return { ...state, existHistory: action.payload.existHistory, messages }
+      return {
+        ...state,
+        existHistory: action.payload.existHistory,
+        messages: messages,
+        scrollBottomMessage: state.messages.length === 0 && messages.length > 0
+      }
     }
     case 'me:set': {
       return { ...state, login: true, me: action.payload }
