@@ -8,7 +8,7 @@ const Wrap = styled.div`
   button {
     width: 100%;
     height: 40px;
-    color: #ffffff;
+    color: var(--color-on-background);
     border-color: transparent;
     background-color: transparent;
   }

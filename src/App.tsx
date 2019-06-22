@@ -3,17 +3,10 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { getMyInfo } from './modules/index.action'
 import { State } from './modules/index.types'
+import Login from './components/Login'
 import PageTop from './components/PageTop'
 import PageRoom from './components/PageRoom'
 import RouterListener from './components/RouterListener'
-
-const Login = () => {
-  return (
-    <div>
-      <a href="/auth/twitter">twitterでログイン</a>
-    </div>
-  )
-}
 
 function App() {
   const login = useSelector((state: State) => state.login)

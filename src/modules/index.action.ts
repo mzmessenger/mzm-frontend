@@ -51,11 +51,13 @@ export function getMyInfo() {
       const payload: { account: string; id: string } = await res.json()
       dispatch({ type: 'me:set', payload })
 
-      identicon(payload.account, 100, (err, data) => {
-        if (!err) {
-          dispatch({ type: 'me:set:icon', payload: data })
-        }
-      })
+      if (payload.account) {
+        identicon(payload.account, 100, (err, data) => {
+          if (!err) {
+            dispatch({ type: 'me:set:icon', payload: data })
+          }
+        })
+      }
     } else {
       dispatch({ type: 'logout' })
     }

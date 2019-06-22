@@ -1,4 +1,4 @@
-import crypto from 'crypto'
+const crypto = require('crypto')
 
 const patch0 = new Array(0, 4, 24, 20)
 const patch1 = new Array(0, 4, 20)

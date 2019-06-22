@@ -19,10 +19,7 @@ const Wrap = styled.header`
 const LinkWrap = styled(Link)`
   display: flex;
   text-decoration: none;
-  color: #8e9297;
-  :visited {
-    color: #8e9297;
-  }
+  color: var(--color-on-surface);
 `
 
 export default function Header({ style }: { style?: any }) {

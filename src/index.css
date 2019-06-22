@@ -9,7 +9,7 @@
   --color-guide: hsl(0, 0%, 16.5%);
   --color-on-guide: hsla(0, 0%, 100%, 0.7);
   --color-warning: hsl(349, 100%, 34%);
-  --color-on-warning: hsl(0, 0%, 7%);
+  --color-on-warning: hsl(0, 0%, 66%);
 }
 
 body {
@@ -17,6 +17,15 @@ body {
     'Hiragino Kaku Gothic ProN W3', HiraKakuProN-W3, 'メイリオ', Osaka,
     'ＭＳ Ｐゴシック', 'MS PGothic', Helvetica, sans-serif;
   font-size: 14px;
+  background-color: var(--color-background);
+}
+
+a {
+  text-decoration: none;
+}
+
+a:visited {
+  color: inherit;
 }
 
 #root {

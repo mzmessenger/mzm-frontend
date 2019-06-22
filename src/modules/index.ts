@@ -129,11 +129,13 @@ export function reducer(state: State = initState, action: Action) {
       }
     }
     case 'message:receive': {
-      identicon(action.payload.userAccount, 100, (err, data) => {
-        if (!err) {
-          action.payload.icon = data
-        }
-      })
+      if (action.payload.userAccount) {
+        identicon(action.payload.userAccount, 100, (err, data) => {
+          if (!err) {
+            action.payload.icon = data
+          }
+        })
+      }
       return {
         ...state,
         messages: [...state.messages, action.payload],

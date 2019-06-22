@@ -8,6 +8,7 @@
     "module": "esnext",
     "target": "es2017",
     "jsx": "preserve",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "typeRoots": ["./typings"]
   }
 }

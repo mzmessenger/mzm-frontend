@@ -16,6 +16,7 @@ const Wrap = styled.div`
   .delete {
     background-color: var(--color-warning);
     color: var(--color-on-warning);
+    font-weight: 800;
     :hover {
       background-color: var(--color-warning);
       color: var(--color-on-warning);
