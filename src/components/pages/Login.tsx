@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import TwitterIcon from '../assets/twitter-icon-blue.svg'
-import Header from './atoms/LoginHeader'
-import Link from './atoms/Link'
+import TwitterIcon from '../../assets/twitter-icon-blue.svg'
+import Header from '../atoms/LoginHeader'
+import Link from '../atoms/Link'
 
 const Wrap = styled.div`
   display: flex;

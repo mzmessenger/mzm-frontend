@@ -1,13 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Body, Right } from '../styles'
-import PageWrapper from './PageWrapper'
-import InputArea from './InputArea'
-import Messages from './Messages'
-import Rooms from './Rooms'
-import RoomNavi from './RoomNavi'
-import RoomInfo from './RoomInfo'
-import Header from './Header'
+import Body from '../atoms/Body'
+import Right from '../atoms/Right'
+import PageWrapper from '../PageWrapper'
+import InputArea from '../InputArea'
+import Messages from '../Messages'
+import Rooms from '../Rooms'
+import RoomNavi from '../RoomNavi'
+import RoomInfo from '../RoomInfo'
+import Header from '../Header'
 
 const MessageBody = styled(Body)`
   grid-template-areas:

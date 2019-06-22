@@ -3,11 +3,11 @@ import { useDispatch } from 'react-redux'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { State } from '../modules/index.types'
-import { getMyInfo } from '../modules/index.action'
-import Header from './atoms/LoginHeader'
-import InputTxt from './atoms/InputText'
-import Button from './atoms/Button'
+import { State } from '../../modules/index.types'
+import { getMyInfo } from '../../modules/index.action'
+import Header from '../atoms/LoginHeader'
+import InputTxt from '../atoms/InputText'
+import Button from '../atoms/Button'
 
 const Wrapper = styled.div`
   display: flex;

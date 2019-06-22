@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import Header from './atoms/LoginHeader'
+import Header from '../atoms/LoginHeader'
 
 const Wrap = styled.div`
   display: flex;

@@ -11,6 +11,9 @@ const Header = styled.header`
   justify-content: center;
   font-size: 24px;
   font-weight: 500;
+  a {
+    color: var(--color-on-background);
+  }
 `
 
 function Login() {
