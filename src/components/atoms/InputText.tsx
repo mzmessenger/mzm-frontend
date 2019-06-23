@@ -31,7 +31,7 @@ export default function Signup({
   value: string
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
   error?: boolean
-  style: any
+  style?: any
 }) {
   return (
     <Wrap style={style} className={error ? 'error' : ''}>

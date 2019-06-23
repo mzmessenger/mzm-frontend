@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { State } from '../../modules/index.types'
 import { getMyInfo } from '../../modules/index.action'
 import Header from '../atoms/LoginHeader'
-import InputTxt from '../atoms/InputText'
+import InputText from '../atoms/InputText'
 import Button from '../atoms/Button'
 
 const Wrapper = styled.div`
@@ -122,7 +122,7 @@ function Signup({ history }: RouteComponentProps) {
         <h2>アカウントを作成</h2>
         <label className={errorTxt ? 'error' : ''}>
           アカウント
-          <InputTxt
+          <InputText
             style={{ margin: '5px 0 0 0' }}
             value={txt}
             error={!!errorTxt}

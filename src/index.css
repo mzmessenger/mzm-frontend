@@ -34,6 +34,11 @@ a:visited {
   color: inherit;
 }
 
+textarea:focus,
+input[type='text']:focus {
+  outline: 0;
+}
+
 #root {
   width: 100vw;
   height: 100vh;

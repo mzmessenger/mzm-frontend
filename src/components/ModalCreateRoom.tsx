@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { createRoom } from '../modules/index.action'
 import Button from './atoms/Button'
 import Modal, { ModalProps } from './atoms/Modal'
+import InputText from './atoms/InputText'
 
 const ModalInner = styled.form`
   width: 440px;
@@ -17,23 +18,6 @@ const ModalInner = styled.form`
   }
   .body {
     padding: 0 20px 20px;
-  }
-`
-
-const InputTextWrap = styled.div`
-  flex: 1;
-  display: flex;
-  height: 40px;
-
-  input {
-    border-radius: 3px;
-    background-color: var(--color-input-background);
-    resize: none;
-    border: none;
-    appearance: none;
-    font-size: 16px;
-    padding: 10px;
-    flex: 1;
   }
 `
 
@@ -79,19 +63,17 @@ function ModalCraeteRoom({ history, open, onClose }: Props) {
       })
   }
 
+  const onChange = e => {
+    setTxt(e.target.value)
+  }
+
   return (
     <Modal open={open} onClose={onClose}>
       <ModalInner onSubmit={handleSubmit}>
         <h4>部屋を作成</h4>
         <div className="body">
           <p style={{ margin: '0 0 3px 0', fontSize: '15px' }}>部屋名</p>
-          <InputTextWrap>
-            <input
-              type="text"
-              value={txt}
-              onChange={e => setTxt(e.target.value)}
-            />
-          </InputTextWrap>
+          <InputText value={txt} onChange={onChange} />
           <p style={{ display: error ? 'block' : 'none' }}>{error}</p>
         </div>
         <Buttons>
