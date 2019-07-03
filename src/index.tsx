@@ -10,10 +10,14 @@ import App from './App'
 
 export const store = createStore(reducer)
 
+const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+
+const url = `${protocol}//${window.location.host}/socket`
+
 ReactDom.render(
   <Provider store={store}>
     <App />
-    <Socket url={'ws://localhost/socket'} />
+    <Socket url={url} />
   </Provider>,
   document.getElementById('root')
 )

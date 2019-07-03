@@ -9,6 +9,7 @@
     "target": "es2017",
     "jsx": "preserve",
     "moduleResolution": "node",
-    "typeRoots": ["./typings"]
+    "typeRoots": ["./typings"],
+    "types": ["node"]
   }
 }

@@ -10,14 +10,14 @@
     "lint": "eslint --ext .ts,.tsx,.js,.jsx src/",
     "prebuild": "npm run lint",
     "build": "webpack",
-    "pre-commit": "npm run build"
+    "build:prod": "webpack --mode=production"
   },
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-react": "^7.0.0",
-    "@types/node": "^12.0.10",
+    "@types/node": "^12.0.11",
     "@types/react": "^16.8.20",
     "@types/react-dom": "^16.8.4",
     "@types/react-redux": "^7.1.0",
