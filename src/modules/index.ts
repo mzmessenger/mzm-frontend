@@ -62,16 +62,14 @@ export function reducer(state: State = initState, action: Action) {
       return { ...initState, login: false }
     case 'websocket:init': {
       const socket = action.payload
-      state.socket = socket
-      const splited = location.pathname.split('/')
-      const name = splited[1] === 'rooms' ? splited[2] : ''
-      if (name) {
-        send(socket, { cmd: 'rooms:enter', name })
+      if (state.currentRoomName) {
+        send(socket, { cmd: 'rooms:enter', name: state.currentRoomName })
+      } else {
+        send(socket, { cmd: 'rooms:get' })
       }
-
       return {
         ...state,
-        socket: action.payload,
+        socket: socket,
         messages: initState.messages,
         rooms: initState.rooms,
         existHistory: initState.existHistory

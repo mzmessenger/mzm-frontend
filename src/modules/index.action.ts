@@ -27,13 +27,7 @@ export function onMessage(e: MessageEvent): Action {
         }
       }
     } else if (parsed.cmd === 'rooms:enter:success') {
-      return {
-        type: 'rooms:set:current',
-        payload: {
-          id: parsed.id,
-          name: parsed.name
-        }
-      }
+      return { type: 'rooms:get' }
     }
   } catch (e) {
     console.error(e)
