@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux'
+import { createIconUrl } from '../lib/util'
 import { Action, ReceiveMessage } from './index.types'
-import identicon from '../lib/identicon'
 
 export function initSocket(socket: WebSocket): Action {
   return { type: 'websocket:init', payload: socket }
@@ -43,15 +43,8 @@ export function getMyInfo() {
     const res = await fetch('/api/user/@me')
     if (res.status === 200) {
       const payload: { account: string; id: string } = await res.json()
-      dispatch({ type: 'me:set', payload })
-
-      if (payload.account) {
-        identicon(payload.account, 100, (err, data) => {
-          if (!err) {
-            dispatch({ type: 'me:set:icon', payload: data })
-          }
-        })
-      }
+      const iconUrl = payload.account ? createIconUrl(payload.account) : null
+      dispatch({ type: 'me:set', payload: { ...payload, iconUrl } })
     } else {
       dispatch({ type: 'logout' })
     }

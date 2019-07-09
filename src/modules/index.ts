@@ -1,5 +1,5 @@
 import { State, Action, SendMessage } from './index.types'
-import identicon from '../lib/identicon'
+import { createIconUrl } from '../lib/util'
 
 const splited = location.pathname.split('/')
 const initCurrentRoomName = splited[1] === 'rooms' ? splited[2] : ''
@@ -15,8 +15,7 @@ const initState: State = {
   rooms: [],
   currentRoom: '',
   currentRoomName: initCurrentRoomName,
-  me: null,
-  icon: null
+  me: null
 }
 
 function send(socket: WebSocket, message: SendMessage) {
@@ -137,11 +136,7 @@ export function reducer(state: State = initState, action: Action) {
     }
     case 'message:receive': {
       if (action.payload.userAccount) {
-        identicon(action.payload.userAccount, 100, (err, data) => {
-          if (!err) {
-            action.payload.icon = data
-          }
-        })
+        action.payload.iconUrl = createIconUrl(action.payload.userAccount)
       }
       return {
         ...state,
@@ -151,16 +146,17 @@ export function reducer(state: State = initState, action: Action) {
     }
     case 'messages:room': {
       for (const message of action.payload.messages) {
-        if (!message.userAccount) {
-          continue
+        if (message.userAccount) {
+          message.iconUrl = createIconUrl(message.userAccount)
         }
-        identicon(message.userAccount, 100, (err, data) => {
-          if (!err) {
-            message.icon = data
-          }
-        })
       }
-      const messages = [...action.payload.messages, ...state.messages]
+      const received = action.payload.messages.map(message => {
+        message.iconUrl = message.userAccount
+          ? createIconUrl(message.userAccount)
+          : null
+        return message
+      })
+      const messages = [...received, ...state.messages]
       return {
         ...state,
         existHistory: action.payload.existHistory,
@@ -170,9 +166,6 @@ export function reducer(state: State = initState, action: Action) {
     }
     case 'me:set': {
       return { ...state, login: true, me: action.payload }
-    }
-    case 'me:set:icon': {
-      return { ...state, icon: action.payload }
     }
     case 'rooms:get': {
       send(state.socket, { cmd: 'rooms:get' })

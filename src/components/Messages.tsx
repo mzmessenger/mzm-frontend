@@ -28,12 +28,13 @@ export default function Messages() {
   const logFlg = messages.length > 0 && existHistory
 
   const messageElements = messages.map(m => {
+    const iconUrl = m.iconUrl ? m.iconUrl : null
     return (
       <div className="message" key={m.id}>
         <Message
           userId={m.userId}
           userAccount={m.userAccount}
-          icon={m.icon}
+          iconUrl={iconUrl}
           message={m.message}
           createdAt={m.createdAt}
         />

@@ -45,7 +45,7 @@ type Props = {
   message: string
   userId: string
   userAccount: string
-  icon: string
+  iconUrl: string
   createdAt: string
 }
 
@@ -53,14 +53,14 @@ export default function Message({
   message,
   userId,
   userAccount,
-  icon,
+  iconUrl,
   createdAt
 }: Props) {
   const date = dayjs(new Date(createdAt)).format('YYYY/MM/DD HH:mm:ss')
   const account = userAccount ? userAccount : userId
   return (
     <MessageWrap>
-      <Icon src={icon} />
+      <Icon src={iconUrl} />
       <MessageHeader>
         <div style={{ flex: 1 }}>{account}</div>
         <time>{date}</time>

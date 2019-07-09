@@ -29,7 +29,7 @@ const Wrap = styled.div`
 
 export default function MyInfo() {
   const me = useSelector((state: State) => state.me)
-  const icon = useSelector((state: State) => state.icon)
+  const icon = me ? me.iconUrl : null
   const [anchorEl, setAnchorEl] = useState(null)
 
   const handleOpen = event => {
