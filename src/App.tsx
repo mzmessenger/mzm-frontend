@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { State } from './modules/index.types'
+import { onResize } from './modules/index.action'
 import Login from './components/pages/Login'
 import PageTop from './components/pages/Top'
 import PageRoom from './components/pages/Room'
@@ -12,6 +13,23 @@ import RouterListener from './components/RouterListener'
 
 function App() {
   const login = useSelector((state: State) => state.login)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(onResize(window.innerWidth, window.innerHeight))
+
+    const handleResize = () =>
+      dispatch(onResize(window.innerWidth, window.innerHeight))
+
+    window.addEventListener('resize', handleResize)
+
+    const vh = window.innerHeight * 0.01
+    document.documentElement.style.setProperty('--vh', `${vh}px`)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
 
   const Top = login ? PageTop : Login
   const Room = login ? PageRoom : Login

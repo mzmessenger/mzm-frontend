@@ -1,21 +1,22 @@
 import React from 'react'
 import styled from 'styled-components'
 import Body from '../atoms/Body'
-import Right from '../atoms/Right'
+import Menu from '../molecules/Menu'
 import PageWrapper from '../PageWrapper'
 import InputArea from '../InputArea'
 import Messages from '../Messages'
-import Rooms from '../Rooms'
-import RoomNavi from '../RoomNavi'
 import RoomInfo from '../RoomInfo'
 import Header from '../Header'
 
-const MessageBody = styled(Body)`
+const MessageBody = styled.div`
+  display: grid;
+  grid-template-rows: 1fr;
+
   grid-template-areas:
     'room-info'
     'messages'
     'input';
-  height: calc(100vh - var(--header-height));
+  height: calc(var(--vh, 1vh) * 100 - var(--header-height));
 
   .messages {
     grid-area: messages;
@@ -26,21 +27,20 @@ export default function PageRoom() {
   return (
     <PageWrapper>
       <Header style={{ gridArea: 'header' }} />
-      <MessageBody>
-        <div style={{ gridArea: 'room-info' }}>
-          <RoomInfo />
-        </div>
-        <div className="messages">
-          <Messages />
-        </div>
-        <div style={{ gridArea: 'input' }}>
-          <InputArea />
-        </div>
-      </MessageBody>
-      <Right>
-        <RoomNavi />
-        <Rooms />
-      </Right>
+      <Body>
+        <MessageBody>
+          <div style={{ gridArea: 'room-info' }}>
+            <RoomInfo />
+          </div>
+          <div className="messages">
+            <Messages />
+          </div>
+          <div style={{ gridArea: 'input' }}>
+            <InputArea />
+          </div>
+        </MessageBody>
+      </Body>
+      <Menu />
     </PageWrapper>
   )
 }

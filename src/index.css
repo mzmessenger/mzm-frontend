@@ -16,6 +16,10 @@
   --color-on-warning: hsl(0, 0%, 66%);
   --color-error: hsl(341, 75%, 50%);
   --color-on-error: hsl(0, 0%, 66%);
+
+  --mobile-menu-width: 40vw;
+  --z-index-overlay: 1200;
+  --z-index-on-overlay: 1300;
 }
 
 body {
@@ -24,6 +28,7 @@ body {
     'ＭＳ Ｐゴシック', 'MS PGothic', Helvetica, sans-serif;
   font-size: 14px;
   background-color: var(--color-background);
+  overflow: hidden auto;
 }
 
 a {

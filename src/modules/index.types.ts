@@ -1,3 +1,24 @@
+export type State = {
+  signup: boolean
+  signupAccount: string
+  login: boolean
+  socket: WebSocket
+  scrollBottomMessage: boolean
+  messages: Message[]
+  existHistory: boolean
+  rooms: {
+    id: string
+    name: string
+    current: boolean
+  }[]
+  currentRoom: string
+  currentRoomName: string
+  me: MyInfo
+  device: 'pc' | 'mobile'
+  menuStatus: 'open' | 'close'
+  overlay: boolean
+}
+
 type Message = {
   id: string
   userId: string
@@ -12,47 +33,6 @@ type MyInfo = {
   account: string
   iconUrl?: string
 }
-
-export type ReceiveMessage =
-  | {
-      cmd: 'message:receive'
-      message: Message
-      room: string
-    }
-  | {
-      cmd: 'rooms'
-      rooms: { id: string; name: string }[]
-    }
-  | {
-      cmd: 'messages:room'
-      messages: Message[]
-      room: string
-      existHistory: boolean
-    }
-  | {
-      cmd: 'rooms:enter:success'
-      id: string
-      name: string
-    }
-
-export type SendMessage =
-  | {
-      cmd: 'message:send'
-      message: string
-      room: string
-    }
-  | {
-      cmd: 'messages:room'
-      room: string
-      id?: string
-    }
-  | {
-      cmd: 'rooms:get'
-    }
-  | {
-      cmd: 'rooms:enter'
-      name: string
-    }
 
 export type Action =
   | {
@@ -110,21 +90,60 @@ export type Action =
   | {
       type: 'remove:user'
     }
+  | {
+      type: 'onresize'
+      payload: { innerHeight: number; innerWidth: number }
+    }
+  | {
+      type: 'menu:open'
+    }
+  | {
+      type: 'menu:close'
+    }
+  | {
+      type: 'overlay:show'
+    }
+  | {
+      type: 'overlay:hide'
+    }
 
-export type State = {
-  signup: boolean
-  signupAccount: string
-  login: boolean
-  socket: WebSocket
-  scrollBottomMessage: boolean
-  messages: Message[]
-  existHistory: boolean
-  rooms: {
-    id: string
-    name: string
-    current: boolean
-  }[]
-  currentRoom: string
-  currentRoomName: string
-  me: MyInfo
-}
+export type ReceiveMessage =
+  | {
+      cmd: 'message:receive'
+      message: Message
+      room: string
+    }
+  | {
+      cmd: 'rooms'
+      rooms: { id: string; name: string }[]
+    }
+  | {
+      cmd: 'messages:room'
+      messages: Message[]
+      room: string
+      existHistory: boolean
+    }
+  | {
+      cmd: 'rooms:enter:success'
+      id: string
+      name: string
+    }
+
+export type SendMessage =
+  | {
+      cmd: 'message:send'
+      message: string
+      room: string
+    }
+  | {
+      cmd: 'messages:room'
+      room: string
+      id?: string
+    }
+  | {
+      cmd: 'rooms:get'
+    }
+  | {
+      cmd: 'rooms:enter'
+      name: string
+    }

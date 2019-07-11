@@ -1,5 +1,6 @@
 import { State, Action, SendMessage } from './index.types'
 import { createIconUrl } from '../lib/util'
+import { WIDTH_MOBILE } from '../lib/constants'
 
 const splited = location.pathname.split('/')
 const initCurrentRoomName = splited[1] === 'rooms' ? splited[2] : ''
@@ -15,7 +16,10 @@ const initState: State = {
   rooms: [],
   currentRoom: '',
   currentRoomName: initCurrentRoomName,
-  me: null
+  me: null,
+  device: 'pc',
+  menuStatus: 'close',
+  overlay: false
 }
 
 function send(socket: WebSocket, message: SendMessage) {
@@ -47,8 +51,17 @@ function setCurrent(
   return { id, name, rooms: renew }
 }
 
-export function reducer(state: State = initState, action: Action) {
+export function reducer(state: State = initState, action: Action): State {
   switch (action.type) {
+    case 'onresize':
+      return {
+        ...state,
+        device: action.payload.innerWidth <= WIDTH_MOBILE ? 'mobile' : 'pc'
+      }
+    case 'menu:open':
+      return { ...state, menuStatus: 'open', overlay: true }
+    case 'menu:close':
+      return { ...state, menuStatus: 'close', overlay: false }
     case 'signup': {
       return {
         ...initState,
@@ -104,10 +117,14 @@ export function reducer(state: State = initState, action: Action) {
       if (state.currentRoom) {
         send(state.socket, { cmd: 'messages:room', room: state.currentRoom })
       }
+      const rooms = action.payload.map(room => ({
+        ...room,
+        current: state.currentRoom === room.id
+      }))
       return {
         ...state,
         messages: [],
-        rooms: [...action.payload]
+        rooms: rooms
       }
     }
     case 'messages:get:room:history': {
@@ -121,17 +138,20 @@ export function reducer(state: State = initState, action: Action) {
     }
     case 'rooms:set:current': {
       const { id } = action.payload
-      if (id === state.currentRoom) {
-        return state
+      let messages = state.messages
+      if (id !== state.currentRoom) {
+        messages = []
+        getMessages(state.socket, id)
       }
-      getMessages(state.socket, id)
       const { name, rooms } = setCurrent(id, state.rooms)
       return {
         ...state,
         rooms: rooms,
-        messages: [],
+        messages: messages,
         currentRoom: id,
-        currentRoomName: name
+        currentRoomName: name,
+        menuStatus: 'close',
+        overlay: false
       }
     }
     case 'message:receive': {
@@ -164,9 +184,8 @@ export function reducer(state: State = initState, action: Action) {
         scrollBottomMessage: state.messages.length === 0 && messages.length > 0
       }
     }
-    case 'me:set': {
+    case 'me:set':
       return { ...state, login: true, me: action.payload }
-    }
     case 'rooms:get': {
       send(state.socket, { cmd: 'rooms:get' })
       return state

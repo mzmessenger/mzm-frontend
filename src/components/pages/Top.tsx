@@ -1,9 +1,7 @@
 import React from 'react'
 import Body from '../atoms/Body'
-import Right from '../atoms/Right'
+import Menu from '../molecules/Menu'
 import PageWrapper from '../PageWrapper'
-import Rooms from '../Rooms'
-import RoomNavi from '../RoomNavi'
 import Header from '../Header'
 
 export default function Index() {
@@ -11,10 +9,7 @@ export default function Index() {
     <PageWrapper>
       <Header style={{ gridArea: 'header' }} />
       <Body></Body>
-      <Right>
-        <RoomNavi />
-        <Rooms />
-      </Right>
+      <Menu />
     </PageWrapper>
   )
 }

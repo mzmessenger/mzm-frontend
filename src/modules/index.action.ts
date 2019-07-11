@@ -113,3 +113,15 @@ export function removeUser() {
     return res
   }
 }
+
+export function onResize(innerWidth: number, innerHeight: number): Action {
+  return { type: 'onresize', payload: { innerWidth, innerHeight } }
+}
+
+export function openMenu(): Action {
+  return { type: 'menu:open' }
+}
+
+export function closeMenu(): Action {
+  return { type: 'menu:close' }
+}

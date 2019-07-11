@@ -1,11 +1,17 @@
 import React from 'react'
 import styled from 'styled-components'
+import { useSelector, useDispatch } from 'react-redux'
+import { State } from '../modules/index.types'
+import { openMenu } from '../modules/index.action'
 import Link from './atoms/Link'
+import MenuIcon from './atoms/MobileMenuIcon'
 import MyInfo from './MyInfo'
 
 const Wrap = styled.header`
   background-color: var(--color-surface);
+  max-width: 100vw;
   display: flex;
+  align-items: center;
   color: var(--color-on-surface);
   .logo {
     display: flex;
@@ -23,13 +29,19 @@ const LinkWrap = styled(Link)`
 `
 
 export default function Header({ style }: { style?: any }) {
+  const device = useSelector((state: State) => state.device)
+
+  const dispatch = useDispatch()
+
+  const onClick = () => dispatch(openMenu())
+
   return (
     <Wrap style={style}>
       <LinkWrap className="logo" to="/">
         <div>MZM</div>
       </LinkWrap>
       <div style={{ flex: 1 }}></div>
-      <MyInfo />
+      {device === 'pc' ? <MyInfo /> : <MenuIcon onClick={onClick} />}
     </Wrap>
   )
 }
