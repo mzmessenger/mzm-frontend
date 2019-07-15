@@ -17,7 +17,7 @@
   --color-error: hsl(341, 75%, 50%);
   --color-on-error: hsl(0, 0%, 66%);
 
-  --mobile-menu-width: 40vw;
+  --mobile-menu-width: 70vw;
   --z-index-overlay: 1200;
   --z-index-on-overlay: 1300;
 }
@@ -46,5 +46,5 @@ input[type='text']:focus {
 
 #root {
   width: 100vw;
-  height: 100vh;
+  height: 100%;
 }
