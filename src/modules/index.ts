@@ -190,6 +190,14 @@ export function reducer(state: State = initState, action: Action): State {
       send(state.socket, { cmd: 'rooms:get' })
       return state
     }
+    case 'rooms:enter:success': {
+      send(state.socket, { cmd: 'rooms:get' })
+      return {
+        ...state,
+        currentRoom: action.payload.id,
+        currentRoomName: action.payload.name
+      }
+    }
     default:
       return state
   }

@@ -27,7 +27,10 @@ export function onMessage(e: MessageEvent): Action {
         }
       }
     } else if (parsed.cmd === 'rooms:enter:success') {
-      return { type: 'rooms:get' }
+      return {
+        type: 'rooms:enter:success',
+        payload: { id: parsed.id, name: parsed.name }
+      }
     }
   } catch (e) {
     console.error(e)

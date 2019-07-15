@@ -106,6 +106,13 @@ export type Action =
   | {
       type: 'overlay:hide'
     }
+  | {
+      type: 'rooms:enter:success'
+      payload: {
+        id: string
+        name: string
+      }
+    }
 
 export type ReceiveMessage =
   | {
