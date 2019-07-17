@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 import Home from '@material-ui/icons/Home'
 import { State } from '../modules/index.types'
-import { setCurrentRooms } from '../modules/index.action'
+import { enterRooms } from '../modules/index.action'
 import Link from './atoms/Link'
 
 const RoomWrap = styled.div`
@@ -37,7 +37,7 @@ export default function Rooms() {
         <Link
           to={`/rooms/${r.name}`}
           key={r.id}
-          onClick={() => dispatch(setCurrentRooms(r.id))}
+          onClick={() => dispatch(enterRooms(r.name))}
         >
           <Room name={r.name} />
         </Link>

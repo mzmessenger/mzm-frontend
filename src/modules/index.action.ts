@@ -1,5 +1,6 @@
 import { Dispatch } from 'redux'
 import { createIconUrl } from '../lib/util'
+import { convertToHtml } from '../lib/messages'
 import { Action, ReceiveMessage } from './index.types'
 
 export function initSocket(socket: WebSocket): Action {
@@ -10,35 +11,43 @@ export function sendMessage(message: string): Action {
   return { type: 'message:send', payload: message }
 }
 
-export function onMessage(e: MessageEvent): Action {
-  try {
-    const parsed: ReceiveMessage = JSON.parse(e.data)
-    if (parsed.cmd === 'rooms') {
-      return { type: 'rooms:receive', payload: parsed.rooms }
-    } else if (parsed.cmd === 'message:receive') {
-      return { type: 'message:receive', payload: parsed.message }
-    } else if (parsed.cmd === 'messages:room') {
-      return {
-        type: 'messages:room',
-        payload: {
-          room: parsed.room,
-          existHistory: parsed.existHistory,
-          messages: parsed.messages
-        }
-      }
-    } else if (parsed.cmd === 'rooms:enter:success') {
-      return {
-        type: 'rooms:enter:success',
-        payload: { id: parsed.id, name: parsed.name }
-      }
-    }
-  } catch (e) {
-    console.error(e)
-  }
-}
+export function onMessage(e: MessageEvent) {
+  return async function(dispatch: Dispatch<Action>) {
+    try {
+      const parsed: ReceiveMessage = JSON.parse(e.data)
+      if (parsed.cmd === 'rooms') {
+        return dispatch({ type: 'rooms:receive', payload: parsed.rooms })
+      } else if (parsed.cmd === 'message:receive') {
+        const html = await convertToHtml(parsed.message.message)
+        return dispatch({
+          type: 'message:receive',
+          payload: { ...parsed.message, html: html }
+        })
+      } else if (parsed.cmd === 'messages:room') {
+        const promises = parsed.messages.map(m => convertToHtml(m.message))
+        const html = await Promise.all(promises)
+        const messages = parsed.messages.map((m, i) => {
+          return { ...m, html: html[i] }
+        })
 
-export function setCurrentRooms(roomId: string): Action {
-  return { type: 'rooms:set:current', payload: { id: roomId } }
+        return dispatch({
+          type: 'messages:room',
+          payload: {
+            room: parsed.room,
+            existHistory: parsed.existHistory,
+            messages: messages
+          }
+        })
+      } else if (parsed.cmd === 'rooms:enter:success') {
+        return dispatch({
+          type: 'rooms:enter:success',
+          payload: { id: parsed.id, name: parsed.name }
+        })
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
 }
 
 export function getMyInfo() {
@@ -74,6 +83,10 @@ export function createRoom(name: string) {
     }
     return res
   }
+}
+
+export function enterRooms(roomName: string): Action {
+  return { type: 'rooms:enter', payload: { name: roomName } }
 }
 
 export function exitRoom(roomId: string) {

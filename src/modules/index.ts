@@ -136,24 +136,6 @@ export function reducer(state: State = initState, action: Action): State {
       send(state.socket, message)
       return state
     }
-    case 'rooms:set:current': {
-      const { id } = action.payload
-      let messages = state.messages
-      if (id !== state.currentRoom) {
-        messages = []
-        getMessages(state.socket, id)
-      }
-      const { name, rooms } = setCurrent(id, state.rooms)
-      return {
-        ...state,
-        rooms: rooms,
-        messages: messages,
-        currentRoom: id,
-        currentRoomName: name,
-        menuStatus: 'close',
-        overlay: false
-      }
-    }
     case 'message:receive': {
       if (action.payload.userAccount) {
         action.payload.iconUrl = createIconUrl(action.payload.userAccount)
@@ -190,10 +172,30 @@ export function reducer(state: State = initState, action: Action): State {
       send(state.socket, { cmd: 'rooms:get' })
       return state
     }
+    case 'rooms:enter': {
+      send(state.socket, { cmd: 'rooms:enter', name: action.payload.name })
+      return state
+    }
     case 'rooms:enter:success': {
-      send(state.socket, { cmd: 'rooms:get' })
+      let messages = state.messages
+      let rooms = state.rooms
+      const already = state.rooms.some(e => e.id === action.payload.id)
+      // すでに入っている部屋だったら部屋の再取得をしない
+      if (!already) {
+        send(state.socket, { cmd: 'rooms:get' })
+      }
+      // currentと違う部屋だったら
+      if (state.currentRoom !== action.payload.id) {
+        messages = []
+        getMessages(state.socket, action.payload.id)
+        rooms = setCurrent(action.payload.id, state.rooms).rooms
+      }
       return {
         ...state,
+        messages,
+        rooms,
+        menuStatus: 'close',
+        overlay: false,
         currentRoom: action.payload.id,
         currentRoomName: action.payload.name
       }

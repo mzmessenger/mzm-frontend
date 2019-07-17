@@ -1,6 +1,7 @@
 import React from 'react'
 import dayjs from 'dayjs'
 import styled from 'styled-components'
+import MessageBody from './MessageBody'
 
 const MessageWrap = styled.div`
   padding: 10px 15px 10px;
@@ -12,45 +13,40 @@ const MessageWrap = styled.div`
   grid-template-areas:
     'icon message-header'
     'icon message-body';
-`
 
-const MessageHeader = styled.div`
-  grid-area: message-header;
-  display: flex;
-  time {
-    letter-spacing: 0;
+  .header {
+    grid-area: message-header;
+    display: flex;
+    time {
+      letter-spacing: 0;
+    }
   }
-`
 
-const MessageBody = styled.div`
-  grid-area: message-body;
-  padding: 5px 0 0 0;
-  p {
-    font-size: 14px;
-    line-height: 20px;
-    margin: 0;
-    white-space: pre-wrap;
+  .body {
+    grid-area: message-body;
   }
-`
 
-const Icon = styled.img`
-  grid-area: icon;
-  margin: 5px 10px 0 0;
-  width: 25px;
-  height: 25px;
-  border-radius: 2px;
+  .icon {
+    grid-area: icon;
+    margin: 5px 10px 0 0;
+    width: 25px;
+    height: 25px;
+    border-radius: 2px;
+  }
 `
 
 type Props = {
   message: string
+  html: string
   userId: string
   userAccount: string
   iconUrl: string
   createdAt: string
 }
 
-export default function Message({
+function Message({
   message,
+  html,
   userId,
   userAccount,
   iconUrl,
@@ -58,16 +54,16 @@ export default function Message({
 }: Props) {
   const date = dayjs(new Date(createdAt)).format('YYYY/MM/DD HH:mm:ss')
   const account = userAccount ? userAccount : userId
+
   return (
     <MessageWrap>
-      <Icon src={iconUrl} />
-      <MessageHeader>
+      <img className="icon" src={iconUrl} />
+      <div className="header">
         <div style={{ flex: 1 }}>{account}</div>
         <time>{date}</time>
-      </MessageHeader>
-      <MessageBody>
-        <p>{message}</p>
-      </MessageBody>
+      </div>
+      <MessageBody className="body" message={message} html={html} />
     </MessageWrap>
   )
 }
+export default Message

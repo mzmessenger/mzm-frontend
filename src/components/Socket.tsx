@@ -25,7 +25,7 @@ function init(
       ws.send('pong')
       return
     }
-    dispatch(onMessage(e))
+    onMessage(e)(dispatch)
   })
   ws.addEventListener('close', () => {
     init(dispatch, url, logout, initSocket, onMessage)

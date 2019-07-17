@@ -25,6 +25,7 @@ type Message = {
   iconUrl?: string
   userAccount: string
   message: string
+  html?: string
   createdAt: string
 }
 
@@ -52,15 +53,12 @@ export type Action =
       payload: Message
     }
   | {
-      type: 'rooms:receive'
-      payload: { id: string; name: string }[]
+      type: 'rooms:enter'
+      payload: { name: string }
     }
   | {
-      type: 'rooms:set:current'
-      payload: {
-        id: string
-        name?: string
-      }
+      type: 'rooms:receive'
+      payload: { id: string; name: string }[]
     }
   | {
       type: 'messages:room'
