@@ -11,7 +11,7 @@ export const initState: RoomsState = {
   currentRoomName: initCurrentRoomName,
   currentRoomMessages: [],
   currentRoomExistHistory: false,
-  scrollBottomMessage: false
+  scrollTargetIndex: 'bottom'
 }
 
 export function reducer(
@@ -99,7 +99,11 @@ export function reducer(
       const currentRoomMessages = isCurrent
         ? room.messages
         : state.currentRoomMessages
-      return { ...state, currentRoomMessages, scrollBottomMessage: isCurrent }
+      return {
+        ...state,
+        currentRoomMessages,
+        scrollTargetIndex: 'bottom'
+      }
     }
     case 'messages:room': {
       const received: Message[] = action.payload.messages.map(message => {
@@ -124,11 +128,14 @@ export function reducer(
       const currentRoomExistHistory = isCurrent
         ? room.existHistory
         : state.currentRoomExistHistory
+      const scrollTargetIndex = isCurrent
+        ? received.length
+        : state.scrollTargetIndex
       return {
         ...state,
         currentRoomMessages,
         currentRoomExistHistory,
-        scrollBottomMessage: isCurrent
+        scrollTargetIndex
       }
     }
     default:

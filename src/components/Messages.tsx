@@ -24,14 +24,15 @@ export default function Messages() {
   const messages = useSelector(
     (state: State) => state.rooms.currentRoomMessages
   )
-  const scrollBottomMessage = useSelector(
-    (state: State) => state.rooms.scrollBottomMessage
+  const scrollTargetIndex = useSelector(
+    (state: State) => state.rooms.scrollTargetIndex
   )
+  const wrapRef = useRef(null)
   const bottomRef = useRef(null)
 
   const logFlg = messages.length > 0 && existHistory
 
-  const messageElements = messages.map(m => {
+  const messageElements = messages.map((m, i) => {
     const iconUrl = m.iconUrl ? m.iconUrl : null
     return (
       <div className="message" key={m.id}>
@@ -48,13 +49,21 @@ export default function Messages() {
   })
 
   useEffect(() => {
-    if (scrollBottomMessage) {
-      bottomRef.current.scrollIntoView()
+    if (!scrollTargetIndex) {
+      return
     }
-  }, [messages])
+    if (scrollTargetIndex === 'bottom') {
+      bottomRef.current.scrollIntoView()
+    } else if (typeof scrollTargetIndex === 'number') {
+      const target = logFlg ? scrollTargetIndex + 1 : scrollTargetIndex
+      wrapRef.current
+        .querySelector(`.message:nth-child(${target})`)
+        .scrollIntoView()
+    }
+  }, [messages.length, scrollTargetIndex])
 
   return (
-    <Wrap>
+    <Wrap ref={wrapRef}>
       {logFlg && <GetHistoryButton oldestId={messages[0].id} />}
       {messageElements}
       <div ref={bottomRef} style={{ visibility: 'hidden' }} />

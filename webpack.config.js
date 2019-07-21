@@ -1,6 +1,7 @@
 /* eslint-env node */
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const WorkerPlugin = require('worker-plugin')
 
 const SRC_PATH = path.join(__dirname, 'src')
 
@@ -54,7 +55,8 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(SRC_PATH, 'index.html')
-    })
+    }),
+    new WorkerPlugin({ globalObject: 'self' })
   ],
   devServer: {
     host: '0.0.0.0',

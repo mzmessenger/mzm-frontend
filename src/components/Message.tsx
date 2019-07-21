@@ -1,6 +1,7 @@
 import React from 'react'
 import dayjs from 'dayjs'
 import styled from 'styled-components'
+import sanitize from '../lib/sanitize'
 import MessageBody from './MessageBody'
 
 const MessageWrap = styled.div`
@@ -62,7 +63,7 @@ function Message({
         <div style={{ flex: 1 }}>{account}</div>
         <time>{date}</time>
       </div>
-      <MessageBody className="body" message={message} html={html} />
+      <MessageBody className="body" message={message} html={sanitize(html)} />
     </MessageWrap>
   )
 }

@@ -24,7 +24,7 @@ export type RoomsState = {
   currentRoomName: string
   currentRoomMessages: Message[]
   currentRoomExistHistory: boolean
-  scrollBottomMessage: boolean
+  scrollTargetIndex: number | 'bottom'
 }
 
 export type RoomsAction =

@@ -68,7 +68,9 @@ async function onMessage(
         existHistory: parsed.existHistory
       })(dispatch)
     } else if (parsed.cmd === 'rooms:enter:success') {
-      history.push(`/rooms/${parsed.name}`)
+      if (history.location.pathname !== parsed.name) {
+        history.push(`/rooms/${parsed.name}`)
+      }
       dispatch(
         enterSuccess(
           parsed.id,

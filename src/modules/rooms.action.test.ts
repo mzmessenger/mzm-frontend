@@ -1,8 +1,12 @@
+jest.mock('../lib/markdown', () => ({
+  convertToHtml: jest.fn()
+}))
+
 import * as action from './rooms.action'
 import { Room } from './rooms.types'
 
 test('enterRoom already entered', async () => {
-  expect.assertions(3)
+  expect.assertions(4)
 
   const socket = { send: jest.fn() }
   const rooms: Room[] = [

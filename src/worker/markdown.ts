@@ -1,6 +1,7 @@
 import marked from 'marked'
-import createDOMPurify from 'dompurify'
-const DOMPurify = createDOMPurify(window)
+import { expose } from 'comlink'
+
+const ctx: Worker = self as any
 
 const r = new marked.Renderer()
 
@@ -21,10 +22,18 @@ r.br = () => ''
 r.image = text => text
 r.text = text => text
 
-// todo: worker
-
-export async function convertToHtml(message: string): Promise<string> {
-  const html = marked(message, { renderer: r })
-  const sanitize = DOMPurify.sanitize(html)
-  return sanitize.trim()
+export class Markdown {
+  convertToHtml(message: string) {
+    return new Promise<string>((resolve, reject) => {
+      marked(message, { renderer: r }, (err, html) => {
+        if (err) {
+          reject(err)
+          return
+        }
+        resolve(html)
+      })
+    })
+  }
 }
+
+expose(Markdown, ctx)

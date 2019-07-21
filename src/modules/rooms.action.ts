@@ -1,7 +1,6 @@
 import { Dispatch } from 'redux'
-// import { store } from '../index'
 import { sendSocket, SendSocketMessage } from '../lib/util'
-import { convertToHtml } from '../lib/messages'
+import { convertToHtml } from '../lib/markdown'
 import { RoomsAction, Message, Room } from './rooms.types'
 
 function getMessages(currentRoomId: string, socket: WebSocket) {
