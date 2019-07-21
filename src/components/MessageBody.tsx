@@ -1,8 +1,9 @@
 import React, { useRef, useEffect } from 'react'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { enterRooms } from '../modules/index.action'
+import { State } from '../modules/index'
+import { enterRoom } from '../modules/rooms.action'
 
 const Wrap = styled.div`
   padding: 5px 0 0 0;
@@ -26,6 +27,8 @@ type Props = {
 function MessageBody({ className, message, html, history }: Props) {
   const messageEl = useRef(null)
   const dispatch = useDispatch()
+  const socket = useSelector((state: State) => state.socket.socket)
+  const rooms = useSelector((state: State) => state.rooms.rooms)
 
   useEffect(() => {
     if (!messageEl.current) {
@@ -38,7 +41,7 @@ function MessageBody({ className, message, html, history }: Props) {
         history.push(url.pathname)
         if (url.pathname.includes('rooms')) {
           const [, , name] = url.pathname.split('/')
-          dispatch(enterRooms(name))
+          dispatch(enterRoom(name, rooms, socket))
         }
       } else {
         window.open(url.href, '_blank')

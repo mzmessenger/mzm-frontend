@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import Home from '@material-ui/icons/Home'
 import DirectionsRun from '@material-ui/icons/DirectionsRun'
-import { State } from '../modules/index.types'
-import { exitRoom } from '../modules/index.action'
+import { State } from '../modules/index'
+import { exitRoom } from '../modules/rooms.action'
 
 const Wrap = styled.div`
   display: flex;
@@ -25,14 +25,15 @@ const Wrap = styled.div`
 `
 
 export default function RoomInfo() {
-  const id = useSelector((state: State) => state.currentRoom)
-  const name = useSelector((state: State) => state.currentRoomName) || ''
+  const id = useSelector((state: State) => state.rooms.currentRoomId)
+  const name = useSelector((state: State) => state.rooms.currentRoomName) || ''
+  const socket = useSelector((state: State) => state.socket.socket)
 
   const dispatch = useDispatch()
 
   // @todo create modal
   const onClick = useCallback(() => {
-    exitRoom(id)(dispatch)
+    exitRoom(id)(dispatch, socket)
   }, [id, dispatch])
 
   return (

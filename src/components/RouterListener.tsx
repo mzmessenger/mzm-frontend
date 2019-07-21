@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
-import { getMyInfo } from '../modules/index.action'
-import { State } from '../modules/index.types'
+import { State } from '../modules/index'
+import { getMyInfo } from '../modules/user.action'
 
 function RouterListener({ history }: RouteComponentProps) {
-  const currentRoomName = useSelector((state: State) => state.currentRoomName)
-  const login = useSelector((state: State) => state.login)
-  const signup = useSelector((state: State) => state.signup)
+  const currentRoomName = useSelector(
+    (state: State) => state.rooms.currentRoomName
+  )
+  const login = useSelector((state: State) => state.user.login)
+  const signup = useSelector((state: State) => state.user.signup)
   const dispatch = useDispatch()
 
   useEffect(() => {

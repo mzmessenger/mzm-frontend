@@ -2,8 +2,9 @@ import React from 'react'
 import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 import Home from '@material-ui/icons/Home'
-import { State } from '../modules/index.types'
-import { enterRooms } from '../modules/index.action'
+import { State } from '../modules/index'
+import { enterRoom } from '../modules/rooms.action'
+import { Room } from '../modules/rooms.types'
 import Link from './atoms/Link'
 
 const RoomWrap = styled.div`
@@ -18,7 +19,7 @@ const RoomWrap = styled.div`
   }
 `
 
-const Room: React.FC<{ name: string }> = ({ name }) => {
+const RoomElem: React.FC<{ name: string }> = ({ name }) => {
   return (
     <RoomWrap>
       <Home style={{ margin: '0 5px 0 0' }} />
@@ -28,18 +29,20 @@ const Room: React.FC<{ name: string }> = ({ name }) => {
 }
 
 export default function Rooms() {
-  const rooms = useSelector((state: State) => state.rooms)
+  const rooms = useSelector((state: State) => state.rooms.rooms)
+  const socket = useSelector((state: State) => state.socket.socket)
   const dispatch = useDispatch()
+
+  function onClick(e: React.MouseEvent, room: Room) {
+    e.preventDefault()
+    dispatch(enterRoom(room.name, rooms, socket))
+  }
 
   return (
     <div style={{ padding: '5px 0' }}>
       {rooms.map(r => (
-        <Link
-          to={`/rooms/${r.name}`}
-          key={r.id}
-          onClick={() => dispatch(enterRooms(r.name))}
-        >
-          <Room name={r.name} />
+        <Link to={`/rooms/${r.name}`} key={r.id} onClick={e => onClick(e, r)}>
+          <RoomElem name={r.name} />
         </Link>
       ))}
     </div>

@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { getHistory } from '../modules/index.action'
+import { State } from '../modules/index'
+import { getHistory } from '../modules/rooms.action'
 
 const Wrap = styled.div`
   width: 100%;
@@ -15,8 +16,10 @@ const Wrap = styled.div`
 `
 
 export default function ButtonGetHistory({ oldestId }: { oldestId: string }) {
+  const currentRoomId = useSelector((state: State) => state.rooms.currentRoomId)
+  const socket = useSelector((state: State) => state.socket.socket)
   const onClick = useCallback(() => {
-    dispatch(getHistory(oldestId))
+    dispatch(getHistory(oldestId, currentRoomId, socket))
   }, [])
 
   const dispatch = useDispatch()

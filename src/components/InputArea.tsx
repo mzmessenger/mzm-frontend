@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { useDispatch } from 'react-redux'
-import { sendMessage } from '../modules/index.action'
+import { useSelector } from 'react-redux'
+import { State } from '../modules/index'
+import { sendMessage } from '../modules/socket.action'
 import Button from './atoms/Button'
 
 const Wrap = styled.div`
@@ -51,11 +52,12 @@ const SendButton = styled(Button)`
 export default function InputArea() {
   const [txt, setTxt] = useState('')
   const [rows, setRows] = useState(1)
-  const dispatch = useDispatch()
+  const currentRoomId = useSelector((state: State) => state.rooms.currentRoomId)
+  const socket = useSelector((state: State) => state.socket.socket)
 
   const handleSubmit = evt => {
     evt.preventDefault()
-    dispatch(sendMessage(txt))
+    sendMessage(txt, currentRoomId, socket)
     setTxt('')
   }
 

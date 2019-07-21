@@ -2,8 +2,8 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { WIDTH_MOBILE } from '../../lib/constants'
-import { State } from '../../modules/index.types'
-import { closeMenu } from '../../modules/index.action'
+import { State } from '../../modules/index'
+import { closeMenu } from '../../modules/user.action'
 import MenuIcon from '../atoms/MobileMenuIcon'
 import Rooms from '../Rooms'
 import RoomNavi from '../RoomNavi'
@@ -41,7 +41,7 @@ const Wrap = styled.div`
 `
 
 export default function Menu() {
-  const menuStatus = useSelector((state: State) => state.menuStatus)
+  const menuStatus = useSelector((state: State) => state.user.menuStatus)
   const className = menuStatus === 'open' ? 'open' : ''
 
   const dispatch = useDispatch()

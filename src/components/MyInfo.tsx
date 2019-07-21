@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
-import { State } from '../modules/index.types'
+import { State } from '../modules/index'
 import Menu from './MenuProfile'
 
 const Wrap = styled.div`
@@ -28,7 +28,7 @@ const Wrap = styled.div`
 `
 
 export default function MyInfo() {
-  const me = useSelector((state: State) => state.me)
+  const me = useSelector((state: State) => state.user.me)
   const icon = me ? me.iconUrl : null
   const [anchorEl, setAnchorEl] = useState(null)
 

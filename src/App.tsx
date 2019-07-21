@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { State } from './modules/index.types'
-import { onResize } from './modules/index.action'
+import { State } from './modules/index'
+import { onResize } from './modules/user.action'
+import Socket from './components/Socket'
 import Login from './components/pages/Login'
 import PageTop from './components/pages/Top'
 import PageRoom from './components/pages/Room'
@@ -11,8 +12,11 @@ import PageTos from './components/pages/Tos'
 import LoginSuccess from './components/pages/LoginSuccess'
 import RouterListener from './components/RouterListener'
 
+const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+const url = `${protocol}//${window.location.host}/socket`
+
 function App() {
-  const login = useSelector((state: State) => state.login)
+  const login = useSelector((state: State) => state.user.login)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -45,6 +49,7 @@ function App() {
       <Route path="/tos" component={PageTos} />
       <Route path="/login/success" component={LoginSuccess} />
       <RouterListener />
+      <Socket url={url} />
     </Router>
   )
 }

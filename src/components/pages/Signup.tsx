@@ -2,8 +2,8 @@ import React, { useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components'
-import { State } from '../../modules/index.types'
-import { getMyInfo } from '../../modules/index.action'
+import { State } from '../../modules/index'
+import { getMyInfo } from '../../modules/user.action'
 import Header from '../atoms/LoginHeader'
 import InputText from '../atoms/InputText'
 import Button from '../atoms/Button'
@@ -66,7 +66,7 @@ const ERROR_TXT =
   '入力された値が半角英数字以外か、すでに存在するアカウントです。'
 
 function Signup({ history }: RouteComponentProps) {
-  const signupAccount = useSelector((state: State) => state.signupAccount)
+  const signupAccount = useSelector((state: State) => state.user.signupAccount)
   if (!signupAccount) {
     history.push('/')
   }

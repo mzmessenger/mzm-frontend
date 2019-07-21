@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { WIDTH_MOBILE } from '../lib/constants'
-import { State } from '../modules/index.types'
+import { State } from '../modules/index'
 
 const Wrap = styled.div`
   height: 100%;
@@ -33,7 +33,7 @@ const Wrap = styled.div`
 `
 
 export default function PageWrapper({ children }) {
-  const overlay = useSelector((state: State) => state.overlay)
+  const overlay = useSelector((state: State) => state.user.overlay)
 
   return (
     <Wrap>

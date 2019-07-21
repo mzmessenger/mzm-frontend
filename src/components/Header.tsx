@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
-import { State } from '../modules/index.types'
-import { openMenu } from '../modules/index.action'
+import { State } from '../modules/index'
+import { openMenu } from '../modules/user.action'
 import Link from './atoms/Link'
 import MenuIcon from './atoms/MobileMenuIcon'
 import MyInfo from './MyInfo'
@@ -29,7 +29,7 @@ const LinkWrap = styled(Link)`
 `
 
 export default function Header({ style }: { style?: any }) {
-  const device = useSelector((state: State) => state.device)
+  const device = useSelector((state: State) => state.user.device)
 
   const dispatch = useDispatch()
 

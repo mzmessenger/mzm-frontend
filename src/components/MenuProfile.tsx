@@ -5,7 +5,7 @@ import Popover, { PopoverProps } from '@material-ui/core/Popover'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import MenuList from '@material-ui/core/MenuList'
 import MenuItem from '@material-ui/core/MenuItem'
-import { removeUser } from '../modules/index.action'
+import { removeUser } from '../modules/user.action'
 
 const Wrap = styled.div`
   background-color: var(--color-surface);

@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { State } from '../modules/index.types'
+import { State } from '../modules/index'
 import Message from './Message'
 import GetHistoryButton from './ButtonGetHistory'
 
@@ -18,10 +18,14 @@ const Wrap = styled.div`
 `
 
 export default function Messages() {
-  const existHistory = useSelector((state: State) => state.existHistory)
-  const messages = useSelector((state: State) => state.messages)
+  const existHistory = useSelector(
+    (state: State) => state.rooms.currentRoomExistHistory
+  )
+  const messages = useSelector(
+    (state: State) => state.rooms.currentRoomMessages
+  )
   const scrollBottomMessage = useSelector(
-    (state: State) => state.scrollBottomMessage
+    (state: State) => state.rooms.scrollBottomMessage
   )
   const bottomRef = useRef(null)
 
