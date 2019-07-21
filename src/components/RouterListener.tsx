@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { State } from '../modules/index'
 import { getMyInfo } from '../modules/user.action'
+import { enterRoom } from '../modules/rooms.action'
 
 function RouterListener({ history }: RouteComponentProps) {
   const currentRoomName = useSelector(
@@ -10,6 +11,8 @@ function RouterListener({ history }: RouteComponentProps) {
   )
   const login = useSelector((state: State) => state.user.login)
   const signup = useSelector((state: State) => state.user.signup)
+  const socket = useSelector((state: State) => state.socket.socket)
+  const rooms = useSelector((state: State) => state.rooms.rooms)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -19,12 +22,15 @@ function RouterListener({ history }: RouteComponentProps) {
   }, [login, currentRoomName])
 
   useEffect(() => {
-    if (
-      !login &&
-      (history.location.pathname === '/' ||
-        /\/(rooms(\/+?))/.test(history.location.pathname))
-    ) {
+    const isRooms = /\/(rooms(\/+?))/.test(history.location.pathname)
+    if (!login && (history.location.pathname === '/' || isRooms)) {
       getMyInfo()(dispatch)
+    }
+
+    if (login && isRooms && socket) {
+      dispatch(
+        enterRoom(history.location.pathname.split('/')[2], rooms, socket)
+      )
     }
   }, [login, history.location.pathname])
 

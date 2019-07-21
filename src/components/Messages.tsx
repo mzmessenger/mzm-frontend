@@ -56,9 +56,10 @@ export default function Messages() {
       bottomRef.current.scrollIntoView()
     } else if (typeof scrollTargetIndex === 'number') {
       const target = logFlg ? scrollTargetIndex + 1 : scrollTargetIndex
-      wrapRef.current
-        .querySelector(`.message:nth-child(${target})`)
-        .scrollIntoView()
+      const dom = wrapRef.current.querySelector(`.message:nth-child(${target})`)
+      if (dom) {
+        dom.scrollIntoView()
+      }
     }
   }, [messages.length, scrollTargetIndex])
 

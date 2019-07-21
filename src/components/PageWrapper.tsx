@@ -7,7 +7,7 @@ import { State } from '../modules/index'
 const Wrap = styled.div`
   height: 100%;
   display: grid;
-  grid-template-columns: 1fr 240px;
+  grid-template-columns: 1fr var(--menu-width);
   grid-template-rows: var(--header-height) 1fr;
   grid-template-areas:
     'header header'

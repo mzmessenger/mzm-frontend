@@ -1,10 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import Home from '@material-ui/icons/Home'
 import { State } from '../modules/index'
-import { enterRoom } from '../modules/rooms.action'
 import { Room } from '../modules/rooms.types'
 import Link from './atoms/Link'
 
@@ -31,13 +30,10 @@ const RoomElem: React.FC<{ name: string }> = ({ name }) => {
 
 function Rooms({ history }: RouteComponentProps) {
   const rooms = useSelector((state: State) => state.rooms.rooms)
-  const socket = useSelector((state: State) => state.socket.socket)
-  const dispatch = useDispatch()
 
   function onClick(e: React.MouseEvent, room: Room) {
     e.preventDefault()
     history.push(`/rooms/${room.name}`)
-    dispatch(enterRoom(room.name, rooms, socket))
   }
 
   return (
