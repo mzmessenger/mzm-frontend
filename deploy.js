@@ -39,7 +39,7 @@ async function deploy({ config, remote, local }) {
     }
   )
 
-  await remote(`sudo cp -R ${tmpDir}/* ${target}/`)
+  await remote(`sudo rsync -av ${tmpDir}/ ${target}/`)
   await remote(`sudo rm -rf ${tmpDir}`)
   await remote(`sudo systemctl reload nginx`)
 }
