@@ -1,5 +1,6 @@
 import marked from 'marked'
 import { escape } from 'validator'
+import highlight from 'highlight.js'
 import { expose } from 'comlink'
 
 const ctx: Worker = self as any
@@ -24,6 +25,15 @@ r.codespan = escapeTxt
 r.br = () => ''
 r.image = escapeTxt
 r.text = escapeTxt
+
+r.code = (code, lang) => {
+  lang = lang ? lang : 'bash'
+  return [
+    '<pre>',
+    `<code class="hljs">${highlight.highlightAuto(code, [lang]).value}</code>`,
+    '</pre>'
+  ].join('')
+}
 
 // markedで取りこぼしたものをescape
 function postEscape(str: string) {
