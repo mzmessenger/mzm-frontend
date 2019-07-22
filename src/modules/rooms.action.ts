@@ -127,7 +127,7 @@ export function receiveMessages({
   return async function(dispatch: Dispatch<RoomsAction>) {
     const promises = messages.map(m => convertToHtml(m.message))
     const html = await Promise.all(promises)
-    messages = messages.map((m, i) => {
+    const converted = messages.map((m, i) => {
       return { ...m, html: html[i] }
     })
 
@@ -136,7 +136,7 @@ export function receiveMessages({
       payload: {
         room: room,
         existHistory: existHistory,
-        messages: messages
+        messages: converted
       }
     })
   }

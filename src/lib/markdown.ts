@@ -7,6 +7,7 @@ const MarkdownWorker = wrap<typeof import('../worker/markdown').Markdown>(
 let markdown = null
 
 export async function convertToHtml(message: string) {
+  // eslint-disable-next-line require-atomic-updates
   if (!markdown) markdown = await new MarkdownWorker()
 
   return await markdown.convertToHtml(message)
