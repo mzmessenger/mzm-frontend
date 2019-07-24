@@ -2,6 +2,7 @@ import { Dispatch } from 'redux'
 import { sendSocket, SendSocketMessage } from '../lib/util'
 import { convertToHtml } from '../lib/markdown'
 import { RoomsAction, Message, Room } from './rooms.types'
+import { closeMenu } from './user.action'
 
 function getMessages(currentRoomId: string, socket: WebSocket) {
   sendSocket(socket, {
@@ -32,31 +33,32 @@ export function createRoom(name: string) {
   }
 }
 
-export function enterRoom(
-  roomName: string,
-  rooms: Room[],
-  socket: WebSocket
-): RoomsAction {
-  const [room] = rooms.filter(r => r.name === roomName)
-  if (room) {
-    if (!room.receivedMessages && !room.loading) {
-      sendSocket(socket, {
-        cmd: 'rooms:enter',
-        name: roomName
-      })
-    }
-    return {
-      type: 'change:room',
-      payload: {
-        id: room.id
+export function enterRoom(roomName: string, rooms: Room[]) {
+  return async function(dispatch: Dispatch, socket: WebSocket) {
+    const [room] = rooms.filter(r => r.name === roomName)
+    if (room) {
+      if (!room.receivedMessages && !room.loading) {
+        sendSocket(socket, {
+          cmd: 'rooms:enter',
+          name: roomName
+        })
       }
+      dispatch({
+        type: 'change:room',
+        payload: {
+          id: room.id
+        }
+      })
+      dispatch(closeMenu())
+      return
     }
+    sendSocket(socket, {
+      cmd: 'rooms:enter',
+      name: roomName
+    })
+    dispatch({ type: 'enter:room' })
+    dispatch(closeMenu())
   }
-  sendSocket(socket, {
-    cmd: 'rooms:enter',
-    name: roomName
-  })
-  return { type: 'enter:room' }
 }
 
 export function exitRoom(roomId: string) {

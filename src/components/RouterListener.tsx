@@ -28,8 +28,9 @@ function RouterListener({ history }: RouteComponentProps) {
     }
 
     if (login && isRooms && socket) {
-      dispatch(
-        enterRoom(history.location.pathname.split('/')[2], rooms, socket)
+      enterRoom(history.location.pathname.split('/')[2], rooms)(
+        dispatch,
+        socket
       )
     }
   }, [login, history.location.pathname])
