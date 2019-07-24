@@ -60,7 +60,8 @@ export function reducer(
         currentRoomId: action.payload.id,
         currentRoomName: room.name,
         currentRoomMessages: room.messages,
-        currentRoomExistHistory: room.existHistory
+        currentRoomExistHistory: room.existHistory,
+        scrollTargetIndex: 'bottom'
       }
     }
     case 'rooms:enter:success': {
