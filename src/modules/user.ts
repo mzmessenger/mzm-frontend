@@ -8,7 +8,11 @@ export const initState: UserState = {
   me: null,
   device: 'pc',
   menuStatus: 'close',
-  overlay: false
+  overlay: false,
+  inputMode: 'normal',
+  txt: '',
+  editTxt: '',
+  editId: null
 }
 
 export function reducer(
@@ -37,6 +41,19 @@ export function reducer(
       return { ...initState, login: false }
     case 'me:set':
       return { ...state, login: true, me: action.payload }
+    case 'edit:start':
+      return {
+        ...state,
+        inputMode: 'edit',
+        editTxt: action.payload.txt,
+        editId: action.payload.id
+      }
+    case 'edit:end':
+      return { ...state, inputMode: 'normal', editTxt: '', editId: null }
+    case 'modify:txt':
+      return { ...state, editTxt: action.payload.txt }
+    case 'input:txt':
+      return { ...state, txt: action.payload.txt }
     default:
       return state
   }

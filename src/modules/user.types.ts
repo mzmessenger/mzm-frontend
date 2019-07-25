@@ -6,6 +6,10 @@ export type UserState = {
   device: 'pc' | 'mobile'
   menuStatus: 'open' | 'close'
   overlay: boolean
+  inputMode: 'normal' | 'edit'
+  txt: string
+  editTxt: string
+  editId: string
 }
 
 type MyInfo = {
@@ -44,4 +48,19 @@ export type UserAction =
     }
   | {
       type: 'overlay:hide'
+    }
+  | {
+      type: 'edit:start'
+      payload: { id: string; txt: string }
+    }
+  | {
+      type: 'edit:end'
+    }
+  | {
+      type: 'input:txt'
+      payload: { txt: string }
+    }
+  | {
+      type: 'modify:txt'
+      payload: { txt: string }
     }

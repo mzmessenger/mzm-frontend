@@ -24,3 +24,8 @@ export type SendSocketMessage =
       cmd: 'rooms:enter'
       name: string
     }
+  | {
+      cmd: 'message:modify'
+      id: string
+      message: string
+    }

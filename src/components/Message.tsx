@@ -1,7 +1,10 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import dayjs from 'dayjs'
 import styled from 'styled-components'
+import CreateIcon from '@material-ui/icons/Create'
 import sanitize from '../lib/sanitize'
+import { startEdit } from '../modules/user.action'
 import MessageBody from './MessageBody'
 
 const MessageWrap = styled.div`
@@ -18,7 +21,16 @@ const MessageWrap = styled.div`
   .header {
     grid-area: message-header;
     display: flex;
+    .actions {
+      .icon {
+        cursor: pointer;
+        svg {
+          font-size: 1rem;
+        }
+      }
+    }
     time {
+      margin-left: 16px;
       letter-spacing: 0;
     }
   }
@@ -27,7 +39,7 @@ const MessageWrap = styled.div`
     grid-area: message-body;
   }
 
-  .icon {
+  .user-icon {
     grid-area: icon;
     margin: 5px 10px 0 0;
     width: 25px;
@@ -37,6 +49,7 @@ const MessageWrap = styled.div`
 `
 
 type Props = {
+  id: string
   message: string
   html: string
   userId: string
@@ -46,6 +59,7 @@ type Props = {
 }
 
 function Message({
+  id,
   message,
   html,
   userId,
@@ -55,12 +69,18 @@ function Message({
 }: Props) {
   const date = dayjs(new Date(createdAt)).format('YYYY/MM/DD HH:mm:ss')
   const account = userAccount ? userAccount : userId
+  const dispatch = useDispatch()
 
   return (
     <MessageWrap>
-      <img className="icon" src={iconUrl} />
+      <img className="user-icon" src={iconUrl} />
       <div className="header">
         <div style={{ flex: 1 }}>{account}</div>
+        <div className="actions">
+          <div className="icon">
+            <CreateIcon onClick={() => dispatch(startEdit(id, message))} />
+          </div>
+        </div>
         <time>{date}</time>
       </div>
       <MessageBody className="body" message={message} html={sanitize(html)} />

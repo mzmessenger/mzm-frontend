@@ -47,3 +47,19 @@ export function openMenu(): UserAction {
 export function closeMenu(): UserAction {
   return { type: 'menu:close' }
 }
+
+export function startEdit(messageId: string, txt: string): UserAction {
+  return { type: 'edit:start', payload: { id: messageId, txt } }
+}
+
+export function endEdit(): UserAction {
+  return { type: 'edit:end' }
+}
+
+export function modifyMessage(txt: string): UserAction {
+  return { type: 'modify:txt', payload: { txt } }
+}
+
+export function inputMessage(txt: string): UserAction {
+  return { type: 'input:txt', payload: { txt } }
+}

@@ -37,6 +37,7 @@ export default function Messages() {
     return (
       <div className="message" key={m.id}>
         <Message
+          id={m.id}
           userId={m.userId}
           userAccount={m.userAccount}
           iconUrl={iconUrl}
