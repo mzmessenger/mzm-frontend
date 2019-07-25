@@ -16,7 +16,8 @@ const MessageWrap = styled.div`
   grid-template-columns: auto 1fr;
   grid-template-areas:
     'icon message-header'
-    'icon message-body';
+    'icon message-body'
+    'icon message-footer';
 
   .header {
     grid-area: message-header;
@@ -46,6 +47,15 @@ const MessageWrap = styled.div`
     height: 25px;
     border-radius: 2px;
   }
+
+  .footer {
+    grid-area: message-footer;
+    .updated {
+      margin-top: 4px;
+      font-size: 8px;
+      color: hsla(0, 100%, 100%, 0.5);
+    }
+  }
 `
 
 type Props = {
@@ -55,6 +65,7 @@ type Props = {
   userId: string
   userAccount: string
   iconUrl: string
+  updated: boolean
   createdAt: string
 }
 
@@ -65,6 +76,7 @@ function Message({
   userId,
   userAccount,
   iconUrl,
+  updated,
   createdAt
 }: Props) {
   const date = dayjs(new Date(createdAt)).format('YYYY/MM/DD HH:mm:ss')
@@ -84,6 +96,9 @@ function Message({
         <time>{date}</time>
       </div>
       <MessageBody className="body" message={message} html={sanitize(html)} />
+      <div className="footer">
+        {updated && <div className="updated">(編集済み)</div>}
+      </div>
     </MessageWrap>
   )
 }

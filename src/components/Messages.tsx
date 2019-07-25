@@ -43,6 +43,7 @@ export default function Messages() {
           iconUrl={iconUrl}
           message={m.message}
           html={m.html}
+          updated={m.updated}
           createdAt={m.createdAt}
         />
       </div>

@@ -5,6 +5,7 @@ export type Message = {
   userAccount: string
   message: string
   html?: string
+  updated: boolean
   createdAt: string
 }
 
@@ -61,13 +62,7 @@ export type RoomsAction =
       payload: {
         room: string
         existHistory: boolean
-        messages: {
-          id: string
-          message: string
-          userAccount: string
-          userId: string
-          createdAt: string
-        }[]
+        messages: Message[]
       }
     }
   | {

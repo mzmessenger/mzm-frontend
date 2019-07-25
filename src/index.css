@@ -36,6 +36,10 @@ a {
   text-decoration: none;
 }
 
+pre {
+  margin: 0;
+}
+
 a:visited {
   color: inherit;
 }
