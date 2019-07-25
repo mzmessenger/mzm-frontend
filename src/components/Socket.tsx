@@ -9,6 +9,7 @@ import { logout } from '../modules/user.action'
 import {
   receiveRooms,
   receiveMessage,
+  receiveModifyMessage,
   receiveMessages,
   enterSuccess
 } from '../modules/rooms.action'
@@ -19,6 +20,8 @@ type Message = {
   userAccount: string
   message: string
   createdAt: string
+  updated: boolean
+  updatedAt: string
 }
 
 type ReceiveMessage =
@@ -42,6 +45,11 @@ type ReceiveMessage =
       id: string
       name: string
     }
+  | {
+      cmd: 'message:modify'
+      message: Message
+      room: string
+    }
 
 async function onMessage(
   e: MessageEvent,
@@ -61,6 +69,8 @@ async function onMessage(
       )
     } else if (parsed.cmd === 'message:receive') {
       receiveMessage(parsed.message, parsed.room)(dispatch)
+    } else if (parsed.cmd === 'message:modify') {
+      receiveModifyMessage(parsed.message, parsed.room)(dispatch)
     } else if (parsed.cmd === 'messages:room') {
       receiveMessages({
         messages: parsed.messages,

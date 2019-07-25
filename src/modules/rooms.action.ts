@@ -117,6 +117,19 @@ export function receiveMessage(message: Message, room: string) {
   }
 }
 
+export function receiveModifyMessage(message: Message, room: string) {
+  return async function(dispatch: Dispatch<RoomsAction>) {
+    const html = await convertToHtml(message.message)
+    return dispatch({
+      type: 'message:modify:success',
+      payload: {
+        message: { ...message, html: html },
+        room: room
+      }
+    })
+  }
+}
+
 export function receiveMessages({
   messages,
   room,

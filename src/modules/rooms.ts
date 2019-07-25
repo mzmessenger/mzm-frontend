@@ -106,6 +106,26 @@ export function reducer(
         scrollTargetIndex: 'bottom'
       }
     }
+    case 'message:modify:success': {
+      const room = { ...state.roomMap.get(action.payload.room) }
+      const index = room.messages
+        .map(r => r.id)
+        .indexOf(action.payload.message.id)
+      if (index > -1) {
+        const message = action.payload.message
+        if (message.userAccount) {
+          message.iconUrl = createIconUrl(message.userAccount)
+        }
+        room.messages[index] = message
+        room.messages = [...room.messages]
+      }
+      state.roomMap.set(action.payload.room, room)
+      const currentRoomMessages =
+        action.payload.room === state.currentRoomId
+          ? room.messages
+          : state.currentRoomMessages
+      return { ...state, currentRoomMessages }
+    }
     case 'messages:room': {
       const received: Message[] = action.payload.messages.map(message => {
         const iconUrl = message.userAccount

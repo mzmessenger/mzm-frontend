@@ -19,6 +19,7 @@ export type Room = {
 
 export type RoomsState = {
   rooms: Room[]
+  // todo: flat object
   roomMap: Map<string, Room>
   currentRoomId: string
   currentRoomName: string
@@ -38,6 +39,10 @@ export type RoomsAction =
     }
   | {
       type: 'message:receive'
+      payload: { message: Message; room: string }
+    }
+  | {
+      type: 'message:modify:success'
       payload: { message: Message; room: string }
     }
   | {
