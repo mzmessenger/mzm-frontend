@@ -178,3 +178,22 @@ export function enterSuccess(
     payload: { id: id, name: name, loading }
   }
 }
+
+export function getUsers(roomId: string) {
+  return async function(_dispatch: Dispatch<RoomsAction>) {
+    if (!roomId) {
+      return
+    }
+    const res = await fetch(`/api/rooms/${roomId}/users`, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8'
+      }
+    })
+    if (res.status === 200) {
+      console.log(await res.json())
+    }
+    return res
+  }
+}
