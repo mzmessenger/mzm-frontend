@@ -20,8 +20,7 @@ export type Room = {
 
 export type RoomsState = {
   rooms: Room[]
-  // todo: flat object
-  roomMap: Map<string, Room>
+  flatRooms: { [key: string]: { room: Room; index: number } }
   currentRoomId: string
   currentRoomName: string
   currentRoomMessages: Message[]
@@ -70,6 +69,12 @@ export type RoomsAction =
     }
   | {
       type: 'change:room'
+      payload: {
+        id: string
+      }
+    }
+  | {
+      type: 'get:messages'
       payload: {
         id: string
       }

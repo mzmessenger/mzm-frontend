@@ -60,12 +60,9 @@ async function onMessage(
   try {
     const parsed: ReceiveMessage = JSON.parse(e.data)
     if (parsed.cmd === 'rooms') {
-      dispatch(
-        receiveRooms(
-          parsed.rooms,
-          store.getState().rooms.currentRoomId,
-          store.getState().socket.socket
-        )
+      receiveRooms(parsed.rooms, store.getState().rooms.currentRoomId)(
+        dispatch,
+        store.getState().socket.socket
       )
     } else if (parsed.cmd === 'message:receive') {
       receiveMessage(parsed.message, parsed.room)(dispatch)
@@ -81,13 +78,9 @@ async function onMessage(
       if (history.location.pathname !== parsed.name) {
         history.push(`/rooms/${parsed.name}`)
       }
-      dispatch(
-        enterSuccess(
-          parsed.id,
-          parsed.name,
-          store.getState().rooms.roomMap,
-          store.getState().socket.socket
-        )
+      enterSuccess(parsed.id, parsed.name, store.getState().rooms.rooms)(
+        dispatch,
+        store.getState().socket.socket
       )
     }
   } catch (e) {
@@ -117,6 +110,7 @@ function init(
     init(store, dispatch, url, history)
   })
   ws.addEventListener('error', () => {
+    ws.close()
     dispatch(logout())
   })
   return ws

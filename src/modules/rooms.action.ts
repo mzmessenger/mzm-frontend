@@ -4,11 +4,12 @@ import { convertToHtml } from '../lib/markdown'
 import { RoomsAction, Message, Room } from './rooms.types'
 import { closeMenu } from './user.action'
 
-function getMessages(currentRoomId: string, socket: WebSocket) {
+export function getMessages(roomId: string, socket: WebSocket): RoomsAction {
   sendSocket(socket, {
     cmd: 'messages:room',
-    room: currentRoomId
+    room: roomId
   })
+  return { type: 'get:messages', payload: { id: roomId } }
 }
 
 export function createRoom(name: string) {
@@ -38,10 +39,7 @@ export function enterRoom(roomName: string, rooms: Room[]) {
     const [room] = rooms.filter(r => r.name === roomName)
     if (room) {
       if (!room.receivedMessages && !room.loading) {
-        sendSocket(socket, {
-          cmd: 'rooms:enter',
-          name: roomName
-        })
+        dispatch(getMessages(room.id, socket))
       }
       dispatch({
         type: 'change:room',
@@ -90,17 +88,18 @@ export function getHistory(id: string, roomId: string, socket: WebSocket) {
 
 export function receiveRooms(
   rooms: { id: string; name: string }[],
-  currentRoomId: string,
-  socket: WebSocket
-): RoomsAction {
-  if (currentRoomId) {
-    getMessages(currentRoomId, socket)
-  }
-  return {
-    type: 'receive:rooms',
-    payload: {
-      rooms: rooms
+  currentRoomId: string
+) {
+  return async function(dispatch: Dispatch<RoomsAction>, socket: WebSocket) {
+    if (currentRoomId) {
+      dispatch(getMessages(currentRoomId, socket))
     }
+    dispatch({
+      type: 'receive:rooms',
+      payload: {
+        rooms: rooms
+      }
+    })
   }
 }
 
@@ -157,25 +156,22 @@ export function receiveMessages({
   }
 }
 
-export function enterSuccess(
-  id: string,
-  name: string,
-  roomMap: Map<string, Room>,
-  socket: WebSocket
-): RoomsAction {
-  const room = roomMap.get(id)
-  // すでに入っている部屋だったら部屋の再取得をしない
-  if (!room) {
-    sendSocket(socket, { cmd: 'rooms:get' })
-  }
-  let loading = false
-  if (room && !room.receivedMessages && !loading) {
-    getMessages(id, socket)
-    loading = true
-  }
-  return {
-    type: 'rooms:enter:success',
-    payload: { id: id, name: name, loading }
+export function enterSuccess(id: string, name: string, rooms: Room[]) {
+  return async function(dispatch: Dispatch<RoomsAction>, socket: WebSocket) {
+    const [room] = rooms.filter(r => r.id === id)
+    // すでに入っている部屋だったら部屋の再取得をしない
+    if (!room) {
+      sendSocket(socket, { cmd: 'rooms:get' })
+    }
+    let loading = false
+    if (room && !room.receivedMessages && !loading) {
+      dispatch(getMessages(id, socket))
+      loading = true
+    }
+    dispatch({
+      type: 'rooms:enter:success',
+      payload: { id: id, name: name, loading }
+    })
   }
 }
 

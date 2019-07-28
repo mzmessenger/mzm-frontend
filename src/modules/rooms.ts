@@ -6,12 +6,29 @@ const initCurrentRoomName = splited[1] === 'rooms' ? splited[2] : ''
 
 export const initState: RoomsState = {
   rooms: [],
-  roomMap: new Map<string, Room>(),
+  flatRooms: {},
   currentRoomId: '',
   currentRoomName: initCurrentRoomName,
   currentRoomMessages: [],
   currentRoomExistHistory: false,
   scrollTargetIndex: 'bottom'
+}
+
+function replaceRoom(
+  index: number,
+  room: Room,
+  flatRooms,
+  rooms: Room[]
+): { rooms: Room[] } {
+  const newRoom = { ...room }
+  flatRooms[room.id] = {
+    room: newRoom,
+    index: index
+  }
+  rooms[index] = newRoom
+  rooms = [...rooms]
+
+  return { rooms: rooms }
 }
 
 export function reducer(
@@ -20,10 +37,10 @@ export function reducer(
 ): RoomsState {
   switch (action.type) {
     case 'receive:rooms': {
-      state.roomMap.clear()
+      const flatRooms = {}
 
       const rooms = []
-      action.payload.rooms.forEach(r => {
+      action.payload.rooms.forEach((r, i) => {
         const room: Room = {
           id: r.id,
           name: r.name,
@@ -32,18 +49,18 @@ export function reducer(
           receivedMessages: false,
           existHistory: false
         }
-        state.roomMap.set(room.id, room)
+        flatRooms[room.id] = { room, index: i }
         rooms.push(room)
       })
 
       return {
         ...state,
-        rooms: rooms,
-        roomMap: new Map(state.roomMap)
+        rooms,
+        flatRooms
       }
     }
     case 'rooms:create': {
-      const room = state.roomMap.get(action.payload.id)
+      const { room } = state.flatRooms[action.payload.id]
 
       return {
         ...state,
@@ -53,29 +70,50 @@ export function reducer(
         currentRoomExistHistory: room ? room.existHistory : false
       }
     }
+    case 'get:messages': {
+      const room = state.flatRooms[action.payload.id]
+      if (room) {
+        room.room.loading = true
+        const replaced = replaceRoom(
+          room.index,
+          room.room,
+          state.flatRooms,
+          state.rooms
+        )
+        state.rooms = replaced.rooms
+      }
+      return { ...state }
+    }
     case 'change:room': {
-      const room = state.roomMap.get(action.payload.id)
+      const room = state.flatRooms[action.payload.id]
       return {
         ...state,
         currentRoomId: action.payload.id,
-        currentRoomName: room.name,
-        currentRoomMessages: room.messages,
-        currentRoomExistHistory: room.existHistory,
+        currentRoomName: room.room.name,
+        currentRoomMessages: room.room.messages,
+        currentRoomExistHistory: room.room.existHistory,
         scrollTargetIndex: 'bottom'
       }
     }
     case 'rooms:enter:success': {
-      const room = state.roomMap.get(action.payload.id)
+      const room = state.flatRooms[action.payload.id]
       if (room) {
-        room.loading = action.payload.loading
+        room.room.loading = action.payload.loading
+        const replaced = replaceRoom(
+          room.index,
+          room.room,
+          state.flatRooms,
+          state.rooms
+        )
+        state.rooms = replaced.rooms
       }
 
       return {
         ...state,
         currentRoomId: action.payload.id,
         currentRoomName: action.payload.name,
-        currentRoomMessages: room ? [...room.messages] : [],
-        currentRoomExistHistory: room ? room.existHistory : false
+        currentRoomMessages: room ? [...room.room.messages] : [],
+        currentRoomExistHistory: room ? room.room.existHistory : false
       }
     }
     case 'rooms:exit': {
@@ -92,13 +130,20 @@ export function reducer(
       if (message.userAccount) {
         message.iconUrl = createIconUrl(message.userAccount)
       }
-      const room = { ...state.roomMap.get(action.payload.room) }
-      room.receivedMessages = true
-      room.messages = [...room.messages, message]
-      state.roomMap.set(action.payload.room, room)
+      const room = state.flatRooms[action.payload.room]
+      room.room.loading = false
+      room.room.messages = [...room.room.messages, message]
+      const replaced = replaceRoom(
+        room.index,
+        room.room,
+        state.flatRooms,
+        state.rooms
+      )
+      state.rooms = replaced.rooms
+
       const isCurrent = action.payload.room === state.currentRoomId
       const currentRoomMessages = isCurrent
-        ? room.messages
+        ? room.room.messages
         : state.currentRoomMessages
       return {
         ...state,
@@ -107,7 +152,7 @@ export function reducer(
       }
     }
     case 'message:modify:success': {
-      const room = { ...state.roomMap.get(action.payload.room) }
+      const room = { ...state.flatRooms[action.payload.room].room }
       const index = room.messages
         .map(r => r.id)
         .indexOf(action.payload.message.id)
@@ -119,7 +164,7 @@ export function reducer(
         room.messages[index] = message
         room.messages = [...room.messages]
       }
-      state.roomMap.set(action.payload.room, room)
+      state.flatRooms[action.payload.room].room = room
       const currentRoomMessages =
         action.payload.room === state.currentRoomId
           ? room.messages
@@ -133,21 +178,25 @@ export function reducer(
           : null
         return { ...message, iconUrl }
       })
-      const room = {
-        ...state.roomMap.get(action.payload.room),
-        loading: false,
-        existHistory: action.payload.existHistory
-      }
-      room.receivedMessages = true
-      room.messages = [...received, ...room.messages]
-      state.roomMap.set(action.payload.room, room)
+      const room = state.flatRooms[action.payload.room]
+      room.room.loading = false
+      room.room.existHistory = action.payload.existHistory
+      room.room.receivedMessages = true
+      room.room.messages = [...received, ...room.room.messages]
+      const replaced = replaceRoom(
+        room.index,
+        room.room,
+        state.flatRooms,
+        state.rooms
+      )
+      state.rooms = replaced.rooms
 
       const isCurrent = action.payload.room === state.currentRoomId
       const currentRoomMessages = isCurrent
-        ? room.messages
+        ? room.room.messages
         : state.currentRoomMessages
       const currentRoomExistHistory = isCurrent
-        ? room.existHistory
+        ? room.room.existHistory
         : state.currentRoomExistHistory
       const scrollTargetIndex = isCurrent
         ? received.length
