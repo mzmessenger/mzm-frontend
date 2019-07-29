@@ -1,18 +1,17 @@
 import React, { useMemo, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import Home from '@material-ui/icons/Home'
 import Person from '@material-ui/icons/Person'
-import DirectionsRun from '@material-ui/icons/DirectionsRun'
+import ExpandMore from '@material-ui/icons/ExpandMore'
 import { WIDTH_MOBILE } from '../lib/constants'
 import { createIconUrl } from '../lib/util'
 import { State } from '../modules/index'
-import { exitRoom } from '../modules/rooms.action'
 
 const Wrap = styled.div`
   display: flex;
   min-height: var(--navi-height);
-  padding: 0 15px;
+  padding: 0 16px;
   align-items: center;
   background-color: var(--color-guide);
   color: var(--color-on-guide);
@@ -41,12 +40,25 @@ const Wrap = styled.div`
     }
   }
 
+  .expand-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition-duration: 0.5s;
+
+    &.expand {
+      transform: rotate(180deg);
+    }
+  }
+
   .icon {
+    cursor: pointer;
     color: var(--color-on-guide);
     margin: 0 8px 0;
   }
 
   @media (max-width: ${WIDTH_MOBILE}px) {
+    padding: 0 8px;
     .room-users {
       .users {
         display: none;
@@ -69,19 +81,17 @@ async function getUsers(roomId: string) {
   return res
 }
 
-export default function RoomInfo() {
+export default function RoomInfo({
+  onExpandClick,
+  expand
+}: {
+  onExpandClick: () => void
+  expand: boolean
+}) {
   const id = useSelector((state: State) => state.rooms.currentRoomId)
   const name = useSelector((state: State) => state.rooms.currentRoomName) || ''
-  const socket = useSelector((state: State) => state.socket.socket)
   const [count, setCount] = useState(0)
   const [users, setUsers] = useState([])
-
-  const dispatch = useDispatch()
-
-  // @todo create modal
-  const onClick = () => {
-    exitRoom(id)(dispatch, socket)
-  }
 
   useMemo(() => {
     if (id) {
@@ -100,6 +110,11 @@ export default function RoomInfo() {
     .slice(0, 10)
     .map((u, i) => <img key={i} src={createIconUrl(u.account)} />)
 
+  const expandClassName = ['expand-icon']
+  if (expand) {
+    expandClassName.push('expand')
+  }
+
   return (
     <Wrap>
       <Home className="icon" fontSize="small" />
@@ -111,11 +126,9 @@ export default function RoomInfo() {
         <div className="count">{count}</div>
         <div className="users">{userIcons}</div>
       </div>
-      <DirectionsRun
-        style={{ cursor: 'pointer' }}
-        className="icon"
-        onClick={onClick}
-      />
+      <div className={expandClassName.join(' ')} onClick={onExpandClick}>
+        <ExpandMore className="icon" />
+      </div>
     </Wrap>
   )
 }

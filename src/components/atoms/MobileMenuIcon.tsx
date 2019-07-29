@@ -3,7 +3,7 @@ import ListIcon from '@material-ui/icons/List'
 import styled from 'styled-components'
 
 const Wrap = styled.header`
-  padding: 10px;
+  padding: 8px;
   cursor: pointer;
 `
 

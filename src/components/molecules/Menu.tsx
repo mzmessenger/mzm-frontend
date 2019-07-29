@@ -32,6 +32,7 @@ const Wrap = styled.div`
     right: 0;
     bottom: 0;
     transform: translate3d(100%, 0, 0);
+    transition-duration: 0.3s;
     z-index: var(--z-index-on-overlay);
 
     .header {

@@ -3,11 +3,13 @@ import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 import { State } from '../modules/index'
 import { openMenu } from '../modules/user.action'
+import { WIDTH_MOBILE } from '../lib/constants'
 import Link from './atoms/Link'
 import MenuIcon from './atoms/MobileMenuIcon'
 import MyInfo from './MyInfo'
 
 const Wrap = styled.header`
+  padding: 0 16px;
   background-color: var(--color-surface);
   max-width: 100vw;
   display: flex;
@@ -16,9 +18,12 @@ const Wrap = styled.header`
   .logo {
     display: flex;
     align-items: center;
-    padding: 0 16px;
     font-size: 16px;
     font-weight: 500;
+  }
+
+  @media (max-width: ${WIDTH_MOBILE}px) {
+    padding: 0 8px 0 16px;
   }
 `
 
@@ -41,7 +46,8 @@ export default function Header({ style }: { style?: any }) {
         <div>MZM</div>
       </LinkWrap>
       <div style={{ flex: 1 }}></div>
-      {device === 'pc' ? <MyInfo /> : <MenuIcon onClick={onClick} />}
+      <MyInfo />
+      {device === 'mobile' && <MenuIcon onClick={onClick} />}
     </Wrap>
   )
 }

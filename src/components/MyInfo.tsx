@@ -7,7 +7,6 @@ import Menu from './MenuProfile'
 
 const Wrap = styled.div`
   padding: 8px;
-  min-width: 140px;
   .profile-wrap {
     display: flex;
   }
