@@ -17,7 +17,7 @@ const Wrap = styled.div`
   }
 `
 
-export default function Messages() {
+export default function Messages({ className }) {
   const existHistory = useSelector(
     (state: State) => state.rooms.currentRoomExistHistory
   )
@@ -66,7 +66,7 @@ export default function Messages() {
   }, [messages.length, scrollTargetIndex])
 
   return (
-    <Wrap ref={wrapRef}>
+    <Wrap ref={wrapRef} className={className}>
       {logFlg && <GetHistoryButton oldestId={messages[0].id} />}
       {messageElements}
       <div ref={bottomRef} style={{ visibility: 'hidden' }} />

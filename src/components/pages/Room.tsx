@@ -8,19 +8,21 @@ import Messages from '../Messages'
 import RoomInfo from '../RoomInfo'
 import Header from '../Header'
 
-const MessageBody = styled.div`
-  display: grid;
-  grid-template-rows: 1fr;
-
-  grid-template-areas:
-    'room-info'
-    'messages'
-    'input';
-  height: calc(var(--vh, 1vh) * 100 - var(--header-height));
+const Content = styled.div`
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 
   .messages {
-    grid-area: messages;
-    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+    .messages-inner {
+      max-height: 100%;
+      overflow: auto;
+    }
   }
 `
 export default function PageRoom() {
@@ -28,19 +30,15 @@ export default function PageRoom() {
     <PageWrapper>
       <Header style={{ gridArea: 'header' }} />
       <Body>
-        <MessageBody>
-          <div style={{ gridArea: 'room-info' }}>
-            <RoomInfo />
-          </div>
+        <Content>
+          <RoomInfo />
           <div className="messages">
-            <Messages />
+            <Messages className="messages-inner" />
           </div>
-          <div style={{ gridArea: 'input' }}>
-            <InputArea />
-          </div>
-        </MessageBody>
+          <InputArea />
+        </Content>
+        <Menu />
       </Body>
-      <Menu />
     </PageWrapper>
   )
 }

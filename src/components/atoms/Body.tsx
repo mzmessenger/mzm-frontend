@@ -6,6 +6,9 @@ import { State } from '../../modules/index'
 const Wrap = styled.div`
   grid-area: body;
   background-color: var(--color-background);
+  height: calc(var(--vh, 1vh) * 100 - var(--header-height));
+  width: 100%;
+  display: flex;
 `
 
 export default function Body({

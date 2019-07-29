@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 const Wrap = styled.div`
   padding: 5px 0 0 0;
+  word-break: break-all;
   p {
     font-size: 14px;
     line-height: 20px;

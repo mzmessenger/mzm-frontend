@@ -9,8 +9,8 @@ import Rooms from '../Rooms'
 import RoomNavi from '../RoomNavi'
 
 const Wrap = styled.div`
-  grid-area: menu;
   background-color: var(--color-surface);
+  width: var(--menu-width);
   color: var(--color-on-surface);
 
   .header {

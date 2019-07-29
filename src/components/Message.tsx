@@ -13,11 +13,16 @@ const MessageWrap = styled.div`
   background-color: hsl(0, 0%, 14%);
   color: #dcddde;
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 40px;
   grid-template-areas:
     'icon message-header'
     'icon message-body'
     'icon message-footer';
+
+  .header,
+  .user-icon {
+    margin: 8px 0 0 0;
+  }
 
   .header {
     grid-area: message-header;
@@ -42,7 +47,6 @@ const MessageWrap = styled.div`
 
   .user-icon {
     grid-area: icon;
-    margin: 5px 10px 0 0;
     width: 25px;
     height: 25px;
     border-radius: 2px;

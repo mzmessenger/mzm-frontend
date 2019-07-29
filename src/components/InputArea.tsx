@@ -41,7 +41,6 @@ const Wrap = styled.div`
       resize: vertical;
       border: none;
       appearance: none;
-      font-size: 16px;
       padding: 10px;
       flex: 1;
     }

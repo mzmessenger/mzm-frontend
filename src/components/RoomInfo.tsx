@@ -11,7 +11,7 @@ import { exitRoom } from '../modules/rooms.action'
 
 const Wrap = styled.div`
   display: flex;
-  height: var(--navi-height);
+  min-height: var(--navi-height);
   padding: 0 15px;
   align-items: center;
   background-color: var(--color-guide);

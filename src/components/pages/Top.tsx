@@ -8,7 +8,8 @@ import Header from '../Header'
 import Link from '../atoms/Link'
 
 const Wrap = styled.div`
-  .body {
+  .content {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -44,22 +45,24 @@ export default function Index() {
     <Wrap>
       <PageWrapper>
         <Header style={{ gridArea: 'header' }} />
-        <Body className="body">
-          <div className="recommended">
-            <div className="inner">
-              <h2>おすすめ部屋</h2>
-              <div className="rooms">
-                {recommended.map(e => (
-                  <div className="room" key={e}>
-                    <Home style={{ margin: '0 5px 0 0' }} />
-                    <Link to={`/rooms/${e}`}>{e}</Link>
-                  </div>
-                ))}
+        <Body>
+          <div className="content">
+            <div className="recommended">
+              <div className="inner">
+                <h2>おすすめ部屋</h2>
+                <div className="rooms">
+                  {recommended.map(e => (
+                    <div className="room" key={e}>
+                      <Home style={{ margin: '0 5px 0 0' }} />
+                      <Link to={`/rooms/${e}`}>{e}</Link>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
+          <Menu />
         </Body>
-        <Menu />
       </PageWrapper>
     </Wrap>
   )
