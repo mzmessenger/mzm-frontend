@@ -21,24 +21,23 @@ test('enterRoom already entered', async () => {
 
   action.enterRoom('test', rooms)(dispatch, socket as any)
 
-  expect(dispatch.mock.calls.length).toBe(2)
+  expect(dispatch.mock.calls.length).toBe(3)
 
   expect(socket.send.mock.calls.length).toBe(1)
   const [arg] = socket.send.mock.calls[0]
-  expect(arg).toBe(
-    JSON.stringify({
-      cmd: 'rooms:enter',
-      name: 'test'
-    })
-  )
+  expect(JSON.parse(arg).cmd).toStrictEqual('messages:room')
 
-  const [args0] = dispatch.mock.calls[0]
+  const [
+    [getMessagesArg],
+    [chaneRoomArgs],
+    [menuCloseArgs]
+  ] = dispatch.mock.calls
+  expect(getMessagesArg.type).toStrictEqual('get:messages')
 
-  expect(args0.type).toStrictEqual('change:room')
-  expect(args0.payload.id).toStrictEqual('001')
+  expect(chaneRoomArgs.type).toStrictEqual('change:room')
+  expect(chaneRoomArgs.payload.id).toStrictEqual('001')
 
-  const [args1] = dispatch.mock.calls[1]
-  expect(args1.type).toStrictEqual('menu:close')
+  expect(menuCloseArgs.type).toStrictEqual('menu:close')
 })
 
 test('enterRoom does not enter', async () => {
