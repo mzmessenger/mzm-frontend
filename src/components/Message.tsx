@@ -1,9 +1,10 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import dayjs from 'dayjs'
 import styled from 'styled-components'
 import CreateIcon from '@material-ui/icons/Create'
 import sanitize from '../lib/sanitize'
+import { State } from '../modules/index'
 import { startEdit } from '../modules/user.action'
 import MessageBody from './MessageBody'
 
@@ -21,13 +22,15 @@ const MessageWrap = styled.div`
 
   .header,
   .user-icon {
-    margin: 8px 0 0 0;
+    margin: 4px 0 0 0;
   }
 
   .header {
     grid-area: message-header;
     display: flex;
     .actions {
+      visibility: hidden;
+
       .icon {
         cursor: pointer;
         svg {
@@ -60,6 +63,12 @@ const MessageWrap = styled.div`
       color: hsla(0, 100%, 100%, 0.5);
     }
   }
+
+  &:hover {
+    .actions {
+      visibility: visible;
+    }
+  }
 `
 
 type Props = {
@@ -83,8 +92,14 @@ function Message({
   updated,
   createdAt
 }: Props) {
-  const date = dayjs(new Date(createdAt)).format('YYYY/MM/DD HH:mm:ss')
+  const day = dayjs(new Date(createdAt))
+  const date = day.format(
+    day.year() === new Date().getFullYear()
+      ? 'MM/DD HH:mm:ss'
+      : 'YYYY/MM/DD HH:mm:ss'
+  )
   const account = userAccount ? userAccount : userId
+  const myAccount = useSelector((state: State) => state.user.me.account)
   const dispatch = useDispatch()
 
   return (
@@ -94,7 +109,9 @@ function Message({
         <div style={{ flex: 1 }}>{account}</div>
         <div className="actions">
           <div className="icon">
-            <CreateIcon onClick={() => dispatch(startEdit(id, message))} />
+            {myAccount === account && (
+              <CreateIcon onClick={() => dispatch(startEdit(id, message))} />
+            )}
           </div>
         </div>
         <time>{date}</time>

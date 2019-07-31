@@ -7,7 +7,7 @@ import Settings from '../Settings'
 
 export default function PageRoom() {
   const [roomSetting, setRoomSetting] = useState(false)
-  const settings = useSelector<State, unknown>(state => state.user.openSettings)
+  const settings = useSelector((state: State) => state.user.openSettings)
 
   const onExpandClick = () => {
     setRoomSetting(!roomSetting)
