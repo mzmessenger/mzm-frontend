@@ -12,7 +12,8 @@ export const initState: UserState = {
   inputMode: 'normal',
   txt: '',
   editTxt: '',
-  editId: null
+  editId: null,
+  openSettings: false
 }
 
 export function reducer(
@@ -54,6 +55,10 @@ export function reducer(
       return { ...state, editTxt: action.payload.txt }
     case 'input:txt':
       return { ...state, txt: action.payload.txt }
+    case 'open:settings':
+      return { ...state, openSettings: true }
+    case 'close:settings':
+      return { ...state, openSettings: false }
     default:
       return state
   }

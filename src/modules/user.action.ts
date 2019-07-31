@@ -63,3 +63,11 @@ export function modifyMessage(txt: string): UserAction {
 export function inputMessage(txt: string): UserAction {
   return { type: 'input:txt', payload: { txt } }
 }
+
+export function openSettings(): UserAction {
+  return { type: 'open:settings' }
+}
+
+export function closeSettings(): UserAction {
+  return { type: 'close:settings' }
+}

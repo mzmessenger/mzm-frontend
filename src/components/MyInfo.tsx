@@ -1,9 +1,9 @@
-import React, { useState, useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
-import MoreVertIcon from '@material-ui/icons/MoreVert'
+import Settings from '@material-ui/icons/Settings'
 import { State } from '../modules/index'
-import Menu from './MenuProfile'
+import { openSettings, closeSettings } from '../modules/user.action'
 
 const Wrap = styled.div`
   padding: 8px;
@@ -24,22 +24,25 @@ const Wrap = styled.div`
   .more-ver-icon {
     cursor: pointer;
   }
+  .setting-icon {
+    cursor: pointer;
+  }
 `
 
 export default function MyInfo() {
   const me = useSelector((state: State) => state.user.me)
+  const settings = useSelector((state: State) => state.user.openSettings)
   const icon = me ? me.iconUrl : null
-  const [anchorEl, setAnchorEl] = useState(null)
+  const dispatch = useDispatch()
 
-  const handleOpen = event => {
-    setAnchorEl(event.currentTarget)
+  const clickSettings = () => {
+    if (settings) {
+      dispatch(closeSettings())
+    } else {
+      dispatch(openSettings())
+    }
   }
 
-  const handleClose = useCallback(() => {
-    setAnchorEl(null)
-  }, [anchorEl])
-
-  const open = Boolean(anchorEl)
   const m = me ? me.account : ''
 
   return (
@@ -47,9 +50,8 @@ export default function MyInfo() {
       <div className="profile-wrap">
         <img className="icon-img" src={icon} width="20" height="20" />
         <div className="profile">{m}</div>
-        <MoreVertIcon className="more-ver-icon" onClick={handleOpen} />
+        <Settings className="settings-icon" onClick={clickSettings} />
       </div>
-      <Menu open={open} anchorEl={anchorEl} handleClose={handleClose} />
     </Wrap>
   )
 }

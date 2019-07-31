@@ -10,6 +10,7 @@ export type UserState = {
   txt: string
   editTxt: string
   editId: string
+  openSettings: boolean
 }
 
 type MyInfo = {
@@ -63,4 +64,10 @@ export type UserAction =
   | {
       type: 'modify:txt'
       payload: { txt: string }
+    }
+  | {
+      type: 'open:settings'
+    }
+  | {
+      type: 'close:settings'
     }
