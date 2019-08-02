@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
+import { WIDTH_MOBILE } from '../lib/constants'
 import { State } from '../modules/index'
 import Body from './atoms/Body'
 import Header from './Header'
@@ -22,6 +23,11 @@ const Wrap = styled.div`
     background-color: hsl(0, 0%, 7%);
     opacity: 0.5;
     z-index: var(--z-index-overlay);
+  }
+
+  @media (max-width: ${WIDTH_MOBILE}px) {
+    display: flex;
+    flex-direction: column;
   }
 `
 

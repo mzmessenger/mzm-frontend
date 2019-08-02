@@ -43,12 +43,9 @@ export default function RoomContent({
   onExpandClick: () => void
 }) {
   return (
-    <>
-      <Content>
-        <RoomInfo onExpandClick={onExpandClick} expand={expand} />
-        {expand ? <SettingRoom /> : <ContentMessage />}
-      </Content>
-      <Menu />
-    </>
+    <Content>
+      <RoomInfo onExpandClick={onExpandClick} expand={expand} />
+      {expand ? <SettingRoom /> : <ContentMessage />}
+    </Content>
   )
 }
