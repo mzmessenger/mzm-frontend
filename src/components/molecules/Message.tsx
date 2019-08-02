@@ -3,10 +3,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import dayjs from 'dayjs'
 import styled from 'styled-components'
 import CreateIcon from '@material-ui/icons/Create'
-import sanitize from '../lib/sanitize'
-import { State } from '../modules/index'
-import { startEdit } from '../modules/user.action'
-import MessageBody from './MessageBody'
+import sanitize from '../../lib/sanitize'
+import { State } from '../../modules/index'
+import { startEdit } from '../../modules/user.action'
+import MessageBody from '../atoms/MessageBody'
 
 const MessageWrap = styled.div`
   padding: 10px 15px 10px;

@@ -8,20 +8,27 @@ import { Room } from '../modules/rooms.types'
 import Link from './atoms/Link'
 
 const RoomWrap = styled.div`
+  padding: 0 4px;
   display: flex;
   align-items: center;
   color: var(--color-on-surface);
   height: 34px;
-  padding: 3px 8px 0;
   .room-name {
     font-size: 16px;
     line-height: 20px;
   }
+  &.current {
+    background: hsla(0, 100%, 100%, 0.1);
+  }
 `
 
-const RoomElem: React.FC<{ name: string }> = ({ name }) => {
+const RoomElem: React.FC<{ name: string; current: boolean }> = ({
+  name,
+  current
+}) => {
+  const className = current ? 'current' : ''
   return (
-    <RoomWrap>
+    <RoomWrap className={className}>
       <Home style={{ margin: '0 5px 0 0' }} />
       <div className="room-name">{name}</div>
     </RoomWrap>
@@ -30,6 +37,9 @@ const RoomElem: React.FC<{ name: string }> = ({ name }) => {
 
 function Rooms({ history }: RouteComponentProps) {
   const rooms = useSelector((state: State) => state.rooms.rooms)
+  const currentRoomName = useSelector(
+    (state: State) => state.rooms.currentRoomName
+  )
 
   function onClick(e: React.MouseEvent, room: Room) {
     e.preventDefault()
@@ -40,7 +50,9 @@ function Rooms({ history }: RouteComponentProps) {
     <div style={{ padding: '5px 0' }}>
       {rooms.map(r => (
         <Link to={`/rooms/${r.name}`} key={r.id} onClick={e => onClick(e, r)}>
-          <RoomElem name={r.name} />
+          <div style={{ padding: '4px' }}>
+            <RoomElem name={r.name} current={r.name === currentRoomName} />
+          </div>
         </Link>
       ))}
     </div>

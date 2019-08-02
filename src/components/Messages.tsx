@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { State } from '../modules/index'
-import Message from './Message'
+import Message from './molecules/Message'
 import GetHistoryButton from './ButtonGetHistory'
 
 const Wrap = styled.div`
