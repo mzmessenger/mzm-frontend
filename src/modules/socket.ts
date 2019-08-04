@@ -10,6 +10,9 @@ export function reducer(
 ): SocketState {
   switch (action.type) {
     case 'websocket:init': {
+      if (state.socket) {
+        state.socket.close()
+      }
       const socket = action.payload
       return {
         ...state,

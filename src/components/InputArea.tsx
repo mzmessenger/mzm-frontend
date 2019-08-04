@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 import { State } from '../modules/index'
@@ -75,16 +75,35 @@ export default function InputArea() {
   const [rows, setRows] = useState(
     inputMode === 'normal' ? txt.split('\n').length : editTxt.split('\n').length
   )
+  const textareaRef = useRef(null)
 
-  const handleSubmit = evt => {
-    evt.preventDefault()
+  useEffect(() => {
+    if (inputMode === 'edit') {
+      textareaRef.current.focus()
+    }
+  }, [inputMode])
+
+  const submit = () => {
     if (inputMode === 'normal') {
       sendMessage(txt, currentRoomId, socket)
+      dispatch(inputMessage(''))
     } else if (inputMode === 'edit') {
       sendModifyMessage(editTxt, editId, socket)
       dispatch(endEdit())
     }
-    dispatch(inputMessage(''))
+    setRows(1)
+  }
+
+  const handleSubmit = e => {
+    e.preventDefault()
+    submit()
+  }
+
+  const onKeyUp = (e: React.KeyboardEvent) => {
+    if (e.shiftKey && e.keyCode === 13) {
+      submit()
+      return
+    }
   }
 
   const onChange = e => {
@@ -111,6 +130,8 @@ export default function InputArea() {
               rows={rows}
               value={inputMode === 'edit' ? editTxt : txt}
               onChange={onChange}
+              onKeyUp={onKeyUp}
+              ref={textareaRef}
             />
           </div>
           <div className="button-area">
