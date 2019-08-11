@@ -12,10 +12,17 @@ export type Message = {
 export type Room = {
   id: string
   name: string
+  unread: number
   messages: Message[]
   loading: boolean
   receivedMessages: boolean
   existHistory: boolean
+}
+
+export type ReceiveRoom = {
+  id: string
+  name: string
+  unread: number
 }
 
 export type RoomsState = {
@@ -31,7 +38,7 @@ export type RoomsState = {
 export type RoomsAction =
   | {
       type: 'receive:rooms'
-      payload: { rooms: { id: string; name: string }[] }
+      payload: { rooms: ReceiveRoom[] }
     }
   | {
       type: 'message:send'

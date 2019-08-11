@@ -32,7 +32,7 @@ type ReceiveMessage =
     }
   | {
       cmd: 'rooms'
-      rooms: { id: string; name: string }[]
+      rooms: { id: string; name: string; unread: number }[]
     }
   | {
       cmd: 'messages:room'

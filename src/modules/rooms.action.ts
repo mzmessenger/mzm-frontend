@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux'
 import { sendSocket, SendSocketMessage } from '../lib/util'
 import { convertToHtml } from '../lib/markdown'
-import { RoomsAction, Message, Room } from './rooms.types'
+import { RoomsAction, Message, Room, ReceiveRoom } from './rooms.types'
 import { closeMenu } from './user.action'
 
 export function getMessages(roomId: string, socket: WebSocket): RoomsAction {
@@ -86,10 +86,7 @@ export function getHistory(id: string, roomId: string, socket: WebSocket) {
   sendSocket(socket, message)
 }
 
-export function receiveRooms(
-  rooms: { id: string; name: string }[],
-  currentRoomId: string
-) {
+export function receiveRooms(rooms: ReceiveRoom[], currentRoomId: string) {
   return async function(dispatch: Dispatch<RoomsAction>, socket: WebSocket) {
     if (currentRoomId) {
       dispatch(getMessages(currentRoomId, socket))

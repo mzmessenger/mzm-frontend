@@ -44,6 +44,7 @@ export function reducer(
         const room: Room = {
           id: r.id,
           name: r.name,
+          unread: r.unread,
           messages: [],
           loading: false,
           receivedMessages: false,
