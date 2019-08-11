@@ -18,8 +18,10 @@ function RouterListener({ history }: RouteComponentProps) {
   useEffect(() => {
     if (login && currentRoomName === '') {
       history.push('/')
-    } else {
+    } else if (currentRoomName !== '') {
       document.title = `MZM (${currentRoomName})`
+    } else {
+      document.title = `MZM`
     }
   }, [login, currentRoomName])
 
