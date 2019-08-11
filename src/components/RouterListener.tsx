@@ -18,24 +18,26 @@ function RouterListener({ history }: RouteComponentProps) {
   useEffect(() => {
     if (login && currentRoomName === '') {
       history.push('/')
-    } else if (currentRoomName !== '') {
-      document.title = `MZM (${currentRoomName})`
-    } else {
-      document.title = `MZM`
     }
   }, [login, currentRoomName])
 
   useEffect(() => {
-    const isRooms = /\/(rooms(\/+?))/.test(history.location.pathname)
-    if (!login && (history.location.pathname === '/' || isRooms)) {
+    const room = history.location.pathname.match(/\/rooms\/(.+)/) && RegExp.$1
+    if (!login && (history.location.pathname === '/' || room)) {
       getMyInfo()(dispatch)
     }
 
-    if (login && isRooms && socket) {
+    if (login && room && socket) {
       enterRoom(history.location.pathname.split('/')[2], rooms)(
         dispatch,
         socket
       )
+    }
+
+    if (room) {
+      document.title = `MZM (${room})`
+    } else {
+      document.title = `MZM`
     }
   }, [login, history.location.pathname])
 

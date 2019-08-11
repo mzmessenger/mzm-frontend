@@ -61,7 +61,9 @@ export function reducer(
       }
     }
     case 'rooms:create': {
-      const { room } = state.flatRooms[action.payload.id]
+      const room = state.flatRooms[action.payload.id]
+        ? state.flatRooms[action.payload.id].room
+        : null
 
       return {
         ...state,
@@ -136,9 +138,16 @@ export function reducer(
       }
       const room = state.flatRooms[action.payload.room]
       room.room.loading = false
-      room.room.messages = [...room.room.messages, message]
-      if (!isCurrent) {
-        room.room.unread++
+
+      const index = room.room.messages.map(r => r.id).indexOf(message.id)
+
+      if (index > -1) {
+        room.room.messages[index] = message
+      } else {
+        room.room.messages = [...room.room.messages, message]
+        if (!isCurrent) {
+          room.room.unread++
+        }
       }
 
       const replaced = replaceRoom(
@@ -190,7 +199,14 @@ export function reducer(
       room.room.loading = false
       room.room.existHistory = action.payload.existHistory
       room.room.receivedMessages = true
-      room.room.messages = [...received, ...room.room.messages]
+
+      // uniq
+      const join = [...received, ...room.room.messages]
+      const messages = [...new Set(join.map(m => m.id))].map(id =>
+        join.find(m => m.id === id)
+      )
+      room.room.messages = messages
+
       const replaced = replaceRoom(
         room.index,
         room.room,
