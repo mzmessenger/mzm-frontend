@@ -1,36 +1,45 @@
 import React from 'react'
+import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { State } from '../modules/index'
 import { Room } from '../modules/rooms.types'
-import Link from './atoms/Link'
+import { readMessages } from '../modules/rooms.action'
 import RoomElem from './atoms/RoomElem'
+
+const Wrap = styled.div`
+  padding: 5px 0;
+  cursor: pointer;
+  .link {
+    padding: 4px;
+  }
+`
 
 function Rooms({ history }: RouteComponentProps) {
   const rooms = useSelector((state: State) => state.rooms.rooms)
   const currentRoomName = useSelector(
     (state: State) => state.rooms.currentRoomName
   )
+  const socket = useSelector((state: State) => state.socket.socket)
 
   function onClick(e: React.MouseEvent, room: Room) {
     e.preventDefault()
     history.push(`/rooms/${room.name}`)
+    readMessages(room.id, socket)
   }
 
   return (
-    <div style={{ padding: '5px 0' }}>
+    <Wrap style={{ padding: '5px 0' }}>
       {rooms.map(r => (
-        <Link to={`/rooms/${r.name}`} key={r.id} onClick={e => onClick(e, r)}>
-          <div style={{ padding: '4px' }}>
-            <RoomElem
-              name={r.name}
-              unread={r.unread}
-              current={r.name === currentRoomName}
-            />
-          </div>
-        </Link>
+        <div className="link" key={r.id} onClick={e => onClick(e, r)}>
+          <RoomElem
+            name={r.name}
+            unread={r.unread}
+            current={r.name === currentRoomName}
+          />
+        </div>
       ))}
-    </div>
+    </Wrap>
   )
 }
 

@@ -11,7 +11,8 @@ import {
   receiveMessage,
   receiveModifyMessage,
   receiveMessages,
-  enterSuccess
+  enterSuccess,
+  alreadyRead
 } from '../modules/rooms.action'
 
 type Message = {
@@ -50,6 +51,11 @@ type ReceiveMessage =
       message: Message
       room: string
     }
+  | {
+      cmd: 'rooms:read'
+      user: string
+      room: string
+    }
 
 async function onMessage(
   e: MessageEvent,
@@ -82,6 +88,8 @@ async function onMessage(
         dispatch,
         store.getState().socket.socket
       )
+    } else if (parsed.cmd === 'rooms:read') {
+      dispatch(alreadyRead(parsed.room))
     }
   } catch (e) {
     console.error(e)

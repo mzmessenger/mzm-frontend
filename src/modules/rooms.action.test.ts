@@ -14,7 +14,8 @@ test('enterRoom already entered', async () => {
       messages: [],
       loading: false,
       receivedMessages: false,
-      existHistory: false
+      existHistory: false,
+      unread: 0
     }
   ]
   const dispatch = jest.fn()

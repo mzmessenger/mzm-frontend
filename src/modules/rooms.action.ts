@@ -184,9 +184,17 @@ export function getUsers(roomId: string) {
         'Content-Type': 'application/json; charset=utf-8'
       }
     })
-    if (res.status === 200) {
-      console.log(await res.json())
-    }
     return res
   }
+}
+
+export function readMessages(roomId: string, socket: WebSocket) {
+  sendSocket(socket, {
+    cmd: 'rooms:read',
+    room: roomId
+  })
+}
+
+export function alreadyRead(roomId: string): RoomsAction {
+  return { type: 'already:read', payload: { room: roomId } }
 }

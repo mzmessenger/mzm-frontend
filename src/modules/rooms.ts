@@ -17,9 +17,9 @@ export const initState: RoomsState = {
 function replaceRoom(
   index: number,
   room: Room,
-  flatRooms,
+  flatRooms: RoomsState['flatRooms'],
   rooms: Room[]
-): { rooms: Room[] } {
+): { rooms: Room[]; flatRooms: RoomsState['flatRooms'] } {
   const newRoom = { ...room }
   flatRooms[room.id] = {
     room: newRoom,
@@ -28,7 +28,7 @@ function replaceRoom(
   rooms[index] = newRoom
   rooms = [...rooms]
 
-  return { rooms: rooms }
+  return { rooms: rooms, flatRooms }
 }
 
 export function reducer(
@@ -82,6 +82,7 @@ export function reducer(
           state.rooms
         )
         state.rooms = replaced.rooms
+        state.flatRooms = replaced.flatRooms
       }
       return { ...state }
     }
@@ -107,6 +108,7 @@ export function reducer(
           state.rooms
         )
         state.rooms = replaced.rooms
+        state.flatRooms = replaced.flatRooms
       }
 
       return {
@@ -127,6 +129,7 @@ export function reducer(
       }
     }
     case 'message:receive': {
+      const isCurrent = action.payload.room === state.currentRoomId
       const message = action.payload.message
       if (message.userAccount) {
         message.iconUrl = createIconUrl(message.userAccount)
@@ -134,20 +137,24 @@ export function reducer(
       const room = state.flatRooms[action.payload.room]
       room.room.loading = false
       room.room.messages = [...room.room.messages, message]
+      if (!isCurrent) {
+        room.room.unread++
+      }
+
       const replaced = replaceRoom(
         room.index,
         room.room,
         state.flatRooms,
         state.rooms
       )
-      state.rooms = replaced.rooms
 
-      const isCurrent = action.payload.room === state.currentRoomId
       const currentRoomMessages = isCurrent
         ? room.room.messages
         : state.currentRoomMessages
       return {
         ...state,
+        rooms: replaced.rooms,
+        flatRooms: replaced.flatRooms,
         currentRoomMessages,
         scrollTargetIndex: 'bottom'
       }
@@ -208,6 +215,17 @@ export function reducer(
         currentRoomExistHistory,
         scrollTargetIndex
       }
+    }
+    case 'already:read': {
+      const room = state.flatRooms[action.payload.room]
+      room.room.unread = 0
+      const replaced = replaceRoom(
+        room.index,
+        room.room,
+        state.flatRooms,
+        state.rooms
+      )
+      return { ...state, rooms: replaced.rooms, flatRooms: replaced.flatRooms }
     }
     default:
       return state

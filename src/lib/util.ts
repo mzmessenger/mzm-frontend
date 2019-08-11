@@ -29,3 +29,7 @@ export type SendSocketMessage =
       id: string
       message: string
     }
+  | {
+      cmd: 'rooms:read'
+      room: string
+    }

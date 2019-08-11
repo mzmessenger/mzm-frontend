@@ -86,3 +86,9 @@ export type RoomsAction =
         id: string
       }
     }
+  | {
+      type: 'already:read'
+      payload: {
+        room: string
+      }
+    }
