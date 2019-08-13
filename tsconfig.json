@@ -10,5 +10,6 @@
     "jsx": "preserve",
     "moduleResolution": "node",
     "typeRoots": ["node_modules/@types", "./typings"]
-  }
+  },
+  "exclude": ["node_modules", "**/*.test.ts"]
 }
