@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components'
-import { State } from '../modules/index'
+import { store } from '../modules/index'
 import { createRoom } from '../modules/rooms.action'
 import Button from './atoms/Button'
 import Modal, { ModalProps } from './atoms/Modal'
@@ -44,12 +44,11 @@ function ModalCraeteRoom({ history, open, onClose }: Props) {
   const [txt, setTxt] = useState('')
   const [error, setErrorTxt] = useState('')
   const dispatch = useDispatch()
-  const socket = useSelector((state: State) => state.socket.socket)
 
   const handleSubmit = evt => {
     evt.preventDefault()
     // @todo エラー時の処理
-    createRoom(txt)(dispatch, socket)
+    createRoom(txt)(dispatch, store.getState)
       .then(data => {
         if (data.status === 200) {
           onClose()

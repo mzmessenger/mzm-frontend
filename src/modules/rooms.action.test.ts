@@ -19,8 +19,13 @@ test('enterRoom already entered', async () => {
     }
   ]
   const dispatch = jest.fn()
+  const getState = () => ({
+    socket: {
+      socket
+    }
+  })
 
-  action.enterRoom('test', rooms)(dispatch, socket as any)
+  action.enterRoom('test', rooms)(dispatch, getState as any)
 
   expect(dispatch.mock.calls.length).toBe(3)
 
@@ -46,8 +51,13 @@ test('enterRoom does not enter', async () => {
   const rooms: Room[] = []
 
   const dispatch = jest.fn()
+  const getState = () => ({
+    socket: {
+      socket
+    }
+  })
 
-  action.enterRoom('test', rooms)(dispatch, socket as any)
+  action.enterRoom('test', rooms)(dispatch, getState as any)
 
   expect(socket.send.mock.calls.length).toBe(1)
   const [arg] = socket.send.mock.calls[0]

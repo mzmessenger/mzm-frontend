@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import DirectionsRun from '@material-ui/icons/DirectionsRun'
-import { State } from '../modules/index'
+import { State, store } from '../modules/index'
 import { exitRoom } from '../modules/rooms.action'
 
 const Wrap = styled.div`
@@ -25,12 +25,11 @@ const Wrap = styled.div`
 
 export default function RoomSetting() {
   const dispatch = useDispatch()
-  const socket = useSelector((state: State) => state.socket.socket)
   const id = useSelector((state: State) => state.rooms.currentRoomId)
   const name = useSelector((state: State) => state.rooms.currentRoomName) || ''
 
   const onClick = () => {
-    exitRoom(id)(dispatch, socket)
+    exitRoom(id)(dispatch, store.getState)
   }
 
   return (

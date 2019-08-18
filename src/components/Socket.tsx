@@ -2,8 +2,7 @@ import React, { useMemo } from 'react'
 import { Dispatch, Store } from 'redux'
 import { useSelector, useDispatch } from 'react-redux'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
-import { store } from '../index'
-import { State } from '../modules/index'
+import { store, State } from '../modules/index'
 import { initSocket } from '../modules/socket.action'
 import { logout } from '../modules/user.action'
 import {
@@ -68,7 +67,7 @@ async function onMessage(
     if (parsed.cmd === 'rooms') {
       receiveRooms(parsed.rooms, store.getState().rooms.currentRoomId)(
         dispatch,
-        store.getState().socket.socket
+        store.getState
       )
     } else if (parsed.cmd === 'message:receive') {
       receiveMessage(parsed.message, parsed.room)(dispatch)
@@ -86,7 +85,7 @@ async function onMessage(
       }
       enterSuccess(parsed.id, parsed.name, store.getState().rooms.rooms)(
         dispatch,
-        store.getState().socket.socket
+        store.getState
       )
     } else if (parsed.cmd === 'rooms:read') {
       dispatch(alreadyRead(parsed.room))

@@ -1,14 +1,11 @@
 import React from 'react'
 import ReactDom from 'react-dom'
-import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import 'normalize.css'
 import 'highlight.js/styles/androidstudio.css'
 import './index.css'
-import { reducer } from './modules/index'
+import { store } from './modules/index'
 import App from './App'
-
-export const store = createStore(reducer)
 
 ReactDom.render(
   <Provider store={store}>

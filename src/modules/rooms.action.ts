@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux'
 import { sendSocket, SendSocketMessage } from '../lib/util'
 import { convertToHtml } from '../lib/markdown'
+import { State } from './index'
 import { RoomsAction, Message, Room, ReceiveRoom } from './rooms.types'
 import { closeMenu } from './user.action'
 
@@ -13,7 +14,10 @@ export function getMessages(roomId: string, socket: WebSocket): RoomsAction {
 }
 
 export function createRoom(name: string) {
-  return async function(dispatch: Dispatch<RoomsAction>, socket: WebSocket) {
+  return async function(
+    dispatch: Dispatch<RoomsAction>,
+    getState: () => State
+  ) {
     const res = await fetch('/api/rooms', {
       method: 'POST',
       mode: 'cors',
@@ -24,7 +28,7 @@ export function createRoom(name: string) {
     })
     if (res.status === 200) {
       const room: { id: string; name: string } = await res.json()
-      sendSocket(socket, { cmd: 'rooms:get' })
+      sendSocket(getState().socket.socket, { cmd: 'rooms:get' })
       dispatch({
         type: 'rooms:create',
         payload: { id: room.id, name: room.name }
@@ -35,11 +39,11 @@ export function createRoom(name: string) {
 }
 
 export function enterRoom(roomName: string, rooms: Room[]) {
-  return async function(dispatch: Dispatch, socket: WebSocket) {
+  return async function(dispatch: Dispatch, getState: () => State) {
     const [room] = rooms.filter(r => r.name === roomName)
     if (room) {
       if (!room.receivedMessages && !room.loading) {
-        dispatch(getMessages(room.id, socket))
+        dispatch(getMessages(room.id, getState().socket.socket))
       }
       dispatch({
         type: 'change:room',
@@ -50,7 +54,7 @@ export function enterRoom(roomName: string, rooms: Room[]) {
       dispatch(closeMenu())
       return
     }
-    sendSocket(socket, {
+    sendSocket(getState().socket.socket, {
       cmd: 'rooms:enter',
       name: roomName
     })
@@ -60,7 +64,10 @@ export function enterRoom(roomName: string, rooms: Room[]) {
 }
 
 export function exitRoom(roomId: string) {
-  return async function(dispatch: Dispatch<RoomsAction>, socket: WebSocket) {
+  return async function(
+    dispatch: Dispatch<RoomsAction>,
+    getState: () => State
+  ) {
     const res = await fetch('/api/rooms/enter', {
       method: 'DELETE',
       mode: 'cors',
@@ -70,7 +77,7 @@ export function exitRoom(roomId: string) {
       body: JSON.stringify({ room: roomId })
     })
     if (res.status === 200) {
-      sendSocket(socket, { cmd: 'rooms:get' })
+      sendSocket(getState().socket.socket, { cmd: 'rooms:get' })
       dispatch({ type: 'rooms:exit' })
     }
     return res
@@ -87,9 +94,12 @@ export function getHistory(id: string, roomId: string, socket: WebSocket) {
 }
 
 export function receiveRooms(rooms: ReceiveRoom[], currentRoomId: string) {
-  return async function(dispatch: Dispatch<RoomsAction>, socket: WebSocket) {
+  return async function(
+    dispatch: Dispatch<RoomsAction>,
+    getState: () => State
+  ) {
     if (currentRoomId) {
-      dispatch(getMessages(currentRoomId, socket))
+      dispatch(getMessages(currentRoomId, getState().socket.socket))
     }
     dispatch({
       type: 'receive:rooms',
@@ -154,15 +164,18 @@ export function receiveMessages({
 }
 
 export function enterSuccess(id: string, name: string, rooms: Room[]) {
-  return async function(dispatch: Dispatch<RoomsAction>, socket: WebSocket) {
+  return async function(
+    dispatch: Dispatch<RoomsAction>,
+    getState: () => State
+  ) {
     const [room] = rooms.filter(r => r.id === id)
     // すでに入っている部屋だったら部屋の再取得をしない
     if (!room) {
-      sendSocket(socket, { cmd: 'rooms:get' })
+      sendSocket(getState().socket.socket, { cmd: 'rooms:get' })
     }
     let loading = false
     if (room && !room.receivedMessages && !loading) {
-      dispatch(getMessages(id, socket))
+      dispatch(getMessages(id, getState().socket.socket))
       loading = true
     }
     dispatch({
