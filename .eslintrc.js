@@ -7,8 +7,7 @@ module.exports = {
       jsx: true
     },
     useJSXTextNode: true,
-    sourceType: 'module',
-    project: './tsconfig.json'
+    sourceType: 'module'
   },
   env: {
     browser: true,
