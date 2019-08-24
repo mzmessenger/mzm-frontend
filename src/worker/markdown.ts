@@ -1,7 +1,15 @@
 import marked from 'marked'
 import { escape } from 'validator'
-import highlight from 'highlight.js'
 import { expose } from 'comlink'
+
+// bundle size
+import highlight from 'highlight.js/lib/highlight'
+import shell from 'highlight.js/lib/languages/shell'
+import javascript from 'highlight.js/lib/languages/javascript'
+import css from 'highlight.js/lib/languages/css'
+highlight.registerLanguage('shell', shell)
+highlight.registerLanguage('javascript', javascript)
+highlight.registerLanguage('css', css)
 
 const ctx: Worker = self as any
 

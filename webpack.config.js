@@ -14,6 +14,17 @@ module.exports = {
     path: path.join(__dirname, 'dist'),
     publicPath: '/'
   },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        react: {
+          test: /react/,
+          chunks: 'all'
+        }
+      }
+    }
+  },
   devtool: 'source-map',
   resolve: {
     modules: ['node_modules'],

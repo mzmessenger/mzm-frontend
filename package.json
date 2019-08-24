@@ -7,8 +7,8 @@
     "start": "webpack-dev-server",
     "format": "prettier --write src/**/*.{ts,tsx,js}",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx src/",
+    "pretest": "npm run lint",
     "test": "jest",
-    "prebuild": "npm run lint",
     "build": "webpack",
     "build:prod": "webpack --mode=production"
   },
