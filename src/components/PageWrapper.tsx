@@ -9,7 +9,6 @@ import Header from './Header'
 const Wrap = styled.div`
   height: 100%;
   display: grid;
-  grid-template-rows: var(--header-height) 1fr;
   grid-template-areas:
     'header'
     'body';

@@ -9,6 +9,7 @@ import MenuIcon from './atoms/MobileMenuIcon'
 import MyInfo from './MyInfo'
 
 const Wrap = styled.header`
+  height: var(--header-height);
   padding: 0 16px;
   background-color: var(--color-surface);
   max-width: 100vw;

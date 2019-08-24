@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "incremental": true,
     "lib": ["es2017", "dom", "webworker"],
     "outDir": "dist",
     "sourceMap": true,

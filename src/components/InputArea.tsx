@@ -8,14 +8,23 @@ import {
 } from '../modules/socket.action'
 import { inputMessage, modifyMessage, endEdit } from '../modules/user.action'
 import Button from './atoms/Button'
+import ResizerY from './atoms/ResizerY'
+
+const HEIGHT_KEY = 'mzm:input:height'
 
 const Wrap = styled.div`
+  display: flex;
+  flex-direction: column;
   padding: 0 15px;
+  color: var(--color-on-background);
+
   .form-wrap {
     padding: 10px 0;
+    flex: 1;
   }
 
   form {
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: flex-end;
@@ -28,6 +37,7 @@ const Wrap = styled.div`
   }
 
   .text-area-wrap {
+    height: 100%;
     flex: 1;
     border-radius: 5px;
     background-color: var(--color-input-background);
@@ -38,7 +48,7 @@ const Wrap = styled.div`
       min-height: 2em;
       color: var(--color-input);
       background-color: transparent;
-      resize: vertical;
+      resize: none;
       border: none;
       appearance: none;
       padding: 10px;
@@ -76,6 +86,16 @@ export default function InputArea() {
     inputMode === 'normal' ? txt.split('\n').length : editTxt.split('\n').length
   )
   const textareaRef = useRef(null)
+  const [height, _setHeight] = useState(
+    localStorage.getItem(HEIGHT_KEY)
+      ? parseInt(localStorage.getItem(HEIGHT_KEY), 10)
+      : 68
+  )
+
+  const setHeight = (h: number) => {
+    _setHeight(h)
+    localStorage.setItem(HEIGHT_KEY, `${h}`)
+  }
 
   useEffect(() => {
     if (inputMode === 'edit') {
@@ -122,7 +142,8 @@ export default function InputArea() {
   }
 
   return (
-    <Wrap>
+    <Wrap style={{ minHeight: height }}>
+      <ResizerY height={height} setHeight={setHeight} />
       <div className={classNames.join(' ')}>
         <form onSubmit={handleSubmit}>
           <div className="text-area-wrap">
