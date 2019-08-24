@@ -3,6 +3,9 @@ export function createIconUrl(user: string) {
 }
 
 export function sendSocket(socket: WebSocket, message: SendSocketMessage) {
+  if (!socket) {
+    return
+  }
   socket.send(JSON.stringify(message))
 }
 
