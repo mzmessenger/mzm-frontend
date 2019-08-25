@@ -1,5 +1,11 @@
 import { createIconUrl } from '../lib/util'
-import { RoomsState, RoomsAction, Message, Room } from './rooms.types'
+import {
+  RoomActionEnum,
+  RoomsState,
+  RoomsAction,
+  Message,
+  Room
+} from './rooms.types'
 
 const splited = location.pathname.split('/')
 const initCurrentRoomName = splited[1] === 'rooms' ? splited[2] : ''
@@ -36,7 +42,7 @@ export function reducer(
   action: RoomsAction
 ): RoomsState {
   switch (action.type) {
-    case 'receive:rooms': {
+    case RoomActionEnum.ReceiveRooms: {
       const flatRooms = {}
 
       const rooms = []
@@ -60,7 +66,7 @@ export function reducer(
         flatRooms
       }
     }
-    case 'rooms:create': {
+    case RoomActionEnum.CreateRoom: {
       const room = state.flatRooms[action.payload.id]
         ? state.flatRooms[action.payload.id].room
         : null
@@ -73,7 +79,7 @@ export function reducer(
         currentRoomExistHistory: room ? room.existHistory : false
       }
     }
-    case 'get:messages': {
+    case RoomActionEnum.GetMessages: {
       const room = state.flatRooms[action.payload.id]
       if (room) {
         room.room.loading = true
@@ -88,7 +94,7 @@ export function reducer(
       }
       return { ...state }
     }
-    case 'change:room': {
+    case RoomActionEnum.ChangeRoom: {
       const room = state.flatRooms[action.payload.id]
       return {
         ...state,
@@ -99,7 +105,7 @@ export function reducer(
         scrollTargetIndex: 'bottom'
       }
     }
-    case 'rooms:enter:success': {
+    case RoomActionEnum.EnterRoomSuccess: {
       const room = state.flatRooms[action.payload.id]
       if (room) {
         room.room.loading = action.payload.loading
@@ -121,7 +127,7 @@ export function reducer(
         currentRoomExistHistory: room ? room.room.existHistory : false
       }
     }
-    case 'rooms:exit': {
+    case RoomActionEnum.ExitRoom: {
       return {
         ...state,
         currentRoomId: '',
@@ -130,7 +136,7 @@ export function reducer(
         currentRoomExistHistory: false
       }
     }
-    case 'message:receive': {
+    case RoomActionEnum.ReceiveMessage: {
       const isCurrent = action.payload.room === state.currentRoomId
       const message = action.payload.message
       if (message.userAccount) {
@@ -168,7 +174,7 @@ export function reducer(
         scrollTargetIndex: 'bottom'
       }
     }
-    case 'message:modify:success': {
+    case RoomActionEnum.ModifyMessageSuccess: {
       const room = { ...state.flatRooms[action.payload.room].room }
       const index = room.messages
         .map(r => r.id)
@@ -188,7 +194,7 @@ export function reducer(
           : state.currentRoomMessages
       return { ...state, currentRoomMessages }
     }
-    case 'messages:room': {
+    case RoomActionEnum.ReceiveMessages: {
       const received: Message[] = action.payload.messages.map(message => {
         const iconUrl = message.userAccount
           ? createIconUrl(message.userAccount)
@@ -232,7 +238,7 @@ export function reducer(
         scrollTargetIndex
       }
     }
-    case 'already:read': {
+    case RoomActionEnum.AlreadyRead: {
       const room = state.flatRooms[action.payload.room]
       room.room.unread = 0
       const replaced = replaceRoom(

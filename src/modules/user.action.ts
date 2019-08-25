@@ -1,6 +1,13 @@
 import { Dispatch } from 'redux'
 import { createIconUrl } from '../lib/util'
-import { UserAction } from './user.types'
+import { UserAction, UserActionEnum } from './user.types'
+
+export function signup(account: string) {
+  return {
+    type: UserActionEnum.Signup,
+    payload: { account }
+  }
+}
 
 export function getMyInfo() {
   return async function(dispatch: Dispatch<UserAction>) {
@@ -8,9 +15,9 @@ export function getMyInfo() {
     if (res.status === 200) {
       const payload: { account: string; id: string } = await res.json()
       const iconUrl = payload.account ? createIconUrl(payload.account) : null
-      dispatch({ type: 'me:set', payload: { ...payload, iconUrl } })
+      dispatch({ type: UserActionEnum.SetMe, payload: { ...payload, iconUrl } })
     } else {
-      dispatch({ type: 'logout' })
+      dispatch({ type: UserActionEnum.Logout })
     }
     return res
   }
@@ -26,12 +33,12 @@ export function removeUser() {
       }
     })
     if (res.status === 200) {
-      dispatch({ type: 'remove:user' })
+      dispatch({ type: UserActionEnum.Remove })
     }
     return res
   }
 }
 
-export function logout() {
-  return { type: 'logout' }
+export function logout(): UserAction {
+  return { type: UserActionEnum.Logout }
 }

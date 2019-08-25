@@ -1,16 +1,22 @@
 import { Dispatch } from 'redux'
-import { sendSocket, SendSocketMessage } from '../lib/util'
+import { sendSocket, SendSocketMessage, SendSocketCmdEnum } from '../lib/util'
 import { convertToHtml } from '../lib/markdown'
 import { State } from './index'
-import { RoomsAction, Message, Room, ReceiveRoom } from './rooms.types'
+import {
+  RoomActionEnum,
+  RoomsAction,
+  Message,
+  Room,
+  ReceiveRoom
+} from './rooms.types'
 import { closeMenu } from './ui.action'
 
 export function getMessages(roomId: string, socket: WebSocket): RoomsAction {
   sendSocket(socket, {
-    cmd: 'messages:room',
+    cmd: SendSocketCmdEnum.GetMessages,
     room: roomId
   })
-  return { type: 'get:messages', payload: { id: roomId } }
+  return { type: RoomActionEnum.GetMessages, payload: { id: roomId } }
 }
 
 export function createRoom(name: string) {
@@ -28,9 +34,9 @@ export function createRoom(name: string) {
     })
     if (res.status === 200) {
       const room: { id: string; name: string } = await res.json()
-      sendSocket(getState().socket.socket, { cmd: 'rooms:get' })
+      sendSocket(getState().socket.socket, { cmd: SendSocketCmdEnum.GetRooms })
       dispatch({
-        type: 'rooms:create',
+        type: RoomActionEnum.CreateRoom,
         payload: { id: room.id, name: room.name }
       })
     }
@@ -46,7 +52,7 @@ export function enterRoom(roomName: string, rooms: Room[]) {
         dispatch(getMessages(room.id, getState().socket.socket))
       }
       dispatch({
-        type: 'change:room',
+        type: RoomActionEnum.ChangeRoom,
         payload: {
           id: room.id
         }
@@ -55,10 +61,9 @@ export function enterRoom(roomName: string, rooms: Room[]) {
       return
     }
     sendSocket(getState().socket.socket, {
-      cmd: 'rooms:enter',
+      cmd: SendSocketCmdEnum.EnterRoom,
       name: roomName
     })
-    dispatch({ type: 'enter:room' })
     dispatch(closeMenu())
   }
 }
@@ -77,8 +82,8 @@ export function exitRoom(roomId: string) {
       body: JSON.stringify({ room: roomId })
     })
     if (res.status === 200) {
-      sendSocket(getState().socket.socket, { cmd: 'rooms:get' })
-      dispatch({ type: 'rooms:exit' })
+      sendSocket(getState().socket.socket, { cmd: SendSocketCmdEnum.GetRooms })
+      dispatch({ type: RoomActionEnum.ExitRoom })
     }
     return res
   }
@@ -86,7 +91,7 @@ export function exitRoom(roomId: string) {
 
 export function getHistory(id: string, roomId: string, socket: WebSocket) {
   const message: SendSocketMessage = {
-    cmd: 'messages:room',
+    cmd: SendSocketCmdEnum.GetMessages,
     room: roomId,
     id: id
   }
@@ -102,7 +107,7 @@ export function receiveRooms(rooms: ReceiveRoom[], currentRoomId: string) {
       dispatch(getMessages(currentRoomId, getState().socket.socket))
     }
     dispatch({
-      type: 'receive:rooms',
+      type: RoomActionEnum.ReceiveRooms,
       payload: {
         rooms: rooms
       }
@@ -114,7 +119,7 @@ export function receiveMessage(message: Message, room: string) {
   return async function(dispatch: Dispatch<RoomsAction>) {
     const html = await convertToHtml(message.message)
     return dispatch({
-      type: 'message:receive',
+      type: RoomActionEnum.ReceiveMessage,
       payload: {
         message: { ...message, html: html },
         room: room
@@ -127,7 +132,7 @@ export function receiveModifyMessage(message: Message, room: string) {
   return async function(dispatch: Dispatch<RoomsAction>) {
     const html = await convertToHtml(message.message)
     return dispatch({
-      type: 'message:modify:success',
+      type: RoomActionEnum.ModifyMessageSuccess,
       payload: {
         message: { ...message, html: html },
         room: room
@@ -153,7 +158,7 @@ export function receiveMessages({
     })
 
     return dispatch({
-      type: 'messages:room',
+      type: RoomActionEnum.ReceiveMessages,
       payload: {
         room: room,
         existHistory: existHistory,
@@ -171,7 +176,7 @@ export function enterSuccess(id: string, name: string, rooms: Room[]) {
     const [room] = rooms.filter(r => r.id === id)
     // すでに入っている部屋だったら部屋の再取得をしない
     if (!room) {
-      sendSocket(getState().socket.socket, { cmd: 'rooms:get' })
+      sendSocket(getState().socket.socket, { cmd: SendSocketCmdEnum.GetRooms })
     }
     let loading = false
     if (room && !room.receivedMessages && !loading) {
@@ -179,7 +184,7 @@ export function enterSuccess(id: string, name: string, rooms: Room[]) {
       loading = true
     }
     dispatch({
-      type: 'rooms:enter:success',
+      type: RoomActionEnum.EnterRoomSuccess,
       payload: { id: id, name: name, loading }
     })
   }
@@ -203,11 +208,11 @@ export function getUsers(roomId: string) {
 
 export function readMessages(roomId: string, socket: WebSocket) {
   sendSocket(socket, {
-    cmd: 'rooms:read',
+    cmd: SendSocketCmdEnum.SendAlreadyRead,
     room: roomId
   })
 }
 
 export function alreadyRead(roomId: string): RoomsAction {
-  return { type: 'already:read', payload: { room: roomId } }
+  return { type: RoomActionEnum.AlreadyRead, payload: { room: roomId } }
 }

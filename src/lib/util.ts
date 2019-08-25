@@ -9,30 +9,39 @@ export function sendSocket(socket: WebSocket, message: SendSocketMessage) {
   socket.send(JSON.stringify(message))
 }
 
+export enum SendSocketCmdEnum {
+  SendMessage = 'message:send',
+  GetMessages = 'messages:room',
+  GetRooms = 'rooms:get',
+  EnterRoom = 'rooms:enter',
+  ModifyMessage = 'message:modify',
+  SendAlreadyRead = 'rooms:read'
+}
+
 export type SendSocketMessage =
   | {
-      cmd: 'message:send'
+      cmd: SendSocketCmdEnum.SendMessage
       message: string
       room: string
     }
   | {
-      cmd: 'messages:room'
+      cmd: SendSocketCmdEnum.GetMessages
       room: string
       id?: string
     }
   | {
-      cmd: 'rooms:get'
+      cmd: SendSocketCmdEnum.GetRooms
     }
   | {
-      cmd: 'rooms:enter'
+      cmd: SendSocketCmdEnum.EnterRoom
       name: string
     }
   | {
-      cmd: 'message:modify'
+      cmd: SendSocketCmdEnum.ModifyMessage
       id: string
       message: string
     }
   | {
-      cmd: 'rooms:read'
+      cmd: SendSocketCmdEnum.SendAlreadyRead
       room: string
     }

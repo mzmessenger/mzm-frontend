@@ -35,36 +35,46 @@ export type RoomsState = {
   scrollTargetIndex: number | 'bottom'
 }
 
+export enum RoomActionEnum {
+  ReceiveRooms = 'roomAction:receive',
+  ReceiveMessage = 'roomAction:receiveMessage',
+  ReceiveMessages = 'roomAction:receiveMessages',
+  GetMessages = 'roomAction:getMessages',
+  ModifyMessageSuccess = 'roomAction:modifyMessageSuccess',
+  EnterRoomSuccess = 'roomAction:enterRoomSuccess',
+  ExitRoom = 'roomAction:exitRoom',
+  CreateRoom = 'roomAction:createRoom',
+  ChangeRoom = 'roomAction:changeRoom',
+  // 既読
+  AlreadyRead = 'roomAction:alreadyRead'
+}
+
 export type RoomsAction =
   | {
-      type: 'receive:rooms'
+      type: RoomActionEnum.ReceiveRooms
       payload: { rooms: ReceiveRoom[] }
     }
   | {
-      type: 'message:send'
-      payload: string
-    }
-  | {
-      type: 'message:receive'
+      type: RoomActionEnum.ReceiveMessage
       payload: { message: Message; room: string }
     }
   | {
-      type: 'message:modify:success'
+      type: RoomActionEnum.ModifyMessageSuccess
       payload: { message: Message; room: string }
     }
   | {
-      type: 'rooms:enter:success'
+      type: RoomActionEnum.EnterRoomSuccess
       payload: { id: string; name: string; loading: boolean }
     }
   | {
-      type: 'rooms:exit'
+      type: RoomActionEnum.ExitRoom
     }
   | {
-      type: 'rooms:create'
+      type: RoomActionEnum.CreateRoom
       payload: { id: string; name: string }
     }
   | {
-      type: 'messages:room'
+      type: RoomActionEnum.ReceiveMessages
       payload: {
         room: string
         existHistory: boolean
@@ -72,22 +82,19 @@ export type RoomsAction =
       }
     }
   | {
-      type: 'enter:room'
-    }
-  | {
-      type: 'change:room'
+      type: RoomActionEnum.ChangeRoom
       payload: {
         id: string
       }
     }
   | {
-      type: 'get:messages'
+      type: RoomActionEnum.GetMessages
       payload: {
         id: string
       }
     }
   | {
-      type: 'already:read'
+      type: RoomActionEnum.AlreadyRead
       payload: {
         room: string
       }

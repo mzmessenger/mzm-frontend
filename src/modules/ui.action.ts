@@ -1,45 +1,45 @@
-import { UIAction } from './ui.types'
+import { UIAction, UIActionEnum } from './ui.types'
 
 export function onResize(innerWidth: number, innerHeight: number): UIAction {
-  return { type: 'onresize', payload: { innerWidth, innerHeight } }
+  return { type: UIActionEnum.Onresize, payload: { innerWidth, innerHeight } }
 }
 
 export function openMenu(): UIAction {
-  return { type: 'menu:open' }
+  return { type: UIActionEnum.OpenMenu }
 }
 
 export function closeMenu(): UIAction {
-  return { type: 'menu:close' }
+  return { type: UIActionEnum.CloseMenu }
 }
 
 export function startEdit(messageId: string, txt: string): UIAction {
-  return { type: 'edit:start', payload: { id: messageId, txt } }
+  return { type: UIActionEnum.StartEditing, payload: { id: messageId, txt } }
 }
 
 export function endEdit(): UIAction {
-  return { type: 'edit:end' }
+  return { type: UIActionEnum.EndEditing }
 }
 
 export function modifyMessage(txt: string): UIAction {
-  return { type: 'modify:txt', payload: { txt } }
+  return { type: UIActionEnum.ModifyText, payload: { txt } }
 }
 
 export function inputMessage(txt: string): UIAction {
-  return { type: 'input:txt', payload: { txt } }
+  return { type: UIActionEnum.InputText, payload: { txt } }
 }
 
 export function openSettings(): UIAction {
-  return { type: 'open:settings' }
+  return { type: UIActionEnum.OpenSettings }
 }
 
 export function closeSettings(): UIAction {
-  return { type: 'close:settings' }
+  return { type: UIActionEnum.CloseSettings }
 }
 
 export function openUserDetail(id: string, account: string): UIAction {
-  return { type: 'open:userdetail', payload: { id, account } }
+  return { type: UIActionEnum.OpenUserDetail, payload: { id, account } }
 }
 
 export function closeUserDetail(): UIAction {
-  return { type: 'close:userdetail' }
+  return { type: UIActionEnum.CloseUserDetail }
 }

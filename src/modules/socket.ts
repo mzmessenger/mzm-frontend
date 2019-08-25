@@ -1,4 +1,4 @@
-import { SocketState, SocketAction } from './socket.types'
+import { SocketState, SocketAction, SocketActionEnum } from './socket.types'
 
 export const initState: SocketState = {
   socket: null
@@ -9,7 +9,7 @@ export function reducer(
   action: SocketAction
 ): SocketState {
   switch (action.type) {
-    case 'websocket:init': {
+    case SocketActionEnum.Init: {
       if (state.socket) {
         state.socket.close()
       }

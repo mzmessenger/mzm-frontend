@@ -11,48 +11,56 @@ export type UIState = {
   userDetail: { id: string; account: string; icon: string }
 }
 
+export enum UIActionEnum {
+  Onresize = 'UIAction:Onresize',
+  OpenMenu = 'UIAction:OpenMenu',
+  CloseMenu = 'UIAction:CloseMenu',
+  InputText = 'UIAction:InputText',
+  StartEditing = 'UIAction:StartEditing',
+  EndEditing = 'UIAction:EndEditing',
+  ModifyText = 'UIAction:ModifyText',
+  OpenSettings = 'UIAction:OpenSettings',
+  CloseSettings = 'UIAction:CloseSettings',
+  OpenUserDetail = 'UIAction:OpenUserDetail',
+  CloseUserDetail = 'UIAction:CloseUserDetail'
+}
+
 export type UIAction =
   | {
-      type: 'onresize'
+      type: UIActionEnum.Onresize
       payload: { innerHeight: number; innerWidth: number }
     }
   | {
-      type: 'menu:open'
+      type: UIActionEnum.OpenMenu
     }
   | {
-      type: 'menu:close'
+      type: UIActionEnum.CloseMenu
     }
   | {
-      type: 'overlay:show'
-    }
-  | {
-      type: 'overlay:hide'
-    }
-  | {
-      type: 'input:txt'
+      type: UIActionEnum.InputText
       payload: { txt: string }
     }
   | {
-      type: 'edit:start'
+      type: UIActionEnum.StartEditing
       payload: { id: string; txt: string }
     }
   | {
-      type: 'edit:end'
+      type: UIActionEnum.EndEditing
     }
   | {
-      type: 'modify:txt'
+      type: UIActionEnum.ModifyText
       payload: { txt: string }
     }
   | {
-      type: 'open:settings'
+      type: UIActionEnum.OpenSettings
     }
   | {
-      type: 'close:settings'
+      type: UIActionEnum.CloseSettings
     }
   | {
-      type: 'open:userdetail'
+      type: UIActionEnum.OpenUserDetail
       payload: { id: string; account: string }
     }
   | {
-      type: 'close:userdetail'
+      type: UIActionEnum.CloseUserDetail
     }

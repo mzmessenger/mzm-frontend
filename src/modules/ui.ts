@@ -1,4 +1,4 @@
-import { UIState, UIAction } from './ui.types'
+import { UIState, UIAction, UIActionEnum } from './ui.types'
 import { WIDTH_MOBILE } from '../lib/constants'
 import { createIconUrl } from '../lib/util'
 
@@ -17,33 +17,33 @@ export const initState: UIState = {
 
 export function reducer(state: UIState = initState, action: UIAction): UIState {
   switch (action.type) {
-    case 'onresize':
+    case UIActionEnum.Onresize:
       return {
         ...state,
         device: action.payload.innerWidth <= WIDTH_MOBILE ? 'mobile' : 'pc'
       }
-    case 'menu:open':
+    case UIActionEnum.OpenMenu:
       return { ...state, menuStatus: 'open', overlay: true }
-    case 'menu:close':
+    case UIActionEnum.CloseMenu:
       return { ...state, menuStatus: 'close', overlay: false }
-    case 'input:txt':
+    case UIActionEnum.InputText:
       return { ...state, txt: action.payload.txt }
-    case 'edit:start':
+    case UIActionEnum.StartEditing:
       return {
         ...state,
         inputMode: 'edit',
         editTxt: action.payload.txt,
         editId: action.payload.id
       }
-    case 'edit:end':
+    case UIActionEnum.EndEditing:
       return { ...state, inputMode: 'normal', editTxt: '', editId: null }
-    case 'modify:txt':
+    case UIActionEnum.ModifyText:
       return { ...state, editTxt: action.payload.txt }
-    case 'open:settings':
+    case UIActionEnum.OpenSettings:
       return { ...state, openSettings: true }
-    case 'close:settings':
+    case UIActionEnum.CloseSettings:
       return { ...state, openSettings: false }
-    case 'open:userdetail':
+    case UIActionEnum.OpenUserDetail:
       return {
         ...state,
         openUserDetail: true,
@@ -53,7 +53,7 @@ export function reducer(state: UIState = initState, action: UIAction): UIState {
           icon: createIconUrl(action.payload.account)
         }
       }
-    case 'close:userdetail':
+    case UIActionEnum.CloseUserDetail:
       return { ...state, openUserDetail: false, userDetail: null }
     default:
       return state

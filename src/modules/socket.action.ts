@@ -1,16 +1,19 @@
-import { sendSocket, SendSocketMessage } from '../lib/util'
-import { SocketAction } from './socket.types'
+import { sendSocket, SendSocketMessage, SendSocketCmdEnum } from '../lib/util'
+import { SocketAction, SocketActionEnum } from './socket.types'
 
 export function initSocket(
   socket: WebSocket,
   currentRoomName: string
 ): SocketAction {
   if (currentRoomName) {
-    sendSocket(socket, { cmd: 'rooms:enter', name: currentRoomName })
+    sendSocket(socket, {
+      cmd: SendSocketCmdEnum.EnterRoom,
+      name: currentRoomName
+    })
   } else {
-    sendSocket(socket, { cmd: 'rooms:get' })
+    sendSocket(socket, { cmd: SendSocketCmdEnum.GetRooms })
   }
-  return { type: 'websocket:init', payload: socket }
+  return { type: SocketActionEnum.Init, payload: socket }
 }
 
 export function sendMessage(
@@ -19,7 +22,7 @@ export function sendMessage(
   socket: WebSocket
 ) {
   const send: SendSocketMessage = {
-    cmd: 'message:send',
+    cmd: SendSocketCmdEnum.SendMessage,
     message: message,
     room: roomId
   }
@@ -32,7 +35,7 @@ export function modifyMessage(
   socket: WebSocket
 ) {
   const send: SendSocketMessage = {
-    cmd: 'message:modify',
+    cmd: SendSocketCmdEnum.ModifyMessage,
     message: message,
     id: messageId
   }

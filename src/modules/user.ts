@@ -1,4 +1,4 @@
-import { UserState, UserAction } from './user.types'
+import { UserState, UserAction, UserActionEnum } from './user.types'
 
 export const initState: UserState = {
   signup: false,
@@ -12,17 +12,17 @@ export function reducer(
   action: UserAction
 ): UserState {
   switch (action.type) {
-    case 'signup': {
+    case UserActionEnum.Signup: {
       return {
         ...initState,
         signup: true,
         signupAccount: action.payload.account
       }
     }
-    case 'logout':
-    case 'remove:user':
+    case UserActionEnum.Logout:
+    case UserActionEnum.Remove:
       return { ...initState, login: false }
-    case 'me:set':
+    case UserActionEnum.SetMe:
       return { ...state, login: true, me: action.payload }
     default:
       return state

@@ -2,8 +2,10 @@ jest.mock('../lib/markdown', () => ({
   convertToHtml: jest.fn()
 }))
 
+import { SendSocketCmdEnum } from '../lib/util'
 import * as action from './rooms.action'
-import { Room } from './rooms.types'
+import { Room, RoomActionEnum } from './rooms.types'
+import { UIActionEnum } from './ui.types'
 
 test('enterRoom already entered', async () => {
   const socket = { send: jest.fn() }
@@ -31,19 +33,18 @@ test('enterRoom already entered', async () => {
 
   expect(socket.send.mock.calls.length).toBe(1)
   const [arg] = socket.send.mock.calls[0]
-  expect(JSON.parse(arg).cmd).toStrictEqual('messages:room')
+  expect(JSON.parse(arg).cmd).toStrictEqual(SendSocketCmdEnum.GetMessages)
 
   const [
     [getMessagesArg],
     [chaneRoomArgs],
     [menuCloseArgs]
   ] = dispatch.mock.calls
-  expect(getMessagesArg.type).toStrictEqual('get:messages')
-
-  expect(chaneRoomArgs.type).toStrictEqual('change:room')
+  expect(getMessagesArg.type).toStrictEqual(RoomActionEnum.GetMessages)
+  expect(chaneRoomArgs.type).toStrictEqual(RoomActionEnum.ChangeRoom)
   expect(chaneRoomArgs.payload.id).toStrictEqual('001')
 
-  expect(menuCloseArgs.type).toStrictEqual('menu:close')
+  expect(menuCloseArgs.type).toStrictEqual(UIActionEnum.CloseMenu)
 })
 
 test('enterRoom does not enter', async () => {
@@ -63,14 +64,11 @@ test('enterRoom does not enter', async () => {
   const [arg] = socket.send.mock.calls[0]
   expect(arg).toBe(
     JSON.stringify({
-      cmd: 'rooms:enter',
+      cmd: SendSocketCmdEnum.EnterRoom,
       name: 'test'
     })
   )
 
-  const [args0] = dispatch.mock.calls[0]
-  expect(args0.type).toStrictEqual('enter:room')
-
-  const [args1] = dispatch.mock.calls[1]
-  expect(args1.type).toStrictEqual('menu:close')
+  const [args] = dispatch.mock.calls[0]
+  expect(args.type).toStrictEqual(UIActionEnum.CloseMenu)
 })

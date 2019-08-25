@@ -11,18 +11,25 @@ type MyInfo = {
   iconUrl?: string
 }
 
+export enum UserActionEnum {
+  Signup = 'UserAction:Signup',
+  Logout = 'UserAction:Logout',
+  SetMe = 'UserAction:SetMe',
+  Remove = 'UserAction:Remove'
+}
+
 export type UserAction =
   | {
-      type: 'signup'
+      type: UserActionEnum.Signup
       payload: { account?: string }
     }
   | {
-      type: 'me:set'
+      type: UserActionEnum.SetMe
       payload: MyInfo
     }
   | {
-      type: 'logout'
+      type: UserActionEnum.Logout
     }
   | {
-      type: 'remove:user'
+      type: UserActionEnum.Remove
     }
