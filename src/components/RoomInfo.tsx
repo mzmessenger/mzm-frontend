@@ -1,9 +1,10 @@
 import React, { useMemo, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import Home from '@material-ui/icons/Home'
 import Person from '@material-ui/icons/Person'
 import ExpandMore from '@material-ui/icons/ExpandMore'
+import { openUserDetail } from '../modules/ui.action'
 import { WIDTH_MOBILE } from '../lib/constants'
 import { createIconUrl } from '../lib/util'
 import { State } from '../modules/index'
@@ -33,6 +34,7 @@ const Wrap = styled.div`
       padding: 0 8px;
       display: flex;
       img {
+        cursor: pointer;
         padding-left: 3px;
         width: 20px;
         height: 20px;
@@ -92,6 +94,7 @@ export default function RoomInfo({
   const name = useSelector((state: State) => state.rooms.currentRoomName) || ''
   const [count, setCount] = useState(0)
   const [users, setUsers] = useState([])
+  const dispatch = useDispatch()
 
   useMemo(() => {
     if (id) {
@@ -106,9 +109,19 @@ export default function RoomInfo({
     }
   }, [id])
 
+  const clickUser = user => {
+    dispatch(openUserDetail(user.id, user.account))
+  }
+
   const userIcons = users
     .slice(0, 10)
-    .map((u, i) => <img key={i} src={createIconUrl(u.account)} />)
+    .map((u, i) => (
+      <img
+        key={i}
+        src={createIconUrl(u.account)}
+        onClick={() => clickUser(u)}
+      />
+    ))
 
   const expandClassName = ['expand-icon']
   if (expand) {

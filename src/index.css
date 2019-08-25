@@ -16,6 +16,7 @@
   --color-link: #3ea6ff;
   --color-input-background: hsl(200, 12%, 85%, 0.24);
   --color-input: hsl(0, 100%, 100%, 0.9);
+  --color-border: hsla(0, 0%, 100%, 0.1);
 
   --mobile-menu-width: 70vw;
   --menu-width: 240px;

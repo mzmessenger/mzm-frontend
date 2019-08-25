@@ -7,6 +7,8 @@ export type UIState = {
   editTxt: string
   editId: string
   openSettings: boolean
+  openUserDetail: boolean
+  userDetail: { id: string; account: string; icon: string }
 }
 
 export type UIAction =
@@ -46,4 +48,11 @@ export type UIAction =
     }
   | {
       type: 'close:settings'
+    }
+  | {
+      type: 'open:userdetail'
+      payload: { id: string; account: string }
+    }
+  | {
+      type: 'close:userdetail'
     }

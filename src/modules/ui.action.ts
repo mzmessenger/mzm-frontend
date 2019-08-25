@@ -35,3 +35,11 @@ export function openSettings(): UIAction {
 export function closeSettings(): UIAction {
   return { type: 'close:settings' }
 }
+
+export function openUserDetail(id: string, account: string): UIAction {
+  return { type: 'open:userdetail', payload: { id, account } }
+}
+
+export function closeUserDetail(): UIAction {
+  return { type: 'close:userdetail' }
+}

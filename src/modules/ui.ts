@@ -1,5 +1,6 @@
 import { UIState, UIAction } from './ui.types'
 import { WIDTH_MOBILE } from '../lib/constants'
+import { createIconUrl } from '../lib/util'
 
 export const initState: UIState = {
   device: 'pc',
@@ -9,7 +10,9 @@ export const initState: UIState = {
   txt: '',
   editTxt: '',
   editId: null,
-  openSettings: false
+  openSettings: false,
+  openUserDetail: false,
+  userDetail: null
 }
 
 export function reducer(state: UIState = initState, action: UIAction): UIState {
@@ -40,6 +43,18 @@ export function reducer(state: UIState = initState, action: UIAction): UIState {
       return { ...state, openSettings: true }
     case 'close:settings':
       return { ...state, openSettings: false }
+    case 'open:userdetail':
+      return {
+        ...state,
+        openUserDetail: true,
+        userDetail: {
+          id: action.payload.id,
+          account: action.payload.account,
+          icon: createIconUrl(action.payload.account)
+        }
+      }
+    case 'close:userdetail':
+      return { ...state, openUserDetail: false, userDetail: null }
     default:
       return state
   }
