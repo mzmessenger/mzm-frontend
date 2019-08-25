@@ -1,10 +1,10 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { WIDTH_MOBILE } from '../lib/constants'
-import { State } from '../modules/index'
-import Body from './atoms/Body'
-import Header from './Header'
+import { WIDTH_MOBILE } from '../../lib/constants'
+import { State } from '../../modules/index'
+import Body from '../atoms/Body'
+import Header from '../Header'
 
 const Wrap = styled.div`
   height: 100%;
@@ -31,7 +31,7 @@ const Wrap = styled.div`
 `
 
 export default function PageWrapper({ children }) {
-  const overlay = useSelector((state: State) => state.user.overlay)
+  const overlay = useSelector((state: State) => state.ui.overlay)
 
   return (
     <Wrap>

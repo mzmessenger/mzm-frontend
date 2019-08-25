@@ -6,7 +6,7 @@ import {
   sendMessage,
   modifyMessage as sendModifyMessage
 } from '../modules/socket.action'
-import { inputMessage, modifyMessage, endEdit } from '../modules/user.action'
+import { inputMessage, modifyMessage, endEdit } from '../modules/ui.action'
 import Button from './atoms/Button'
 import ResizerY from './atoms/ResizerY'
 
@@ -77,10 +77,10 @@ const CancelButton = styled(Button)`
 export default function InputArea() {
   const currentRoomId = useSelector((state: State) => state.rooms.currentRoomId)
   const socket = useSelector((state: State) => state.socket.socket)
-  const txt = useSelector((state: State) => state.user.txt)
-  const editTxt = useSelector((state: State) => state.user.editTxt)
-  const editId = useSelector((state: State) => state.user.editId)
-  const inputMode = useSelector((state: State) => state.user.inputMode)
+  const txt = useSelector((state: State) => state.ui.txt)
+  const editTxt = useSelector((state: State) => state.ui.editTxt)
+  const editId = useSelector((state: State) => state.ui.editId)
+  const inputMode = useSelector((state: State) => state.ui.inputMode)
   const dispatch = useDispatch()
   const [rows, setRows] = useState(
     inputMode === 'normal' ? txt.split('\n').length : editTxt.split('\n').length

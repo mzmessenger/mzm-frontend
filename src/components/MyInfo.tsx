@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import Settings from '@material-ui/icons/Settings'
 import { State } from '../modules/index'
-import { openSettings, closeSettings } from '../modules/user.action'
+import { openSettings, closeSettings } from '../modules/ui.action'
 
 const Wrap = styled.div`
   padding: 8px;
@@ -31,7 +31,7 @@ const Wrap = styled.div`
 
 export default function MyInfo() {
   const me = useSelector((state: State) => state.user.me)
-  const settings = useSelector((state: State) => state.user.openSettings)
+  const settings = useSelector((state: State) => state.ui.openSettings)
   const icon = me ? me.iconUrl : null
   const dispatch = useDispatch()
 

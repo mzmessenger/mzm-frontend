@@ -3,7 +3,7 @@ import { sendSocket, SendSocketMessage } from '../lib/util'
 import { convertToHtml } from '../lib/markdown'
 import { State } from './index'
 import { RoomsAction, Message, Room, ReceiveRoom } from './rooms.types'
-import { closeMenu } from './user.action'
+import { closeMenu } from './ui.action'
 
 export function getMessages(roomId: string, socket: WebSocket): RoomsAction {
   sendSocket(socket, {

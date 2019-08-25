@@ -3,12 +3,12 @@ import { useSelector } from 'react-redux'
 import { State } from '../../modules/index'
 import Menu from '../molecules/Menu'
 import RoomContent from '../RoomContent'
-import PageWrapper from '../PageWrapper'
+import PageWrapper from '../templates/PageWrapper'
 import Settings from '../Settings'
 
 export default function PageRoom() {
   const [roomSetting, setRoomSetting] = useState(false)
-  const settings = useSelector((state: State) => state.user.openSettings)
+  const settings = useSelector((state: State) => state.ui.openSettings)
 
   const onExpandClick = () => {
     setRoomSetting(!roomSetting)

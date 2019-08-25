@@ -35,39 +35,3 @@ export function removeUser() {
 export function logout() {
   return { type: 'logout' }
 }
-
-export function onResize(innerWidth: number, innerHeight: number): UserAction {
-  return { type: 'onresize', payload: { innerWidth, innerHeight } }
-}
-
-export function openMenu(): UserAction {
-  return { type: 'menu:open' }
-}
-
-export function closeMenu(): UserAction {
-  return { type: 'menu:close' }
-}
-
-export function startEdit(messageId: string, txt: string): UserAction {
-  return { type: 'edit:start', payload: { id: messageId, txt } }
-}
-
-export function endEdit(): UserAction {
-  return { type: 'edit:end' }
-}
-
-export function modifyMessage(txt: string): UserAction {
-  return { type: 'modify:txt', payload: { txt } }
-}
-
-export function inputMessage(txt: string): UserAction {
-  return { type: 'input:txt', payload: { txt } }
-}
-
-export function openSettings(): UserAction {
-  return { type: 'open:settings' }
-}
-
-export function closeSettings(): UserAction {
-  return { type: 'close:settings' }
-}

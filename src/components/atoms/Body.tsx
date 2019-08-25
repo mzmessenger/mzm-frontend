@@ -18,7 +18,7 @@ export default function Body({
   children?: any
   className?: string
 }) {
-  const menuStatus = useSelector((state: State) => state.user.menuStatus)
+  const menuStatus = useSelector((state: State) => state.ui.menuStatus)
   const classNames = menuStatus === 'open' ? ['open'] : ['']
   if (className) {
     classNames.push(className)

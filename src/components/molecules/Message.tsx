@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import CreateIcon from '@material-ui/icons/Create'
 import { sanitize } from '../../lib/sanitize'
 import { State } from '../../modules/index'
-import { startEdit } from '../../modules/user.action'
+import { startEdit } from '../../modules/ui.action'
 import MessageBody from '../atoms/MessageBody'
 
 const MessageWrap = styled.div`

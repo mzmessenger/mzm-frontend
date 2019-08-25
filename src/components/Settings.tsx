@@ -1,7 +1,8 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
-import { removeUser, closeSettings } from '../modules/user.action'
+import { removeUser } from '../modules/user.action'
+import { closeSettings } from '../modules/ui.action'
 import Button from './atoms/Button'
 
 const Wrap = styled.div`
