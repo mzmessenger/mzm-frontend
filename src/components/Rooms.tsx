@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
-import { State } from '../modules/index'
+import { State, store } from '../modules/index'
 import { Room } from '../modules/rooms.types'
 import { readMessages } from '../modules/rooms.action'
 import RoomElem from './atoms/RoomElem'
@@ -20,12 +20,12 @@ function Rooms({ history }: RouteComponentProps) {
   const currentRoomName = useSelector(
     (state: State) => state.rooms.currentRoomName
   )
-  const socket = useSelector((state: State) => state.socket.socket)
+  const dispatch = useDispatch()
 
   function onClick(e: React.MouseEvent, room: Room) {
     e.preventDefault()
     history.push(`/rooms/${room.name}`)
-    readMessages(room.id, socket)
+    readMessages(room.id)(dispatch, store.getState)
   }
 
   return (

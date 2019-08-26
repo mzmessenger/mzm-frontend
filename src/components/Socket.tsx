@@ -70,7 +70,7 @@ async function onMessage(
         store.getState
       )
     } else if (parsed.cmd === 'message:receive') {
-      receiveMessage(parsed.message, parsed.room)(dispatch)
+      receiveMessage(parsed.message, parsed.room)(dispatch, store.getState)
     } else if (parsed.cmd === 'message:modify') {
       receiveModifyMessage(parsed.message, parsed.room)(dispatch)
     } else if (parsed.cmd === 'messages:room') {

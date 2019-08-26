@@ -72,3 +72,34 @@ test('enterRoom does not enter', async () => {
   const [args] = dispatch.mock.calls[0]
   expect(args.type).toStrictEqual(UIActionEnum.CloseMenu)
 })
+
+test('receiveMessage', async () => {
+  const room = 'roomid'
+
+  const dispatch = jest.fn()
+  const socket = { send: jest.fn() }
+  const getState = () => ({
+    rooms: {
+      currentRoomId: room
+    },
+    socket: {
+      socket
+    }
+  })
+
+  const message = {
+    id: 'id',
+    userId: 'userid',
+    userAccount: 'account',
+    message: 'message',
+    updated: false,
+    createdAt: new Date().toString()
+  }
+
+  await action.receiveMessage(message, room)(dispatch, getState as any)
+
+  // 同じ部屋なら既読処理が呼ばれる
+  expect(socket.send.mock.calls.length).toBe(1)
+  const [arg] = socket.send.mock.calls[0]
+  expect(JSON.parse(arg).cmd).toStrictEqual(SendSocketCmdEnum.SendAlreadyRead)
+})

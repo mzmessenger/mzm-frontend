@@ -116,7 +116,14 @@ export function receiveRooms(rooms: ReceiveRoom[], currentRoomId: string) {
 }
 
 export function receiveMessage(message: Message, room: string) {
-  return async function(dispatch: Dispatch<RoomsAction>) {
+  return async function(
+    dispatch: Dispatch<RoomsAction>,
+    getState: () => State
+  ) {
+    // 現在みている部屋だったら既読フラグを返す
+    if (room === getState().rooms.currentRoomId) {
+      readMessages(room)(dispatch, getState)
+    }
     const html = await convertToHtml(message.message)
     return dispatch({
       type: RoomActionEnum.ReceiveMessage,
@@ -206,11 +213,16 @@ export function getUsers(roomId: string) {
   }
 }
 
-export function readMessages(roomId: string, socket: WebSocket) {
-  sendSocket(socket, {
-    cmd: SendSocketCmdEnum.SendAlreadyRead,
-    room: roomId
-  })
+export function readMessages(roomId: string) {
+  return async function(
+    _dispatch: Dispatch<RoomsAction>,
+    getState: () => State
+  ) {
+    sendSocket(getState().socket.socket, {
+      cmd: SendSocketCmdEnum.SendAlreadyRead,
+      room: roomId
+    })
+  }
 }
 
 export function alreadyRead(roomId: string): RoomsAction {
