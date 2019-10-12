@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { withRouter, RouteComponentProps } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { State, store } from '../modules/index'
 import { getMyInfo } from '../modules/user.action'
 import { enterRoom } from '../modules/rooms.action'
 
-function RouterListener({ history }: RouteComponentProps) {
+export default function RouterListener() {
+  const history = useHistory()
   const currentRoomName = useSelector(
     (state: State) => state.rooms.currentRoomName
   )
@@ -48,5 +49,3 @@ function RouterListener({ history }: RouteComponentProps) {
 
   return <></>
 }
-
-export default withRouter(RouterListener)

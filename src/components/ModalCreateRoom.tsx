@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { withRouter, RouteComponentProps } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { store } from '../modules/index'
 import { createRoom } from '../modules/rooms.action'
@@ -38,9 +38,10 @@ const Buttons = styled.div`
   }
 `
 
-type Props = ModalProps & RouteComponentProps
+type Props = ModalProps
 
-function ModalCraeteRoom({ history, open, onClose }: Props) {
+export default function ModalCraeteRoom({ open, onClose }: Props) {
+  const history = useHistory()
   const [txt, setTxt] = useState('')
   const [error, setErrorTxt] = useState('')
   const dispatch = useDispatch()
@@ -91,5 +92,3 @@ function ModalCraeteRoom({ history, open, onClose }: Props) {
     </Modal>
   )
 }
-
-export default withRouter(ModalCraeteRoom)

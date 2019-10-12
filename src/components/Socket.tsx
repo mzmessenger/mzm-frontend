@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { Dispatch, Store } from 'redux'
 import { useSelector, useDispatch } from 'react-redux'
-import { withRouter, RouteComponentProps } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { store, State } from '../modules/index'
 import { initSocket } from '../modules/socket.action'
 import { logout } from '../modules/user.action'
@@ -60,7 +60,7 @@ async function onMessage(
   e: MessageEvent,
   store: Store<State>,
   dispatch: Dispatch,
-  history: RouteComponentProps['history']
+  history: ReturnType<typeof useHistory>
 ) {
   try {
     const parsed: ReceiveMessage = JSON.parse(e.data)
@@ -99,7 +99,7 @@ function init(
   store: Store<State>,
   dispatch: Dispatch,
   url: string,
-  history: RouteComponentProps['history']
+  history: ReturnType<typeof useHistory>
 ) {
   const ws = new WebSocket(url)
 
@@ -125,9 +125,10 @@ function init(
 
 type Props = {
   url: string
-} & RouteComponentProps
+}
 
-function Socket({ url, history }: Props) {
+export default function Socket({ url }: Props) {
+  const history = useHistory()
   const login = useSelector((state: State) => state.user.login)
   const dispatch = useDispatch()
 
@@ -139,4 +140,3 @@ function Socket({ url, history }: Props) {
 
   return <></>
 }
-export default withRouter(Socket)

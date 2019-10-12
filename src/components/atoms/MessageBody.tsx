@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react'
-import { withRouter, RouteComponentProps } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 const Wrap = styled.div`
@@ -20,9 +20,10 @@ type Props = {
   className?: string
   message: string
   html: string
-} & RouteComponentProps
+}
 
-function MessageBody({ className, message, html, history }: Props) {
+export default function MessageBody({ className, message, html }: Props) {
+  const history = useHistory()
   const messageEl = useRef(null)
 
   useEffect(() => {
@@ -60,4 +61,3 @@ function MessageBody({ className, message, html, history }: Props) {
     ></Wrap>
   )
 }
-export default withRouter(MessageBody)

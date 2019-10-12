@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
-import { withRouter, RouteComponentProps } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { State, store } from '../modules/index'
 import { Room } from '../modules/rooms.types'
 import { readMessages } from '../modules/rooms.action'
@@ -15,7 +15,8 @@ const Wrap = styled.div`
   }
 `
 
-function Rooms({ history }: RouteComponentProps) {
+export default function Rooms() {
+  const history = useHistory()
   const rooms = useSelector((state: State) => state.rooms.rooms)
   const currentRoomName = useSelector(
     (state: State) => state.rooms.currentRoomName
@@ -42,5 +43,3 @@ function Rooms({ history }: RouteComponentProps) {
     </Wrap>
   )
 }
-
-export default withRouter(Rooms)
