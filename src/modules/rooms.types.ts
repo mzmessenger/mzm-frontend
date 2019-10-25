@@ -4,6 +4,7 @@ export type Message = {
   iconUrl?: string
   userAccount: string
   message: string
+  iine: number
   html?: string
   updated: boolean
   createdAt: string
@@ -46,7 +47,8 @@ export enum RoomActionEnum {
   CreateRoom = 'roomAction:createRoom',
   ChangeRoom = 'roomAction:changeRoom',
   // 既読
-  AlreadyRead = 'roomAction:alreadyRead'
+  AlreadyRead = 'roomAction:alreadyRead',
+  ReceiveIine = 'roomAction:reveiceIine'
 }
 
 export type RoomsAction =
@@ -97,5 +99,13 @@ export type RoomsAction =
       type: RoomActionEnum.AlreadyRead
       payload: {
         room: string
+      }
+    }
+  | {
+      type: RoomActionEnum.ReceiveIine
+      payload: {
+        room: string
+        message: string
+        iine: number
       }
     }

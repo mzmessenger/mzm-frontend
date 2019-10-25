@@ -42,6 +42,7 @@ export default function Messages({ className }) {
           userAccount={m.userAccount}
           iconUrl={iconUrl}
           message={m.message}
+          iine={m.iine}
           html={m.html}
           updated={m.updated}
           createdAt={m.createdAt}

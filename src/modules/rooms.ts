@@ -194,6 +194,21 @@ export function reducer(
           : state.currentRoomMessages
       return { ...state, currentRoomMessages }
     }
+    case RoomActionEnum.ReceiveIine: {
+      const room = state.flatRooms[action.payload.room]
+      const index = room.room.messages
+        .map(message => message.id)
+        .indexOf(action.payload.message)
+
+      if (index > -1) {
+        room.room.messages[index].iine = action.payload.iine
+        if (action.payload.room === state.currentRoomId) {
+          return { ...state, currentRoomMessages: [...room.room.messages] }
+        }
+      }
+
+      return state
+    }
     case RoomActionEnum.ReceiveMessages: {
       const received: Message[] = action.payload.messages.map(message => {
         const iconUrl = message.userAccount

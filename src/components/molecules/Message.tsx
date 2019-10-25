@@ -3,9 +3,11 @@ import { useSelector, useDispatch } from 'react-redux'
 import dayjs from 'dayjs'
 import styled from 'styled-components'
 import CreateIcon from '@material-ui/icons/Create'
+import ThumbUpIcon from '@material-ui/icons/ThumbUp'
 import { sanitize } from '../../lib/sanitize'
-import { State } from '../../modules/index'
+import { State, store } from '../../modules/index'
 import { startEdit } from '../../modules/ui.action'
+import { incrementIine } from '../../modules/socket.action'
 import MessageBody from '../atoms/MessageBody'
 
 const MessageWrap = styled.div`
@@ -28,14 +30,21 @@ const MessageWrap = styled.div`
   .header {
     grid-area: message-header;
     display: flex;
+    .iine {
+      display: flex;
+      margin-left: 16px;
+      flex: 1;
+      .num {
+        margin-left: 4px;
+      }
+    }
     .actions {
       visibility: hidden;
-
-      .icon {
-        cursor: pointer;
-        svg {
-          font-size: 1rem;
-        }
+    }
+    .icon {
+      cursor: pointer;
+      svg {
+        font-size: 1rem;
       }
     }
     time {
@@ -74,6 +83,7 @@ const MessageWrap = styled.div`
 type Props = {
   id: string
   message: string
+  iine: number
   html: string
   userId: string
   userAccount: string
@@ -85,6 +95,7 @@ type Props = {
 function Message({
   id,
   message,
+  iine,
   html,
   userId,
   userAccount,
@@ -102,11 +113,19 @@ function Message({
   const myAccount = useSelector((state: State) => state.user.me.account)
   const dispatch = useDispatch()
 
+  const iineEvent = () => {
+    incrementIine(id)(dispatch, store.getState)
+  }
+
   return (
     <MessageWrap>
       <img className="user-icon" src={iconUrl} />
       <div className="header">
-        <div style={{ flex: 1 }}>{account}</div>
+        <div className="account">{account}</div>
+        <div className="iine icon" onClick={() => iineEvent()}>
+          <ThumbUpIcon />
+          {iine !== 0 && <div className="num">{iine}</div>}
+        </div>
         <div className="actions">
           <div className="icon">
             {myAccount === account && (

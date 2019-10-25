@@ -11,7 +11,8 @@ import {
   receiveModifyMessage,
   receiveMessages,
   enterSuccess,
-  alreadyRead
+  alreadyRead,
+  receiveIine
 } from '../modules/rooms.action'
 
 type Message = {
@@ -19,6 +20,7 @@ type Message = {
   userId: string
   userAccount: string
   message: string
+  iine: number
   createdAt: string
   updated: boolean
   updatedAt: string
@@ -55,6 +57,12 @@ type ReceiveMessage =
       user: string
       room: string
     }
+  | {
+      cmd: 'message:iine'
+      room: string
+      id: string
+      iine: number
+    }
 
 async function onMessage(
   e: MessageEvent,
@@ -89,6 +97,8 @@ async function onMessage(
       )
     } else if (parsed.cmd === 'rooms:read') {
       dispatch(alreadyRead(parsed.room))
+    } else if (parsed.cmd === 'message:iine') {
+      dispatch(receiveIine(parsed.room, parsed.id, parsed.iine))
     }
   } catch (e) {
     console.error(e)

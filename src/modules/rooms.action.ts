@@ -228,3 +228,14 @@ export function readMessages(roomId: string) {
 export function alreadyRead(roomId: string): RoomsAction {
   return { type: RoomActionEnum.AlreadyRead, payload: { room: roomId } }
 }
+
+export function receiveIine(
+  roomId: string,
+  messageId: string,
+  iine: number
+): RoomsAction {
+  return {
+    type: RoomActionEnum.ReceiveIine,
+    payload: { room: roomId, message: messageId, iine }
+  }
+}

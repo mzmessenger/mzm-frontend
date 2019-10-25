@@ -1,3 +1,5 @@
+import { Dispatch } from 'redux'
+import { State } from './index'
 import { sendSocket, SendSocketMessage, SendSocketCmdEnum } from '../lib/util'
 import { SocketAction, SocketActionEnum } from './socket.types'
 
@@ -40,4 +42,13 @@ export function modifyMessage(
     id: messageId
   }
   sendSocket(socket, send)
+}
+
+export function incrementIine(messageId: string) {
+  return async function(_dispatch: Dispatch, getState: () => State) {
+    sendSocket(getState().socket.socket, {
+      cmd: SendSocketCmdEnum.IncrementIine,
+      id: messageId
+    })
+  }
 }
