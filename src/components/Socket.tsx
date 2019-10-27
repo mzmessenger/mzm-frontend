@@ -83,18 +83,22 @@ async function onMessage(
         store.getState
       )
     } else if (parsed.cmd === 'message:receive') {
-      addMessage(parsed.message)(dispatch)
-      receiveMessage(parsed.message.id, parsed.room)(dispatch, store.getState)
+      addMessage(parsed.message)(dispatch).then(() => {
+        receiveMessage(parsed.message.id, parsed.room)(dispatch, store.getState)
+      })
     } else if (parsed.cmd === 'message:modify') {
-      modifyMessage(parsed.message)(dispatch)
-      dispatch(reloadMessage(parsed.room))
+      modifyMessage(parsed.message)(dispatch).then(() => {
+        dispatch(reloadMessage(parsed.room))
+      })
     } else if (parsed.cmd === 'messages:room') {
-      addMessages(parsed.messages)(dispatch)
-      receiveMessages({
-        messageIds: parsed.messages.map(m => m.id),
-        room: parsed.room,
-        existHistory: parsed.existHistory
-      })(dispatch)
+      // wait converting html
+      addMessages(parsed.messages)(dispatch).then(() => {
+        receiveMessages({
+          messageIds: parsed.messages.map(m => m.id),
+          room: parsed.room,
+          existHistory: parsed.existHistory
+        })(dispatch)
+      })
     } else if (parsed.cmd === 'rooms:enter:success') {
       if (history.location.pathname !== parsed.name) {
         history.push(`/rooms/${parsed.name}`)

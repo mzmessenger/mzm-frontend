@@ -50,9 +50,7 @@ export default function Messages({ className }) {
       const target = logFlg ? scrollTargetIndex + 1 : scrollTargetIndex
       const dom = wrapRef.current.querySelector(`.message:nth-child(${target})`)
       if (dom) {
-        setTimeout(() => {
-          dom.scrollIntoView()
-        }, 10)
+        dom.scrollIntoView()
       }
     }
   }, [messages.length, scrollTargetIndex])
