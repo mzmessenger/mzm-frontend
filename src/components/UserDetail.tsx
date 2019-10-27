@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Clear from '@material-ui/icons/Clear'
 import { useSelector, useDispatch } from 'react-redux'
 import { State } from '../modules/index'
-import { closeUserDetail } from '../modules/ui.action'
+import { closeUserDetail } from '../modules/ui'
 
 const Wrap = styled.div`
   background-color: var(--color-surface);

@@ -1,40 +1,23 @@
-import { createIconUrl } from '../lib/util'
+import { Dispatch } from 'redux'
+import { sendSocket, SendSocketMessage, SendSocketCmdEnum } from '../lib/util'
+import { State } from './index'
 import {
   RoomActionEnum,
-  RoomsState,
   RoomsAction,
-  Message,
+  ReceiveRoom,
+  RoomsState,
   Room
 } from './rooms.types'
+import { closeMenu } from './ui'
 
 const splited = location.pathname.split('/')
 const initCurrentRoomName = splited[1] === 'rooms' ? splited[2] : ''
 
 export const initState: RoomsState = {
-  rooms: [],
-  flatRooms: {},
+  rooms: { byId: {}, allIds: [] },
   currentRoomId: '',
   currentRoomName: initCurrentRoomName,
-  currentRoomMessages: [],
-  currentRoomExistHistory: false,
   scrollTargetIndex: 'bottom'
-}
-
-function replaceRoom(
-  index: number,
-  room: Room,
-  flatRooms: RoomsState['flatRooms'],
-  rooms: Room[]
-): { rooms: Room[]; flatRooms: RoomsState['flatRooms'] } {
-  const newRoom = { ...room }
-  flatRooms[room.id] = {
-    room: newRoom,
-    index: index
-  }
-  rooms[index] = newRoom
-  rooms = [...rooms]
-
-  return { rooms: rooms, flatRooms }
 }
 
 export function reducer(
@@ -43,213 +26,335 @@ export function reducer(
 ): RoomsState {
   switch (action.type) {
     case RoomActionEnum.ReceiveRooms: {
-      const flatRooms = {}
+      const allIds = []
+      for (const r of action.payload.rooms) {
+        if (!allIds.includes(r.id)) {
+          allIds.push(r.id)
 
-      const rooms = []
-      action.payload.rooms.forEach((r, i) => {
-        const room: Room = {
-          id: r.id,
-          name: r.name,
-          unread: r.unread,
-          messages: [],
-          loading: false,
-          receivedMessages: false,
-          existHistory: false
+          const room: Room = {
+            id: r.id,
+            name: r.name,
+            unread: r.unread,
+            messages: [],
+            loading: false,
+            receivedMessages: false,
+            existHistory: false
+          }
+          state.rooms.byId[r.id] = room
         }
-        flatRooms[room.id] = { room, index: i }
-        rooms.push(room)
-      })
-
-      return {
-        ...state,
-        rooms,
-        flatRooms
       }
+      state.rooms.allIds = allIds
+      return { ...state }
     }
     case RoomActionEnum.CreateRoom: {
-      const room = state.flatRooms[action.payload.id]
-        ? state.flatRooms[action.payload.id].room
-        : null
-
       return {
         ...state,
         currentRoomId: action.payload.id,
-        currentRoomName: action.payload.name,
-        currentRoomMessages: room ? [...room.messages] : [],
-        currentRoomExistHistory: room ? room.existHistory : false
+        currentRoomName: action.payload.name
       }
     }
     case RoomActionEnum.GetMessages: {
-      const room = state.flatRooms[action.payload.id]
+      const room = state.rooms.byId[action.payload.id]
       if (room) {
-        room.room.loading = true
-        const replaced = replaceRoom(
-          room.index,
-          room.room,
-          state.flatRooms,
-          state.rooms
-        )
-        state.rooms = replaced.rooms
-        state.flatRooms = replaced.flatRooms
+        state.rooms.byId[action.payload.id] = { ...room, loading: true }
       }
       return { ...state }
     }
     case RoomActionEnum.ChangeRoom: {
-      const room = state.flatRooms[action.payload.id]
       return {
         ...state,
         currentRoomId: action.payload.id,
-        currentRoomName: room.room.name,
-        currentRoomMessages: room.room.messages,
-        currentRoomExistHistory: room.room.existHistory,
+        currentRoomName: state.rooms.byId[action.payload.id].name,
         scrollTargetIndex: 'bottom'
       }
     }
     case RoomActionEnum.EnterRoomSuccess: {
-      const room = state.flatRooms[action.payload.id]
+      const room = state.rooms.byId[action.payload.id]
       if (room) {
-        room.room.loading = action.payload.loading
-        const replaced = replaceRoom(
-          room.index,
-          room.room,
-          state.flatRooms,
-          state.rooms
-        )
-        state.rooms = replaced.rooms
-        state.flatRooms = replaced.flatRooms
+        state.rooms.byId[action.payload.id] = {
+          ...state.rooms.byId[action.payload.id],
+          loading: action.payload.loading
+        }
       }
 
       return {
         ...state,
         currentRoomId: action.payload.id,
-        currentRoomName: action.payload.name,
-        currentRoomMessages: room ? [...room.room.messages] : [],
-        currentRoomExistHistory: room ? room.room.existHistory : false
+        currentRoomName: action.payload.name
       }
     }
     case RoomActionEnum.ExitRoom: {
       return {
         ...state,
         currentRoomId: '',
-        currentRoomName: '',
-        currentRoomMessages: [],
-        currentRoomExistHistory: false
+        currentRoomName: ''
       }
     }
     case RoomActionEnum.ReceiveMessage: {
       const isCurrent = action.payload.room === state.currentRoomId
-      const message = action.payload.message
-      if (message.userAccount) {
-        message.iconUrl = createIconUrl(message.userAccount)
-      }
-      const room = state.flatRooms[action.payload.room]
-      room.room.loading = false
+      const room = state.rooms.byId[action.payload.room]
 
-      const index = room.room.messages.map(r => r.id).indexOf(message.id)
-
-      if (index > -1) {
-        room.room.messages[index] = message
-      } else {
-        room.room.messages = [...room.room.messages, message]
-        if (!isCurrent) {
-          room.room.unread++
-        }
+      room.loading = false
+      room.messages = [...room.messages, action.payload.message]
+      if (!isCurrent) {
+        room.unread++
       }
 
-      const replaced = replaceRoom(
-        room.index,
-        room.room,
-        state.flatRooms,
-        state.rooms
-      )
-
-      const currentRoomMessages = isCurrent
-        ? room.room.messages
-        : state.currentRoomMessages
       return {
         ...state,
-        rooms: replaced.rooms,
-        flatRooms: replaced.flatRooms,
-        currentRoomMessages,
         scrollTargetIndex: 'bottom'
       }
     }
-    case RoomActionEnum.ModifyMessageSuccess: {
-      const room = { ...state.flatRooms[action.payload.room].room }
-      const index = room.messages
-        .map(r => r.id)
-        .indexOf(action.payload.message.id)
-      if (index > -1) {
-        const message = action.payload.message
-        if (message.userAccount) {
-          message.iconUrl = createIconUrl(message.userAccount)
-        }
-        room.messages[index] = message
-        room.messages = [...room.messages]
-      }
-      state.flatRooms[action.payload.room].room = room
-      const currentRoomMessages =
-        action.payload.room === state.currentRoomId
-          ? room.messages
-          : state.currentRoomMessages
-      return { ...state, currentRoomMessages }
-    }
     case RoomActionEnum.ReceiveMessages: {
-      const received: Message[] = action.payload.messages.map(message => {
-        const iconUrl = message.userAccount
-          ? createIconUrl(message.userAccount)
-          : null
-        return { ...message, iconUrl }
-      })
-      const room = state.flatRooms[action.payload.room]
-      room.room.loading = false
-      room.room.existHistory = action.payload.existHistory
-      room.room.receivedMessages = true
-
+      const roomId = action.payload.room
       // uniq
-      const join = [...received, ...room.room.messages]
-      const messages = [...new Set(join.map(m => m.id))].map(id =>
-        join.find(m => m.id === id)
-      )
-      room.room.messages = messages
+      const arr = [
+        ...action.payload.messages,
+        ...state.rooms.byId[roomId].messages
+      ]
+      const messages = [...new Set(arr)]
 
-      const replaced = replaceRoom(
-        room.index,
-        room.room,
-        state.flatRooms,
-        state.rooms
-      )
-      state.rooms = replaced.rooms
+      const scrollTargetIndex =
+        action.payload.room === state.currentRoomId &&
+        !state.rooms.byId[roomId].receivedMessages
+          ? action.payload.messages.length
+          : state.scrollTargetIndex
 
-      const isCurrent = action.payload.room === state.currentRoomId
-      const currentRoomMessages = isCurrent
-        ? room.room.messages
-        : state.currentRoomMessages
-      const currentRoomExistHistory = isCurrent
-        ? room.room.existHistory
-        : state.currentRoomExistHistory
-      const scrollTargetIndex = isCurrent
-        ? received.length
-        : state.scrollTargetIndex
+      const room = {
+        ...state.rooms.byId[roomId],
+        messages,
+        loading: false,
+        receivedMessages: true,
+        existHistory: action.payload.existHistory
+      }
+      state.rooms.byId[roomId] = room
+
       return {
         ...state,
-        currentRoomMessages,
-        currentRoomExistHistory,
         scrollTargetIndex
       }
     }
     case RoomActionEnum.AlreadyRead: {
-      const room = state.flatRooms[action.payload.room]
-      room.room.unread = 0
-      const replaced = replaceRoom(
-        room.index,
-        room.room,
-        state.flatRooms,
-        state.rooms
-      )
-      return { ...state, rooms: replaced.rooms, flatRooms: replaced.flatRooms }
+      state.rooms.byId[action.payload.room] = {
+        ...state.rooms.byId[action.payload.room],
+        unread: 0
+      }
+      return { ...state }
+    }
+    case RoomActionEnum.ReloadMessages: {
+      state.rooms.byId[action.payload.room].messages = [
+        ...state.rooms.byId[action.payload.room].messages
+      ]
+      return { ...state }
     }
     default:
       return state
+  }
+}
+
+export function getMessages(roomId: string, socket: WebSocket): RoomsAction {
+  sendSocket(socket, {
+    cmd: SendSocketCmdEnum.GetMessages,
+    room: roomId
+  })
+  return { type: RoomActionEnum.GetMessages, payload: { id: roomId } }
+}
+
+export function createRoom(name: string) {
+  return async function(
+    dispatch: Dispatch<RoomsAction>,
+    getState: () => State
+  ) {
+    const res = await fetch('/api/rooms', {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8'
+      },
+      body: JSON.stringify({ name })
+    })
+    if (res.status === 200) {
+      const room: { id: string; name: string } = await res.json()
+      sendSocket(getState().socket.socket, { cmd: SendSocketCmdEnum.GetRooms })
+      dispatch({
+        type: RoomActionEnum.CreateRoom,
+        payload: { id: room.id, name: room.name }
+      })
+    }
+    return res
+  }
+}
+
+export function enterRoom(roomName: string) {
+  return async function(dispatch: Dispatch, getState: () => State) {
+    const room = Object.values(getState().rooms.rooms.byId).find(
+      r => r.name === roomName
+    )
+    if (room) {
+      if (!room.receivedMessages && !room.loading) {
+        dispatch(getMessages(room.id, getState().socket.socket))
+      }
+      dispatch({
+        type: RoomActionEnum.ChangeRoom,
+        payload: {
+          id: room.id
+        }
+      })
+      dispatch(closeMenu())
+      return
+    }
+    sendSocket(getState().socket.socket, {
+      cmd: SendSocketCmdEnum.EnterRoom,
+      name: roomName
+    })
+    dispatch(closeMenu())
+  }
+}
+
+export function exitRoom(roomId: string) {
+  return async function(
+    dispatch: Dispatch<RoomsAction>,
+    getState: () => State
+  ) {
+    const res = await fetch('/api/rooms/enter', {
+      method: 'DELETE',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8'
+      },
+      body: JSON.stringify({ room: roomId })
+    })
+    if (res.status === 200) {
+      sendSocket(getState().socket.socket, { cmd: SendSocketCmdEnum.GetRooms })
+      dispatch({ type: RoomActionEnum.ExitRoom })
+    }
+    return res
+  }
+}
+
+export function getHistory(id: string, roomId: string, socket: WebSocket) {
+  const message: SendSocketMessage = {
+    cmd: SendSocketCmdEnum.GetMessages,
+    room: roomId,
+    id: id
+  }
+  sendSocket(socket, message)
+}
+
+export function receiveRooms(rooms: ReceiveRoom[], currentRoomId: string) {
+  return async function(
+    dispatch: Dispatch<RoomsAction>,
+    getState: () => State
+  ) {
+    if (currentRoomId) {
+      dispatch(getMessages(currentRoomId, getState().socket.socket))
+    }
+    dispatch({
+      type: RoomActionEnum.ReceiveRooms,
+      payload: {
+        rooms: rooms
+      }
+    })
+  }
+}
+
+export function receiveMessage(messageId: string, room: string) {
+  return async function(
+    dispatch: Dispatch<RoomsAction>,
+    getState: () => State
+  ) {
+    // 現在みている部屋だったら既読フラグを返す
+    if (room === getState().rooms.currentRoomId) {
+      readMessages(room)(dispatch, getState)
+    }
+    return dispatch({
+      type: RoomActionEnum.ReceiveMessage,
+      payload: {
+        message: messageId,
+        room: room
+      }
+    })
+  }
+}
+
+export function receiveMessages({
+  messageIds,
+  room,
+  existHistory
+}: {
+  messageIds: string[]
+  room: string
+  existHistory: boolean
+}) {
+  return async function(dispatch: Dispatch<RoomsAction>) {
+    return dispatch({
+      type: RoomActionEnum.ReceiveMessages,
+      payload: {
+        room: room,
+        existHistory: existHistory,
+        messages: messageIds
+      }
+    })
+  }
+}
+
+export function enterSuccess(id: string, name: string) {
+  return async function(
+    dispatch: Dispatch<RoomsAction>,
+    getState: () => State
+  ) {
+    const room = getState().rooms.rooms.byId[id]
+    // すでに入っている部屋だったら部屋の再取得をしない
+    if (!room) {
+      sendSocket(getState().socket.socket, { cmd: SendSocketCmdEnum.GetRooms })
+    }
+    let loading = false
+    if (room && !room.receivedMessages && !loading) {
+      dispatch(getMessages(id, getState().socket.socket))
+      loading = true
+    }
+    dispatch({
+      type: RoomActionEnum.EnterRoomSuccess,
+      payload: { id: id, name: name, loading }
+    })
+  }
+}
+
+export function getUsers(roomId: string) {
+  return async function(_dispatch: Dispatch<RoomsAction>) {
+    if (!roomId) {
+      return
+    }
+    const res = await fetch(`/api/rooms/${roomId}/users`, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8'
+      }
+    })
+    return res
+  }
+}
+
+export function readMessages(roomId: string) {
+  return async function(
+    _dispatch: Dispatch<RoomsAction>,
+    getState: () => State
+  ) {
+    sendSocket(getState().socket.socket, {
+      cmd: SendSocketCmdEnum.SendAlreadyRead,
+      room: roomId
+    })
+  }
+}
+
+export function alreadyRead(roomId: string): RoomsAction {
+  return { type: RoomActionEnum.AlreadyRead, payload: { room: roomId } }
+}
+
+export function reloadMessage(roomId: string): RoomsAction {
+  return {
+    type: RoomActionEnum.ReloadMessages,
+    payload: { room: roomId }
   }
 }

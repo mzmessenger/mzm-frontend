@@ -2,8 +2,8 @@ import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { State, store } from '../modules/index'
-import { getMyInfo } from '../modules/user.action'
-import { enterRoom } from '../modules/rooms.action'
+import { getMyInfo } from '../modules/user'
+import { enterRoom } from '../modules/rooms'
 
 export default function RouterListener() {
   const history = useHistory()
@@ -12,7 +12,6 @@ export default function RouterListener() {
   )
   const login = useSelector((state: State) => state.user.login)
   const signup = useSelector((state: State) => state.user.signup)
-  const rooms = useSelector((state: State) => state.rooms.rooms)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -28,7 +27,7 @@ export default function RouterListener() {
     }
 
     if (login && room) {
-      enterRoom(history.location.pathname.split('/')[2], rooms)(
+      enterRoom(history.location.pathname.split('/')[2])(
         dispatch,
         store.getState
       )

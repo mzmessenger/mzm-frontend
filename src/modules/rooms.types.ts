@@ -4,16 +4,16 @@ export type Message = {
   iconUrl?: string
   userAccount: string
   message: string
+  iine: number
   html?: string
   updated: boolean
   createdAt: string
 }
-
 export type Room = {
   id: string
   name: string
   unread: number
-  messages: Message[]
+  messages: string[]
   loading: boolean
   receivedMessages: boolean
   existHistory: boolean
@@ -26,12 +26,12 @@ export type ReceiveRoom = {
 }
 
 export type RoomsState = {
-  rooms: Room[]
-  flatRooms: { [key: string]: { room: Room; index: number } }
+  rooms: {
+    byId: { [key: string]: Room }
+    allIds: string[]
+  }
   currentRoomId: string
   currentRoomName: string
-  currentRoomMessages: Message[]
-  currentRoomExistHistory: boolean
   scrollTargetIndex: number | 'bottom'
 }
 
@@ -39,8 +39,8 @@ export enum RoomActionEnum {
   ReceiveRooms = 'roomAction:receive',
   ReceiveMessage = 'roomAction:receiveMessage',
   ReceiveMessages = 'roomAction:receiveMessages',
+  ReloadMessages = 'roomAction:reloadMessages',
   GetMessages = 'roomAction:getMessages',
-  ModifyMessageSuccess = 'roomAction:modifyMessageSuccess',
   EnterRoomSuccess = 'roomAction:enterRoomSuccess',
   ExitRoom = 'roomAction:exitRoom',
   CreateRoom = 'roomAction:createRoom',
@@ -56,11 +56,7 @@ export type RoomsAction =
     }
   | {
       type: RoomActionEnum.ReceiveMessage
-      payload: { message: Message; room: string }
-    }
-  | {
-      type: RoomActionEnum.ModifyMessageSuccess
-      payload: { message: Message; room: string }
+      payload: { message: string; room: string }
     }
   | {
       type: RoomActionEnum.EnterRoomSuccess
@@ -78,7 +74,7 @@ export type RoomsAction =
       payload: {
         room: string
         existHistory: boolean
-        messages: Message[]
+        messages: string[]
       }
     }
   | {
@@ -95,6 +91,12 @@ export type RoomsAction =
     }
   | {
       type: RoomActionEnum.AlreadyRead
+      payload: {
+        room: string
+      }
+    }
+  | {
+      type: RoomActionEnum.ReloadMessages
       payload: {
         room: string
       }

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import DirectionsRun from '@material-ui/icons/DirectionsRun'
 import { State, store } from '../modules/index'
-import { exitRoom } from '../modules/rooms.action'
+import { exitRoom } from '../modules/rooms'
 
 const Wrap = styled.div`
   padding: 8px 32px;

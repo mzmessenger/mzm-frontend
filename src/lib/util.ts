@@ -15,7 +15,8 @@ export enum SendSocketCmdEnum {
   GetRooms = 'rooms:get',
   EnterRoom = 'rooms:enter',
   ModifyMessage = 'message:modify',
-  SendAlreadyRead = 'rooms:read'
+  SendAlreadyRead = 'rooms:read',
+  IncrementIine = 'message:iine'
 }
 
 export type SendSocketMessage =
@@ -44,4 +45,8 @@ export type SendSocketMessage =
   | {
       cmd: SendSocketCmdEnum.SendAlreadyRead
       room: string
+    }
+  | {
+      cmd: SendSocketCmdEnum.IncrementIine
+      id: string
     }

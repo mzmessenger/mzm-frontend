@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { getMyInfo, signup } from '../../modules/user.action'
+import { getMyInfo, signup } from '../../modules/user'
 
 function LoginSuccess() {
   const dispatch = useDispatch()
