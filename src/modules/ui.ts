@@ -72,11 +72,11 @@ export function closeMenu(): UIAction {
   return { type: UIActionEnum.CloseMenu }
 }
 
-export function startEdit(messageId: string, txt: string): UIAction {
+export function startToEdit(messageId: string, txt: string): UIAction {
   return { type: UIActionEnum.StartEditing, payload: { id: messageId, txt } }
 }
 
-export function endEdit(): UIAction {
+export function endToEdit(): UIAction {
   return { type: UIActionEnum.EndEditing }
 }
 

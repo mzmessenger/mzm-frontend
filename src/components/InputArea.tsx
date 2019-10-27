@@ -6,7 +6,7 @@ import {
   sendMessage,
   modifyMessage as sendModifyMessage
 } from '../modules/socket'
-import { inputMessage, modifyMessage, endEdit } from '../modules/ui'
+import { inputMessage, modifyMessage, endToEdit } from '../modules/ui'
 import Button from './atoms/Button'
 import ResizerY from './atoms/ResizerY'
 
@@ -109,7 +109,7 @@ export default function InputArea() {
       dispatch(inputMessage(''))
     } else if (inputMode === 'edit') {
       sendModifyMessage(editTxt, editId, socket)
-      dispatch(endEdit())
+      dispatch(endToEdit())
     }
     setRows(1)
   }
@@ -158,7 +158,7 @@ export default function InputArea() {
           <div className="button-area">
             <div style={{ flex: '1' }}></div>
             {inputMode === 'edit' && (
-              <CancelButton onClick={() => dispatch(endEdit())}>
+              <CancelButton onClick={() => dispatch(endToEdit())}>
                 キャンセル
               </CancelButton>
             )}
