@@ -3,31 +3,36 @@ jest.mock('../lib/markdown', () => ({
 }))
 
 import { SendSocketCmdEnum } from '../lib/util'
-import * as action from './rooms.action'
-import { Room, RoomActionEnum } from './rooms.types'
+import * as action from './rooms'
+import { RoomActionEnum } from './rooms.types'
 import { UIActionEnum } from './ui.types'
 
 test('enterRoom already entered', async () => {
   const socket = { send: jest.fn() }
-  const rooms: Room[] = [
-    {
-      id: '001',
-      name: 'test',
-      messages: [],
-      loading: false,
-      receivedMessages: false,
-      existHistory: false,
-      unread: 0
-    }
-  ]
   const dispatch = jest.fn()
   const getState = () => ({
     socket: {
       socket
+    },
+    rooms: {
+      rooms: {
+        byId: {
+          '001': {
+            id: '001',
+            name: 'test',
+            messages: [],
+            loading: false,
+            receivedMessages: false,
+            existHistory: false,
+            unread: 0
+          }
+        },
+        allIds: ['001']
+      }
     }
   })
 
-  action.enterRoom('test', rooms)(dispatch, getState as any)
+  action.enterRoom('test')(dispatch, getState as any)
 
   expect(dispatch.mock.calls.length).toBe(3)
 
@@ -49,16 +54,21 @@ test('enterRoom already entered', async () => {
 
 test('enterRoom does not enter', async () => {
   const socket = { send: jest.fn() }
-  const rooms: Room[] = []
 
   const dispatch = jest.fn()
   const getState = () => ({
     socket: {
       socket
+    },
+    rooms: {
+      rooms: {
+        byId: {},
+        allIds: []
+      }
     }
   })
 
-  action.enterRoom('test', rooms)(dispatch, getState as any)
+  action.enterRoom('test')(dispatch, getState as any)
 
   expect(socket.send.mock.calls.length).toBe(1)
   const [arg] = socket.send.mock.calls[0]
@@ -96,7 +106,7 @@ test('receiveMessage', async () => {
     createdAt: new Date().toString()
   }
 
-  await action.receiveMessage(message, room)(dispatch, getState as any)
+  await action.receiveMessage(message.id, room)(dispatch, getState as any)
 
   // 同じ部屋なら既読処理が呼ばれる
   expect(socket.send.mock.calls.length).toBe(1)

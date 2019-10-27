@@ -5,8 +5,8 @@ import { State } from '../modules/index'
 import {
   sendMessage,
   modifyMessage as sendModifyMessage
-} from '../modules/socket.action'
-import { inputMessage, modifyMessage, endEdit } from '../modules/ui.action'
+} from '../modules/socket'
+import { inputMessage, modifyMessage, endEdit } from '../modules/ui'
 import Button from './atoms/Button'
 import ResizerY from './atoms/ResizerY'
 

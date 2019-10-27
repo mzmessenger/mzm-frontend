@@ -6,8 +6,8 @@ import CreateIcon from '@material-ui/icons/Create'
 import ThumbUpIcon from '@material-ui/icons/ThumbUp'
 import { sanitize } from '../../lib/sanitize'
 import { State, store } from '../../modules/index'
-import { startEdit } from '../../modules/ui.action'
-import { incrementIine } from '../../modules/socket.action'
+import { startEdit } from '../../modules/ui'
+import { incrementIine } from '../../modules/socket'
 import MessageBody from '../atoms/MessageBody'
 
 const MessageWrap = styled.div`
@@ -80,29 +80,26 @@ const MessageWrap = styled.div`
   }
 `
 
-type Props = {
-  id: string
-  message: string
-  iine: number
-  html: string
-  userId: string
-  userAccount: string
-  iconUrl: string
-  updated: boolean
-  createdAt: string
-}
+function Message({ id }: { id: string }) {
+  const myAccount = useSelector((state: State) => state.user.me.account)
+  const messageObj = useSelector(
+    (state: State) => state.messages.messages.byId[id]
+  )
+  const dispatch = useDispatch()
+  if (!messageObj) {
+    return <></>
+  }
+  const {
+    message,
+    iine,
+    html,
+    userId,
+    userAccount,
+    iconUrl,
+    updated,
+    createdAt
+  } = messageObj
 
-function Message({
-  id,
-  message,
-  iine,
-  html,
-  userId,
-  userAccount,
-  iconUrl,
-  updated,
-  createdAt
-}: Props) {
   const day = dayjs(new Date(createdAt))
   const date = day.format(
     day.year() === new Date().getFullYear()
@@ -110,8 +107,6 @@ function Message({
       : 'YYYY/MM/DD HH:mm:ss'
   )
   const account = userAccount ? userAccount : userId
-  const myAccount = useSelector((state: State) => state.user.me.account)
-  const dispatch = useDispatch()
 
   const iineEvent = () => {
     incrementIine(id)(dispatch, store.getState)

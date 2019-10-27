@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { State } from '../modules/index'
-import { getHistory } from '../modules/rooms.action'
+import { getHistory } from '../modules/rooms'
 
 const Wrap = styled.div`
   width: 100%;

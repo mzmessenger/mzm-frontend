@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import Settings from '@material-ui/icons/Settings'
 import { State } from '../modules/index'
-import { openSettings, closeSettings } from '../modules/ui.action'
+import { openSettings, closeSettings } from '../modules/ui'
 
 const Wrap = styled.div`
   padding: 8px;

@@ -3,17 +3,22 @@ import { Dispatch, Store } from 'redux'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { store, State } from '../modules/index'
-import { initSocket } from '../modules/socket.action'
-import { logout } from '../modules/user.action'
+import { initSocket } from '../modules/socket'
+import { logout } from '../modules/user'
 import {
   receiveRooms,
   receiveMessage,
-  receiveModifyMessage,
   receiveMessages,
   enterSuccess,
   alreadyRead,
-  receiveIine
-} from '../modules/rooms.action'
+  reloadMessage
+} from '../modules/rooms'
+import {
+  addMessages,
+  addMessage,
+  modifyMessage,
+  updateIine
+} from '../modules/messages'
 
 type Message = {
   id: string
@@ -78,12 +83,15 @@ async function onMessage(
         store.getState
       )
     } else if (parsed.cmd === 'message:receive') {
-      receiveMessage(parsed.message, parsed.room)(dispatch, store.getState)
+      addMessage(parsed.message)(dispatch)
+      receiveMessage(parsed.message.id, parsed.room)(dispatch, store.getState)
     } else if (parsed.cmd === 'message:modify') {
-      receiveModifyMessage(parsed.message, parsed.room)(dispatch)
+      modifyMessage(parsed.message)(dispatch)
+      dispatch(reloadMessage(parsed.room))
     } else if (parsed.cmd === 'messages:room') {
+      addMessages(parsed.messages)(dispatch)
       receiveMessages({
-        messages: parsed.messages,
+        messageIds: parsed.messages.map(m => m.id),
         room: parsed.room,
         existHistory: parsed.existHistory
       })(dispatch)
@@ -91,14 +99,12 @@ async function onMessage(
       if (history.location.pathname !== parsed.name) {
         history.push(`/rooms/${parsed.name}`)
       }
-      enterSuccess(parsed.id, parsed.name, store.getState().rooms.rooms)(
-        dispatch,
-        store.getState
-      )
+      enterSuccess(parsed.id, parsed.name)(dispatch, store.getState)
     } else if (parsed.cmd === 'rooms:read') {
       dispatch(alreadyRead(parsed.room))
     } else if (parsed.cmd === 'message:iine') {
-      dispatch(receiveIine(parsed.room, parsed.id, parsed.iine))
+      dispatch(updateIine(parsed.id, parsed.iine))
+      dispatch(reloadMessage(parsed.room))
     }
   } catch (e) {
     console.error(e)
