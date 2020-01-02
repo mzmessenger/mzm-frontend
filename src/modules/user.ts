@@ -45,7 +45,7 @@ export function getMyInfo() {
       const payload: { account: string; id: string } = await res.json()
       const iconUrl = payload.account ? createIconUrl(payload.account) : null
       dispatch({ type: UserActionEnum.SetMe, payload: { ...payload, iconUrl } })
-    } else {
+    } else if (res.status === 403) {
       dispatch({ type: UserActionEnum.Logout })
     }
     return res
