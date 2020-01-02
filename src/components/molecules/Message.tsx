@@ -13,8 +13,8 @@ import MessageBody from '../atoms/MessageBody'
 const MessageWrap = styled.div`
   padding: 10px 15px 10px;
   border-radius: 1px;
-  background-color: hsl(0, 0%, 14%);
   color: #dcddde;
+  border-bottom: 1px solid var(--color-border);
   display: grid;
   grid-template-columns: 40px;
   grid-template-areas:

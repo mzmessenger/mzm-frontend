@@ -11,7 +11,7 @@ import InputText from './atoms/InputText'
 const ModalInner = styled.form`
   width: 440px;
   border-radius: 3px;
-  background-color: var(--color-surface);
+  background-color: var(--color-background);
   color: var(--color-on-background);
   h4 {
     margin: 0;
@@ -26,13 +26,12 @@ const Buttons = styled.div`
   padding: 14px 20px;
   display: flex;
   justify-content: flex-end;
-  background: var(--color-guide);
+  border-top: 1px solid var(--color-border);
   button {
     height: 40px;
     width: 100px;
   }
   button.cancel {
-    color: var(--color-on-background);
     border-color: transparent;
     background-color: transparent;
   }

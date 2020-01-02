@@ -9,8 +9,7 @@ const Wrap = styled.div`
   padding: 0 10px;
   height: var(--navi-height);
   align-items: center;
-  background-color: hsl(0, 0%, 18.5%);
-  color: #8e9297;
+  border-bottom: 1px solid var(--color-border);
   cursor: pointer;
 `
 

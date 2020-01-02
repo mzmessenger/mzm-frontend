@@ -1,17 +1,15 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { WIDTH_MOBILE } from '../../lib/constants'
 import { State } from '../../modules/index'
 import Body from '../atoms/Body'
 import Header from '../Header'
 
 const Wrap = styled.div`
   height: 100%;
-  display: grid;
-  grid-template-areas:
-    'header'
-    'body';
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 
   .overlay {
     position: fixed;
@@ -23,11 +21,6 @@ const Wrap = styled.div`
     opacity: 0.5;
     z-index: var(--z-index-overlay);
   }
-
-  @media (max-width: ${WIDTH_MOBILE}px) {
-    display: flex;
-    flex-direction: column;
-  }
 `
 
 export default function PageWrapper({ children }) {
@@ -35,7 +28,7 @@ export default function PageWrapper({ children }) {
 
   return (
     <Wrap>
-      <Header style={{ gridArea: 'header' }} />
+      <Header />
       <Body>{children}</Body>
       {overlay && <div className="overlay" />}
     </Wrap>

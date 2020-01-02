@@ -22,12 +22,7 @@ function App() {
   useEffect(() => {
     dispatch(onResize(window.innerWidth, window.innerHeight))
 
-    const vh = window.innerHeight * 0.01
-    document.documentElement.style.setProperty('--vh', `${vh}px`)
-
     const handleResize = () => {
-      const vh = window.innerHeight * 0.01
-      document.documentElement.style.setProperty('--vh', `${vh}px`)
       dispatch(onResize(window.innerWidth, window.innerHeight))
     }
 

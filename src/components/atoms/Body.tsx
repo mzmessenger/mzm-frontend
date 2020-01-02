@@ -4,11 +4,10 @@ import styled from 'styled-components'
 import { State } from '../../modules/index'
 
 const Wrap = styled.div`
-  grid-area: body;
-  background-color: var(--color-background);
-  height: calc(var(--vh, 1vh) * 100 - var(--header-height));
   width: 100%;
+  height: 100%;
   display: flex;
+  overflow: hidden;
 `
 
 export default function Body({
