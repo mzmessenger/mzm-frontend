@@ -12,6 +12,7 @@ const Wrap = styled.div`
     color: var(--color-on-background);
     border-color: transparent;
     background-color: transparent;
+    border-bottom: 1px solid var(--color-border);
   }
 `
 

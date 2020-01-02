@@ -9,9 +9,9 @@ import Rooms from '../Rooms'
 import RoomNavi from '../RoomNavi'
 
 const Wrap = styled.div`
-  background-color: var(--color-surface);
   width: var(--menu-width);
   color: var(--color-on-surface);
+  border-left: 1px solid var(--color-border);
 
   .header {
     height: var(--header-height);
@@ -26,6 +26,7 @@ const Wrap = styled.div`
   }
 
   @media (max-width: ${WIDTH_MOBILE}px) {
+    background: var(--color-background);
     width: var(--mobile-menu-width);
     position: absolute;
     top: 0;
@@ -37,6 +38,7 @@ const Wrap = styled.div`
 
     .header {
       display: block;
+      border-bottom: 1px solid var(--color-border);
     }
   }
 `

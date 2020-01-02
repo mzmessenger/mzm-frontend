@@ -14,8 +14,8 @@ const Wrap = styled.div`
   min-height: var(--navi-height);
   padding: 0 16px;
   align-items: center;
-  background-color: var(--color-guide);
   color: var(--color-on-guide);
+  border-bottom: 1px solid var(--color-border);
 
   .room-name {
     flex: 1;

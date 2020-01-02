@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { State } from '../../modules/index'
 
 const Wrap = styled.div`
-  background-color: var(--color-background);
   width: 100%;
   height: 100%;
   display: flex;

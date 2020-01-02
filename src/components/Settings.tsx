@@ -17,7 +17,7 @@ const Wrap = styled.div`
 
   .user {
     padding: 16px 0 32px;
-    border-bottom: 1px solid hsla(0, 100%, 100%, 0.9);
+    border-bottom: 1px solid var(--color-border);
   }
 
   .logout {
@@ -27,6 +27,7 @@ const Wrap = styled.div`
   .delete {
     margin-top: 32px;
     button {
+      padding: 0 16px;
       color: var(--color-on-warning);
       background-color: var(--color-warning);
       border-color: transparent;
