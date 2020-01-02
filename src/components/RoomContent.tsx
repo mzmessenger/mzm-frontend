@@ -13,11 +13,11 @@ const Content = styled.div`
 
   .messages {
     display: flex;
+    overflow: hidden;
     flex-direction: column;
     justify-content: flex-end;
     height: 100%;
     .messages-inner {
-      max-height: 100%;
       overflow: auto;
     }
   }

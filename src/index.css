@@ -24,13 +24,20 @@
   --z-index-on-overlay: 1300;
 }
 
+html,
+body {
+  max-height: 100%;
+  min-height: 100%;
+  display: flex;
+  overflow: hidden;
+}
+
 body {
   font-family: 'Noto', Arial, 'ヒラギノ角ゴ ProN W3',
     'Hiragino Kaku Gothic ProN W3', HiraKakuProN-W3, 'メイリオ', Osaka,
     'ＭＳ Ｐゴシック', 'MS PGothic', Helvetica, sans-serif;
   font-size: 14px;
   background-color: var(--color-background);
-  overflow: hidden auto;
 }
 
 a {
@@ -52,5 +59,6 @@ input[type='text']:focus {
 
 #root {
   width: 100vw;
-  height: 100%;
+  display: flex;
+  overflow: hidden;
 }
