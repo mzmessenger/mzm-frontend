@@ -33,13 +33,15 @@ const MessageWrap = styled.div`
     .iine {
       display: flex;
       margin-left: 16px;
-      flex: 1;
       .num {
         margin-left: 4px;
       }
     }
     .actions {
       visibility: hidden;
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
     }
     .icon {
       cursor: pointer;
@@ -182,7 +184,7 @@ function ContainerMessage({ id }: { id: string }) {
     incrementIine(id)(dispatch, store.getState)
   }
   const startEditHandler = () => {
-    startToEdit(messageObj.id, messageObj.message)
+    dispatch(startToEdit(messageObj.id, messageObj.message))
   }
   const prevIineRef = useRef<number>()
   useEffect(() => {
