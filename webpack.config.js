@@ -1,9 +1,11 @@
 /* eslint-env node */
 const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 const WorkerPlugin = require('worker-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
+const workboxPlugin = require('workbox-webpack-plugin')
 
 const SRC_PATH = path.join(__dirname, 'src')
+const DEST_PATH = path.join(__dirname, 'dist')
 
 module.exports = {
   mode: 'development',
@@ -11,19 +13,8 @@ module.exports = {
     index: path.join(SRC_PATH, 'index.tsx')
   },
   output: {
-    path: path.join(__dirname, 'dist'),
+    path: DEST_PATH,
     publicPath: '/'
-  },
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-      cacheGroups: {
-        react: {
-          test: /react/,
-          chunks: 'all'
-        }
-      }
-    }
   },
   devtool: 'source-map',
   resolve: {
@@ -59,15 +50,49 @@ module.exports = {
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
-        use: ['file-loader']
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'assets'
+            }
+          }
+        ]
       }
     ]
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: path.join(SRC_PATH, 'index.html')
-    }),
-    new WorkerPlugin({ globalObject: 'self' })
+    new WorkerPlugin({ globalObject: 'self' }),
+    new CopyPlugin([
+      { from: path.join(SRC_PATH, 'index.html'), to: DEST_PATH },
+      { from: path.join(SRC_PATH, 'manifest.json'), to: DEST_PATH },
+      {
+        from: path.join(SRC_PATH, 'assets', 'icons'),
+        to: path.join(DEST_PATH, 'assets', 'icons')
+      }
+    ]),
+    new workboxPlugin.GenerateSW({
+      offlineGoogleAnalytics: true,
+      exclude: [/^manifest.json$/],
+      swDest: 'sw.js',
+      cacheId: 'mzm',
+      clientsClaim: true,
+      skipWaiting: true,
+      cleanupOutdatedCaches: true,
+      runtimeCaching: [
+        {
+          urlPattern: '/',
+          handler: 'NetworkFirst',
+          options: {
+            cacheName: 'mzm-default',
+            expiration: {
+              maxAgeSeconds: 60 * 60 * 24
+            }
+          }
+        }
+      ]
+    })
   ],
   devServer: {
     host: '0.0.0.0',

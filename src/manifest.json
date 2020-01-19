@@ -1,0 +1,16 @@
+{
+  "name": "MZM",
+  "short_name": "MZM",
+  "description": "Chat system for developer",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#222429",
+  "background_color": "#222429",
+  "icons": [
+    {
+      "src": "/assets/icons/mzm.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    }
+  ]
+}
