@@ -40,7 +40,7 @@ export function signup(account: string) {
 
 export function getMyInfo() {
   return async function(dispatch: Dispatch<UserAction>) {
-    const res = await fetch('/api/user/@me')
+    const res = await fetch('/api/user/@me', { credentials: 'include' })
     if (res.status === 200) {
       const payload: { account: string; id: string } = await res.json()
       const iconUrl = payload.account ? createIconUrl(payload.account) : null
