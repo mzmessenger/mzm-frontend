@@ -48,6 +48,7 @@ const Wrap = styled.div`
       min-height: 2em;
       color: var(--color-input);
       background-color: transparent;
+      font-size: 14px;
       resize: none;
       border: none;
       appearance: none;

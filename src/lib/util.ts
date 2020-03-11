@@ -1,5 +1,5 @@
 export function createIconUrl(user: string) {
-  return `/api/imager/icon/${user}`
+  return `/api/icon/user/${user}`
 }
 
 export function sendSocket(socket: WebSocket, message: SendSocketMessage) {
