@@ -1,7 +1,32 @@
 import React from 'react'
 import styled from 'styled-components'
-import Home from '@material-ui/icons/Home'
 import Link from './atoms/Link'
+import RoomElem from './atoms/RoomElem'
+
+const recommended = ['要望室', 'test']
+
+export default function TopContent() {
+  return (
+    <Content>
+      <div className="content">
+        <div className="recommended">
+          <div className="inner">
+            <h2>おすすめ部屋</h2>
+            <div className="rooms">
+              {recommended.map(e => (
+                <div className="room" key={e}>
+                  <Link to={`/rooms/${e}`}>
+                    <RoomElem name={e} unread={0} current={false} />
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </Content>
+  )
+}
 
 const Content = styled.div`
   width: 100%;
@@ -34,27 +59,3 @@ const Content = styled.div`
     }
   }
 `
-
-const recommended = ['test']
-
-export default function TopContent() {
-  return (
-    <Content>
-      <div className="content">
-        <div className="recommended">
-          <div className="inner">
-            <h2>おすすめ部屋</h2>
-            <div className="rooms">
-              {recommended.map(e => (
-                <div className="room" key={e}>
-                  <Home style={{ margin: '0 5px 0 0' }} />
-                  <Link to={`/rooms/${e}`}>{e}</Link>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </Content>
-  )
-}

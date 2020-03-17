@@ -2,36 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import Home from '@material-ui/icons/Home'
 
-const RoomWrap = styled.div`
-  padding: 0 4px;
-  display: flex;
-  align-items: center;
-  color: var(--color-on-surface);
-  height: 34px;
-  .room-name {
-    font-size: 16px;
-    line-height: 20px;
-    flex: 1;
-  }
-  &.current {
-    background: hsla(0, 100%, 100%, 0.1);
-  }
-  .unread {
-    display: none;
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
-    border-radius: 50%;
-    background: rgb(255, 0, 0);
-    color: hsla(0, 100%, 100%, 1);
-    text-align: center;
-    font-weight: bold;
-    &.show {
-      display: inline-block;
-    }
-  }
-`
-
 type Props = {
   name: string
   unread: number
@@ -53,3 +23,33 @@ export default function RoomElem({ name, unread, current }: Props) {
     </RoomWrap>
   )
 }
+
+const RoomWrap = styled.div`
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  color: var(--color-on-surface);
+  height: 34px;
+  .room-name {
+    font-size: 16px;
+    line-height: 20px;
+    flex: 1;
+  }
+  &.current {
+    background: var(--color-surface);
+  }
+  .unread {
+    display: none;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    border-radius: 50%;
+    background: rgb(255, 0, 0);
+    color: hsla(0, 100%, 100%, 1);
+    text-align: center;
+    font-weight: bold;
+    &.show {
+      display: inline-block;
+    }
+  }
+`
