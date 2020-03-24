@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import Home from '@material-ui/icons/Home'
@@ -96,7 +96,7 @@ export default function RoomInfo({
   const [users, setUsers] = useState([])
   const dispatch = useDispatch()
 
-  useMemo(() => {
+  useEffect(() => {
     if (id) {
       getUsers(id).then(res => {
         if (res.status === 200) {
