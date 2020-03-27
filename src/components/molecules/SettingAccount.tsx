@@ -33,7 +33,7 @@ function ShowAccount({
 
   const [image, setImage] = useState('')
 
-  const [edit, setEdit] = useState(true)
+  const [edit, setEdit] = useState(false)
   const onEdit = () => {
     setEdit(true)
   }
@@ -149,11 +149,6 @@ const Wrap = styled.div`
         padding: 0.5em 1em 0;
       }
       flex: 1;
-      h4 {
-        margin: 0;
-        padding: 0;
-        font-size: 8px;
-      }
       span {
         font-size: 16px;
       }

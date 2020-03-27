@@ -1,6 +1,7 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Modal, { ModalProps } from '../atoms/Modal'
+import Button from '../atoms/Button'
 
 type Props = ModalProps & {
   image: string
@@ -17,6 +18,48 @@ type Drag = typeof Drag[keyof typeof Drag]
 
 const MIN_LENGTH = 100
 
+const getLength = (
+  type: Drag,
+  startClipLength: number,
+  diff: number,
+  minLength: number,
+  maxLength: number
+): number => {
+  let length = startClipLength
+  if (type === Drag.UPPER_LEFT || type === Drag.UPPER_RIGHT) {
+    length = startClipLength - diff
+  } else if (type === Drag.LOWER_LEFT || type === Drag.LOWER_RIGHT) {
+    length = startClipLength + diff
+  }
+
+  if (length < minLength) {
+    return minLength
+  }
+  if (maxLength < length) {
+    return maxLength
+  }
+  return length
+}
+
+const getMoveTo = (
+  type: Drag,
+  currentX: number,
+  currentY: number,
+  diff: number
+): { x: number; y: number } => {
+  switch (type) {
+    case Drag.UPPER_LEFT:
+      return { x: currentX + diff, y: currentY + diff }
+    case Drag.UPPER_RIGHT:
+      return { x: currentX, y: currentY + diff }
+    case Drag.LOWER_LEFT:
+      return { x: currentX + diff, y: currentY }
+    case Drag.LOWER_RIGHT:
+      return { x: currentX, y: currentY }
+  }
+  return { x: currentX, y: currentY }
+}
+
 export default function ModalIconCanvas({ image, open, onClose }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const imgRef = useRef<HTMLImageElement>(null)
@@ -31,28 +74,23 @@ export default function ModalIconCanvas({ image, open, onClose }: Props) {
   const [sx, setSx] = useState(0)
   const [sy, setSy] = useState(0)
   const [startClipLength, setStartClipLength] = useState(0)
-  const [currentX, setCurrentX] = useState(0)
-  const [currentY, setCurrentY] = useState(0)
+  const [left, setLeft] = useState(0)
+  const [top, setTop] = useState(0)
   const [translate, setTranslate] = useState('')
   const [maxLength, setMaxLength] = useState(0)
 
-  const clipImage = (
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    length: number
-  ) => {
-    canvasRef.current.width = length
-    canvasRef.current.height = length
+  const clipImage = (x: number, y: number, width: number, height: number) => {
+    canvasRef.current.width = width
+    canvasRef.current.height = height
     const ctx = canvasRef.current.getContext('2d')
-    ctx.drawImage(imgRef.current, x, y, length, length, 0, 0, length, length)
+    ctx.drawImage(imgRef.current, x, y, width, height, 0, 0, width, height)
 
-    const { data } = ctx.getImageData(0, 0, width, height)
-    setSize(data.length)
+    canvasRef.current.toBlob(blob => {
+      setSize(blob.size)
+    })
   }
 
-  const onLoad = useCallback(() => {
+  const onLoad = () => {
     const _width = imgRef.current.naturalWidth
     const _height = imgRef.current.naturalHeight
     setHeight(_height)
@@ -61,8 +99,8 @@ export default function ModalIconCanvas({ image, open, onClose }: Props) {
     setMaxLength(_maxLength)
     const _clipLength = _maxLength * 0.8
     setClipLength(_clipLength)
-    clipImage(0, 0, _width, _height, _clipLength)
-  }, [])
+    clipImage(0, 0, _clipLength, _clipLength)
+  }
 
   // init
   useEffect(() => {
@@ -72,12 +110,26 @@ export default function ModalIconCanvas({ image, open, onClose }: Props) {
     setTranslate('')
   }, [open])
 
-  const onMouseDown = (e, drag: Drag) => {
+  const onMouseDown = (e, type: Drag) => {
     setDrag(true)
-    setDragType(drag)
+    setDragType(type)
     setSx(e.pageX)
     setSy(e.pageY)
     setStartClipLength(clipLength)
+
+    const clipperRect = clipperRef.current.getBoundingClientRect()
+    const wrapperRect = wrapperRef.current.getBoundingClientRect()
+    const left = clipperRect.left - wrapperRect.left
+    const top = clipperRect.top - wrapperRect.top
+    if (type === Drag.UPPER_LEFT) {
+      setMaxLength(Math.min(clipLength + left, clipLength + top))
+    } else if (type === Drag.UPPER_RIGHT) {
+      setMaxLength(Math.min(width - left, clipLength + top))
+    } else if (type === Drag.LOWER_LEFT) {
+      setMaxLength(Math.min(width + left, height - top))
+    } else if (type === Drag.LOWER_RIGHT) {
+      setMaxLength(Math.min(clipLength + left, height - top))
+    }
   }
 
   const onMouseUp = () => {
@@ -90,18 +142,11 @@ export default function ModalIconCanvas({ image, open, onClose }: Props) {
     const wrapperRect = wrapperRef.current.getBoundingClientRect()
     const cx = clipperRect.left - wrapperRect.left
     const cy = clipperRect.top - wrapperRect.top
-    setCurrentX(cx)
-    setCurrentY(cy)
+    setLeft(cx)
+    setTop(cy)
 
-    clipImage(cx, cy, clipLength, clipLength, clipLength)
+    clipImage(cx, cy, clipLength, clipLength)
   }
-
-  useEffect(() => {
-    document.documentElement.addEventListener('mouseup', onMouseUp)
-    return () => {
-      document.documentElement.removeEventListener('mouseup', onMouseUp)
-    }
-  }, [drag, clipLength])
 
   const move = (translateX: number, translateY: number, length: number) => {
     if (translateX + length > width) {
@@ -125,62 +170,70 @@ export default function ModalIconCanvas({ image, open, onClose }: Props) {
     }
 
     if (dragType === Drag.MOVE) {
-      move(currentX + e.pageX - sx, currentY + e.pageY - sy, clipLength)
-    } else if (dragType === Drag.UPPER_LEFT) {
-      const dy = e.pageY - sy
-      const length = startClipLength - dy
-      if (length < MIN_LENGTH || maxLength < length) {
-        return
-      }
-
+      move(left + e.pageX - sx, top + e.pageY - sy, clipLength)
+    } else if (
+      dragType === Drag.UPPER_LEFT ||
+      dragType === Drag.UPPER_RIGHT ||
+      dragType === Drag.LOWER_LEFT ||
+      dragType === Drag.LOWER_RIGHT
+    ) {
+      const diff = e.pageY - sy
+      const length = getLength(
+        dragType,
+        startClipLength,
+        diff,
+        MIN_LENGTH,
+        maxLength
+      )
       setClipLength(length)
-      move(currentX + dy, currentY + dy, length)
-    } else if (dragType === Drag.UPPER_RIGHT) {
-      const dy = e.pageY - sy
-      const length = startClipLength - dy
-      if (length < MIN_LENGTH || maxLength < length) {
-        return
-      }
 
-      setClipLength(length)
-      move(currentX, currentY + dy, length)
-    } else if (dragType === Drag.LOWER_LEFT) {
-      const dy = e.pageY - sy
-      const length = startClipLength + dy
-      if (length < MIN_LENGTH || maxLength < length) {
-        return
-      }
-
-      setClipLength(length)
-      move(currentX - dy, currentY, length)
-    } else if (dragType === Drag.LOWER_RIGHT) {
-      const dy = e.pageY - sy
-      const length = startClipLength + dy
-      if (length < MIN_LENGTH || maxLength < length) {
-        return
-      }
-
-      setClipLength(length)
-      move(currentX, currentY, length)
+      const moveTo = getMoveTo(dragType, left, top, startClipLength - length)
+      move(moveTo.x, moveTo.y, length)
     }
   }
+
+  useEffect(() => {
+    document.documentElement.addEventListener('mousemove', onMouseMove)
+    document.documentElement.addEventListener('mouseup', onMouseUp)
+    return () => {
+      document.documentElement.removeEventListener('mousemove', onMouseMove)
+      document.documentElement.removeEventListener('mouseup', onMouseUp)
+    }
+  }, [drag, clipLength])
+
+  const sendImage = () => {
+    const formData = new FormData()
+    canvasRef.current.toBlob(blob => {
+      formData.append('icon', blob)
+      fetch('/api/icon/user', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'
+      }).then(res => {
+        if (res.ok) {
+          onClose()
+        } else {
+          res.text().then(text => {
+            alert(`アップロードにエラーが発生しました(${text})`)
+          })
+        }
+      })
+    })
+  }
+
+  const sizeStr =
+    size > 1000 * 1000 ? `${size / 1000 / 1000}MB` : `${size / 1000}KB`
 
   return (
     <Modal open={open} onClose={onClose}>
       <Wrap className={drag ? 'drag' : ''}>
-        <div>size: {size}</div>
-        <div
-          className="canvas-wrap"
-          style={{ width, height }}
-          ref={wrapperRef}
-          onMouseMove={onMouseMove}
-        >
+        <div className="canvas-wrap" style={{ width, height }} ref={wrapperRef}>
           <div
             ref={clipperRef}
             className="clipper"
             style={{
-              width: clipLength - 1,
-              height: clipLength - 1,
+              width: clipLength,
+              height: clipLength,
               transform: translate
             }}
           >
@@ -215,6 +268,32 @@ export default function ModalIconCanvas({ image, open, onClose }: Props) {
           />
           <div className="underlay"></div>
           <img src={image} ref={imgRef} onLoad={onLoad} />
+        </div>
+        <div className="info">
+          <div>
+            <h4>width</h4>
+            <span>{width}px</span>
+          </div>
+          <div>
+            <h4>height</h4>
+            <span>{height}px</span>
+          </div>
+          <div>
+            <h4>clip</h4>
+            <span>{clipLength}px</span>
+          </div>
+          <div>
+            <h4>size</h4>
+            <span>{sizeStr}</span>
+          </div>
+        </div>
+        <div className="button">
+          <Button className="cancel" onClick={onClose}>
+            キャンセル
+          </Button>
+          <Button className="send" onClick={sendImage}>
+            送信
+          </Button>
         </div>
       </Wrap>
     </Modal>
@@ -300,6 +379,32 @@ const Wrap = styled.div`
         bottom: calc(0px - var(--point-diff));
         right: calc(0px - var(--point-diff));
       }
+    }
+  }
+
+  .info {
+    border-top: 1px solid var(--color-border);
+    padding: 8px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 8px;
+  }
+
+  .button {
+    border-top: 1px solid var(--color-border);
+    padding: 8px 0 0;
+    display: flex;
+    justify-content: flex-end;
+    button {
+      width: 100px;
+      height: 40px;
+    }
+    .send {
+      margin-left: 8px;
+    }
+    .cancel {
+      border-color: transparent;
+      background: none;
     }
   }
 `
