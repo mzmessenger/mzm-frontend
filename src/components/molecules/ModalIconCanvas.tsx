@@ -1,10 +1,13 @@
 import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
-import Modal, { ModalProps } from '../atoms/Modal'
+import Modal from '../atoms/Modal'
 import Button from '../atoms/Button'
 
-type Props = ModalProps & {
+type Props = {
   image: string
+  open: boolean
+  onSave: () => void
+  onCancel: () => void
 }
 
 const Drag = {
@@ -60,7 +63,12 @@ const getMoveTo = (
   return { x: currentX, y: currentY }
 }
 
-export default function ModalIconCanvas({ image, open, onClose }: Props) {
+export default function ModalIconCanvas({
+  image,
+  open,
+  onSave,
+  onCancel
+}: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const imgRef = useRef<HTMLImageElement>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
@@ -78,12 +86,20 @@ export default function ModalIconCanvas({ image, open, onClose }: Props) {
   const [top, setTop] = useState(0)
   const [translate, setTranslate] = useState('')
   const [maxLength, setMaxLength] = useState(0)
+  const [scale, setScale] = useState(1)
 
-  const clipImage = (x: number, y: number, width: number, height: number) => {
-    canvasRef.current.width = width
-    canvasRef.current.height = height
+  const clipImage = (
+    x: number,
+    y: number,
+    sw: number,
+    sh: number,
+    dw: number,
+    dh: number
+  ) => {
+    canvasRef.current.width = dw
+    canvasRef.current.height = dh
     const ctx = canvasRef.current.getContext('2d')
-    ctx.drawImage(imgRef.current, x, y, width, height, 0, 0, width, height)
+    ctx.drawImage(imgRef.current, x, y, sw, sh, 0, 0, dw, dh)
 
     canvasRef.current.toBlob(blob => {
       setSize(blob.size)
@@ -93,13 +109,25 @@ export default function ModalIconCanvas({ image, open, onClose }: Props) {
   const onLoad = () => {
     const _width = imgRef.current.naturalWidth
     const _height = imgRef.current.naturalHeight
-    setHeight(_height)
-    setWidth(_width)
-    const _maxLength = Math.min(_height, _width)
+    let _scale = 1
+    if (_width > 500) {
+      _scale = 500 / _width
+    }
+    setHeight(_height * _scale)
+    setWidth(_width * _scale)
+    setScale(_scale)
+    const _maxLength = Math.min(_height, _width) * _scale
     setMaxLength(_maxLength)
-    const _clipLength = _maxLength * 0.8
+    const _clipLength = _maxLength
     setClipLength(_clipLength)
-    clipImage(0, 0, _clipLength, _clipLength)
+    clipImage(
+      0,
+      0,
+      _clipLength / _scale,
+      _clipLength / _scale,
+      _clipLength,
+      _clipLength
+    )
   }
 
   // init
@@ -145,7 +173,14 @@ export default function ModalIconCanvas({ image, open, onClose }: Props) {
     setLeft(cx)
     setTop(cy)
 
-    clipImage(cx, cy, clipLength, clipLength)
+    clipImage(
+      cx / scale,
+      cy / scale,
+      clipLength / scale,
+      clipLength / scale,
+      clipLength,
+      clipLength
+    )
   }
 
   const move = (translateX: number, translateY: number, length: number) => {
@@ -211,7 +246,7 @@ export default function ModalIconCanvas({ image, open, onClose }: Props) {
         credentials: 'include'
       }).then(res => {
         if (res.ok) {
-          onClose()
+          onSave()
         } else {
           res.text().then(text => {
             alert(`アップロードにエラーが発生しました(${text})`)
@@ -225,8 +260,14 @@ export default function ModalIconCanvas({ image, open, onClose }: Props) {
     size > 1000 * 1000 ? `${size / 1000 / 1000}MB` : `${size / 1000}KB`
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={open} onClose={onCancel}>
       <Wrap className={drag ? 'drag' : ''}>
+        <img
+          src={image}
+          style={{ display: 'none' }}
+          ref={imgRef}
+          onLoad={onLoad}
+        />
         <div className="canvas-wrap" style={{ width, height }} ref={wrapperRef}>
           <div
             ref={clipperRef}
@@ -260,14 +301,9 @@ export default function ModalIconCanvas({ image, open, onClose }: Props) {
               />
             </div>
           </div>
-          <canvas
-            ref={canvasRef}
-            style={{
-              transform: translate
-            }}
-          />
+          <canvas ref={canvasRef} style={{ transform: translate }} />
           <div className="underlay"></div>
-          <img src={image} ref={imgRef} onLoad={onLoad} />
+          <img src={image} style={{ width, height }} />
         </div>
         <div className="info">
           <div>
@@ -288,7 +324,7 @@ export default function ModalIconCanvas({ image, open, onClose }: Props) {
           </div>
         </div>
         <div className="button">
-          <Button className="cancel" onClick={onClose}>
+          <Button className="cancel" onClick={onCancel}>
             キャンセル
           </Button>
           <Button className="send" onClick={sendImage}>

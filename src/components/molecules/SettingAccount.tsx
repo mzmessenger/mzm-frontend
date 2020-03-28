@@ -16,6 +16,10 @@ function ShowAccount({
   id: string
   account: string
 }) {
+  const [open, setOpen] = useState(false)
+  const [image, setImage] = useState('')
+  const [edit, setEdit] = useState(false)
+
   // ターゲット以外の場所にdropしてしまった時にブラウザで画像を開かないように
   useEffect(() => {
     const _onDragOver = e => e.preventDefault()
@@ -28,14 +32,23 @@ function ShowAccount({
       document.removeEventListener('drop', _onDrop)
     }
   }, [])
-  const [open, setOpen] = useState(false)
-  const onClose = useCallback(() => setOpen(false), [])
 
-  const [image, setImage] = useState('')
+  const onModalSave = useCallback(() => {
+    onSave()
+    setOpen(false)
+  }, [])
 
-  const [edit, setEdit] = useState(false)
+  const onModalCancel = useCallback(() => {
+    onSave()
+    setOpen(false)
+  }, [])
+
   const onEdit = () => {
     setEdit(true)
+  }
+
+  const onSave = () => {
+    setEdit(false)
   }
 
   const onCancel = () => {
@@ -51,6 +64,7 @@ function ShowAccount({
       e.preventDefault()
     }
   }
+
   const onDrop = e => {
     e.preventDefault()
     const data = e.dataTransfer
@@ -90,9 +104,12 @@ function ShowAccount({
       </ul>
       <div className="button">
         {edit && (
-          <Button className="cancel" onClick={onCancel}>
-            キャンセル
-          </Button>
+          <>
+            <Button className="cancel" onClick={onCancel}>
+              キャンセル
+            </Button>
+            <Button onClick={onSave}>保存</Button>
+          </>
         )}
         {!edit && (
           <Button className="edit" onClick={onEdit}>
@@ -100,7 +117,12 @@ function ShowAccount({
           </Button>
         )}
       </div>
-      <ModalIconCanvas image={image} open={open} onClose={onClose} />
+      <ModalIconCanvas
+        image={image}
+        open={open}
+        onSave={onModalSave}
+        onCancel={onModalCancel}
+      />
     </>
   )
 }
