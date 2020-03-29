@@ -8,13 +8,14 @@ export type UserState = {
 type MyInfo = {
   id: string
   account: string
-  iconUrl?: string
+  iconUrl: string
 }
 
 export enum UserActionEnum {
   Signup = 'UserAction:Signup',
   Logout = 'UserAction:Logout',
   SetMe = 'UserAction:SetMe',
+  SetIcon = 'UserAction:SetIcon',
   Remove = 'UserAction:Remove'
 }
 
@@ -24,11 +25,17 @@ export type UserAction =
       payload: { account?: string }
     }
   | {
+      type: UserActionEnum.Logout
+    }
+  | {
       type: UserActionEnum.SetMe
       payload: MyInfo
     }
   | {
-      type: UserActionEnum.Logout
+      type: UserActionEnum.SetIcon
+      payload: {
+        version: string
+      }
     }
   | {
       type: UserActionEnum.Remove

@@ -1,5 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
+import { uploadIcon } from '../../modules/user'
 import Modal from '../atoms/Modal'
 import Button from '../atoms/Button'
 
@@ -87,6 +89,7 @@ export default function ModalIconCanvas({
   const [translate, setTranslate] = useState('')
   const [maxLength, setMaxLength] = useState(0)
   const [scale, setScale] = useState(1)
+  const dispatch = useDispatch()
 
   const clipImage = (
     x: number,
@@ -237,14 +240,8 @@ export default function ModalIconCanvas({
   }, [drag, clipLength])
 
   const sendImage = () => {
-    const formData = new FormData()
     canvasRef.current.toBlob(blob => {
-      formData.append('icon', blob)
-      fetch('/api/icon/user', {
-        method: 'POST',
-        body: formData,
-        credentials: 'include'
-      }).then(res => {
+      uploadIcon(blob)(dispatch).then(res => {
         if (res.ok) {
           onSave()
         } else {

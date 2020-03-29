@@ -1,7 +1,3 @@
-export function createIconUrl(user: string) {
-  return `/api/icon/user/${user}`
-}
-
 export function sendSocket(socket: WebSocket, message: SendSocketMessage) {
   if (!socket) {
     return

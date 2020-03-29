@@ -59,7 +59,7 @@ export type UIAction =
     }
   | {
       type: UIActionEnum.OpenUserDetail
-      payload: { id: string; account: string }
+      payload: { id: string; account: string; icon: string }
     }
   | {
       type: UIActionEnum.CloseUserDetail

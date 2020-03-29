@@ -10,7 +10,7 @@ export type MessagesState = {
 export type Message = {
   id: string
   userId: string
-  iconUrl?: string
+  icon: string
   userAccount: string
   message: string
   iine: number

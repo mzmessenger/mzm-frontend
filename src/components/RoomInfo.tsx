@@ -6,7 +6,6 @@ import Person from '@material-ui/icons/Person'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import { openUserDetail } from '../modules/ui'
 import { WIDTH_MOBILE } from '../lib/constants'
-import { createIconUrl } from '../lib/util'
 import { State } from '../modules/index'
 
 const Wrap = styled.div`
@@ -110,18 +109,12 @@ export default function RoomInfo({
   }, [id])
 
   const clickUser = user => {
-    dispatch(openUserDetail(user.id, user.account))
+    dispatch(openUserDetail(user.id, user.account, user.icon))
   }
 
   const userIcons = users
     .slice(0, 10)
-    .map((u, i) => (
-      <img
-        key={i}
-        src={createIconUrl(u.account)}
-        onClick={() => clickUser(u)}
-      />
-    ))
+    .map((u, i) => <img key={i} src={u.icon} onClick={() => clickUser(u)} />)
 
   const expandClassName = ['expand-icon']
   if (expand) {

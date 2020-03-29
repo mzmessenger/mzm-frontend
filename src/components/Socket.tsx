@@ -29,6 +29,7 @@ type Message = {
   createdAt: string
   updated: boolean
   updatedAt: string
+  icon: string
 }
 
 type ReceiveMessage =
