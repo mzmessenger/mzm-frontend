@@ -116,16 +116,18 @@ export default function ModalIconCanvas({
     return { top, left }
   }
 
-  const setSendImg = () => {
+  const setSendImg = (length: number, sendScale: number) => {
     const current = getCurrentPosition()
+    sendImgRef.current.width = LIMIT_LENGTH
+    sendImgRef.current.height = LIMIT_LENGTH
     sendImgRef.current
       .getContext('2d')
       .drawImage(
         imgRef.current,
-        current.left / scale,
-        current.top / scale,
-        clipLength / scale,
-        clipLength / scale,
+        current.left / sendScale,
+        current.top / sendScale,
+        length / sendScale,
+        length / sendScale,
         0,
         0,
         LIMIT_LENGTH,
@@ -159,7 +161,7 @@ export default function ModalIconCanvas({
       _clipLength,
       _clipLength
     )
-    setSendImg()
+    setSendImg(_clipLength, _scale)
   }
 
   // init
@@ -209,7 +211,7 @@ export default function ModalIconCanvas({
       clipLength,
       clipLength
     )
-    setSendImg()
+    setSendImg(clipLength, scale)
   }
 
   const move = (translateX: number, translateY: number, length: number) => {
@@ -293,7 +295,11 @@ export default function ModalIconCanvas({
         />
         <canvas
           ref={sendImgRef}
-          style={{ width: LIMIT_LENGTH, height: LIMIT_LENGTH, display: 'none' }}
+          style={{
+            width: LIMIT_LENGTH,
+            height: LIMIT_LENGTH,
+            display: 'none'
+          }}
         />
         <div className="canvas-wrap" style={{ width, height }} ref={wrapperRef}>
           <div

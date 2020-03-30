@@ -3,6 +3,7 @@
   --navi-height: 40px;
   --color-primary: rgb(29, 161, 242);
   --color-on-primary: hsla(0, 100%, 100%, 0.9);
+  --color-base: hsl(0, 0%, 0%);
   --color-background: #222429;
   --color-on-background: #e1e1e1;
   --color-surface: hsla(0, 100%, 100%, 0.1);

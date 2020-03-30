@@ -25,7 +25,7 @@ type Props = {
   startEditHandler: (event: React.MouseEvent) => void
 }
 
-function PresentationalMessage({
+const PresentationalMessage = ({
   message,
   iine,
   html,
@@ -38,7 +38,7 @@ function PresentationalMessage({
   myAccount,
   iineHandler,
   startEditHandler
-}: Props) {
+}: Props) => {
   const [iineAction, setIineAction] = useState(false)
   const day = dayjs(new Date(createdAt))
   const date = day.format(
@@ -132,12 +132,13 @@ export default function Message({ id }: { id: string }) {
 }
 
 const MessageWrap = styled.div`
+  --icon-size: 32px;
+
   padding: 10px 15px 10px;
   border-radius: 1px;
   color: #dcddde;
-  border-bottom: 1px solid var(--color-border);
   display: grid;
-  grid-template-columns: 40px;
+  grid-template-columns: calc(var(--icon-size) + 16px);
   grid-template-areas:
     'icon message-header'
     'icon message-body'
@@ -182,8 +183,8 @@ const MessageWrap = styled.div`
 
   .user-icon {
     grid-area: icon;
-    width: 25px;
-    height: 25px;
+    width: var(--icon-size);
+    height: var(--icon-size);
     border-radius: 2px;
   }
 
