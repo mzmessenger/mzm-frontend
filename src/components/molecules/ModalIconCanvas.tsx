@@ -22,6 +22,7 @@ const Drag = {
 type Drag = typeof Drag[keyof typeof Drag]
 
 const MIN_LENGTH = 100
+const LIMIT_LENGTH = 400
 
 const getLength = (
   type: Drag,
@@ -71,7 +72,9 @@ export default function ModalIconCanvas({
   onSave,
   onCancel
 }: Props) {
+  const dispatch = useDispatch()
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const sendImgRef = useRef<HTMLCanvasElement>(null)
   const imgRef = useRef<HTMLImageElement>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
   const clipperRef = useRef<HTMLDivElement>(null)
@@ -89,7 +92,6 @@ export default function ModalIconCanvas({
   const [translate, setTranslate] = useState('')
   const [maxLength, setMaxLength] = useState(0)
   const [scale, setScale] = useState(1)
-  const dispatch = useDispatch()
 
   const clipImage = (
     x: number,
@@ -101,10 +103,36 @@ export default function ModalIconCanvas({
   ) => {
     canvasRef.current.width = dw
     canvasRef.current.height = dh
-    const ctx = canvasRef.current.getContext('2d')
-    ctx.drawImage(imgRef.current, x, y, sw, sh, 0, 0, dw, dh)
+    canvasRef.current
+      .getContext('2d')
+      .drawImage(imgRef.current, x, y, sw, sh, 0, 0, dw, dh)
+  }
 
-    canvasRef.current.toBlob(blob => {
+  const getCurrentPosition = () => {
+    const clipperRect = clipperRef.current.getBoundingClientRect()
+    const wrapperRect = wrapperRef.current.getBoundingClientRect()
+    const left = clipperRect.left - wrapperRect.left
+    const top = clipperRect.top - wrapperRect.top
+    return { top, left }
+  }
+
+  const setSendImg = () => {
+    const current = getCurrentPosition()
+    sendImgRef.current
+      .getContext('2d')
+      .drawImage(
+        imgRef.current,
+        current.left / scale,
+        current.top / scale,
+        clipLength / scale,
+        clipLength / scale,
+        0,
+        0,
+        LIMIT_LENGTH,
+        LIMIT_LENGTH
+      )
+
+    sendImgRef.current.toBlob(blob => {
       setSize(blob.size)
     })
   }
@@ -113,8 +141,8 @@ export default function ModalIconCanvas({
     const _width = imgRef.current.naturalWidth
     const _height = imgRef.current.naturalHeight
     let _scale = 1
-    if (_width > 500) {
-      _scale = 500 / _width
+    if (_width > LIMIT_LENGTH) {
+      _scale = LIMIT_LENGTH / _width
     }
     setHeight(_height * _scale)
     setWidth(_width * _scale)
@@ -131,6 +159,7 @@ export default function ModalIconCanvas({
       _clipLength,
       _clipLength
     )
+    setSendImg()
   }
 
   // init
@@ -148,18 +177,17 @@ export default function ModalIconCanvas({
     setSy(e.pageY)
     setStartClipLength(clipLength)
 
-    const clipperRect = clipperRef.current.getBoundingClientRect()
-    const wrapperRect = wrapperRef.current.getBoundingClientRect()
-    const left = clipperRect.left - wrapperRect.left
-    const top = clipperRect.top - wrapperRect.top
+    const current = getCurrentPosition()
     if (type === Drag.UPPER_LEFT) {
-      setMaxLength(Math.min(clipLength + left, clipLength + top))
+      setMaxLength(
+        Math.min(clipLength + current.left, clipLength + current.top)
+      )
     } else if (type === Drag.UPPER_RIGHT) {
-      setMaxLength(Math.min(width - left, clipLength + top))
+      setMaxLength(Math.min(width - current.left, clipLength + current.top))
     } else if (type === Drag.LOWER_LEFT) {
-      setMaxLength(Math.min(width + left, height - top))
+      setMaxLength(Math.min(width + current.left, height - current.top))
     } else if (type === Drag.LOWER_RIGHT) {
-      setMaxLength(Math.min(clipLength + left, height - top))
+      setMaxLength(Math.min(clipLength + current.left, height - current.top))
     }
   }
 
@@ -169,21 +197,19 @@ export default function ModalIconCanvas({
     }
     setDrag(false)
 
-    const clipperRect = clipperRef.current.getBoundingClientRect()
-    const wrapperRect = wrapperRef.current.getBoundingClientRect()
-    const cx = clipperRect.left - wrapperRect.left
-    const cy = clipperRect.top - wrapperRect.top
-    setLeft(cx)
-    setTop(cy)
+    const current = getCurrentPosition()
+    setLeft(current.left)
+    setTop(current.top)
 
     clipImage(
-      cx / scale,
-      cy / scale,
+      current.left / scale,
+      current.top / scale,
       clipLength / scale,
       clipLength / scale,
       clipLength,
       clipLength
     )
+    setSendImg()
   }
 
   const move = (translateX: number, translateY: number, length: number) => {
@@ -240,7 +266,7 @@ export default function ModalIconCanvas({
   }, [drag, clipLength])
 
   const sendImage = () => {
-    canvasRef.current.toBlob(blob => {
+    sendImgRef.current.toBlob(blob => {
       uploadIcon(blob)(dispatch).then(res => {
         if (res.ok) {
           onSave()
@@ -264,6 +290,10 @@ export default function ModalIconCanvas({
           style={{ display: 'none' }}
           ref={imgRef}
           onLoad={onLoad}
+        />
+        <canvas
+          ref={sendImgRef}
+          style={{ width: LIMIT_LENGTH, height: LIMIT_LENGTH, display: 'none' }}
         />
         <div className="canvas-wrap" style={{ width, height }} ref={wrapperRef}>
           <div
@@ -312,6 +342,10 @@ export default function ModalIconCanvas({
             <span>{height}px</span>
           </div>
           <div>
+            <h4>scale</h4>
+            <span>{scale}</span>
+          </div>
+          <div>
             <h4>clip</h4>
             <span>{clipLength}px</span>
           </div>
@@ -338,9 +372,6 @@ const Wrap = styled.div`
   border-radius: 3px;
   background-color: var(--color-background);
   color: var(--color-on-background);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 
   &.drag {
     canvas {
