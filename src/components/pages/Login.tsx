@@ -27,6 +27,7 @@ export default function Login() {
       </div>
       <div className="link">
         <Link to="/tos">利用規約</Link>
+        <Link to="/privacy-policy">プライバシーポリシー</Link>
       </div>
     </Wrap>
   )
@@ -84,9 +85,8 @@ const Wrap = styled.div`
 
   .link {
     margin: 40px 0 0 0;
-    background-color: var(--color-surface);
-    a {
-      color: var(--color-link);
-    }
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 8px;
   }
 `

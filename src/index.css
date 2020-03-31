@@ -45,12 +45,12 @@ a {
   color: var(--color-link);
 }
 
-pre {
-  margin: 0;
+a:visited {
+  color: var(--color-link);
 }
 
-a:visited {
-  color: inherit;
+pre {
+  margin: 0;
 }
 
 textarea:focus,

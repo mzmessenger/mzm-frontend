@@ -7,7 +7,6 @@ const Wrap = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  overflow: scroll;
 
   .terms {
     margin: 20px;
