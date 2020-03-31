@@ -6,8 +6,8 @@ import Body from '../atoms/Body'
 import Header from '../Header'
 
 const Wrap = styled.div`
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vh;
   display: flex;
   flex-direction: column;
 

@@ -30,8 +30,6 @@ html,
 body {
   max-height: 100%;
   min-height: 100%;
-  display: flex;
-  overflow: hidden;
 }
 
 body {
@@ -66,7 +64,5 @@ h4 {
 }
 
 #root {
-  width: 100vw;
   display: flex;
-  overflow: hidden;
 }

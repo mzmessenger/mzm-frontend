@@ -6,7 +6,7 @@ import PageWrapper from '../templates/PageWrapper'
 import TopContent from '../TopContent'
 import Settings from '../Settings'
 
-export default function Index() {
+export default function Top() {
   const settings = useSelector((state: State) => state.ui.openSettings)
 
   return (

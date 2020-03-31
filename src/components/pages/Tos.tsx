@@ -7,6 +7,7 @@ const Wrap = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow: scroll;
 
   .terms {
     margin: 20px;
@@ -14,10 +15,6 @@ const Wrap = styled.div`
     padding: 20px;
     background-color: var(--color-surface);
     color: var(--color-on-surface);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
   }
 `
 
