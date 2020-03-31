@@ -6,7 +6,6 @@ import {
   Message
 } from './messages.type'
 import { convertToHtml } from '../lib/markdown'
-import { createIconUrl } from '../lib/util'
 
 export const initState: MessagesState = {
   messages: {
@@ -25,10 +24,7 @@ export function reducer(
       for (const message of action.payload.messages) {
         if (!allIds.includes(message.id)) {
           allIds.push(message.id)
-          const iconUrl = message.userAccount
-            ? createIconUrl(message.userAccount)
-            : null
-          const m = { ...message, iconUrl }
+          const m = { ...message }
           state.messages.byId[message.id] = m
         }
       }
@@ -37,12 +33,8 @@ export function reducer(
     }
     case MessageActionEnum.AddMessage: {
       const allIds = [...state.messages.allIds, action.payload.message.id]
-      const iconUrl = action.payload.message.userAccount
-        ? createIconUrl(action.payload.message.userAccount)
-        : null
       state.messages.byId[action.payload.message.id] = {
-        ...action.payload.message,
-        iconUrl
+        ...action.payload.message
       }
       state.messages.allIds = [...allIds]
       return { ...state }

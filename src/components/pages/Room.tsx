@@ -21,10 +21,12 @@ export default function PageRoom() {
       {settings ? (
         <Settings />
       ) : (
-        <RoomContent expand={roomSetting} onExpandClick={onExpandClick} />
+        <>
+          <RoomContent expand={roomSetting} onExpandClick={onExpandClick} />
+          <Menu />
+        </>
       )}
       {openUserDetail && <UserDetail />}
-      <Menu />
     </PageWrapper>
   )
 }

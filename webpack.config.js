@@ -8,7 +8,6 @@ const SRC_PATH = path.join(__dirname, 'src')
 const DEST_PATH = path.join(__dirname, 'dist')
 
 module.exports = {
-  mode: 'development',
   entry: {
     index: path.join(SRC_PATH, 'index.tsx')
   },
@@ -38,7 +37,8 @@ module.exports = {
                   }
                 ],
                 '@babel/preset-react'
-              ]
+              ],
+              cacheDirectory: true
             }
           },
           'ts-loader'

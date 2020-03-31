@@ -4,6 +4,34 @@ import TwitterIcon from '../../assets/twitter-icon-blue.svg'
 import Header from '../atoms/LoginHeader'
 import Link from '../atoms/Link'
 
+export default function Login() {
+  return (
+    <Wrap>
+      <Header />
+      <div className="login">
+        <h4>
+          <Link to="/tos">利用規約</Link>に同意してログイン
+        </h4>
+        <div className="button">
+          <a href="/auth/twitter" className="twitter">
+            <figure className="icon" />
+            Twitter
+          </a>
+        </div>
+      </div>
+      <div className="attention">
+        <h2>注意事項</h2>
+        <p>
+          MZMはβリリース中です。エラーの発生や予告なくデータの削除等が発生する可能性があります。
+        </p>
+      </div>
+      <div className="link">
+        <Link to="/tos">利用規約</Link>
+      </div>
+    </Wrap>
+  )
+}
+
 const Wrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -16,8 +44,9 @@ const Wrap = styled.div`
       justify-content: center;
       align-items: center;
     }
-    a {
+    .twitter {
       height: 40px;
+      margin: 1em 0 0 0;
       padding: 0 14px 0 10px;
       font-size: 1rem;
       background-color: var(--color-guide);
@@ -61,31 +90,3 @@ const Wrap = styled.div`
     }
   }
 `
-
-function Login() {
-  return (
-    <Wrap>
-      <Header />
-      <div className="login">
-        <h4>利用規約に同意してログイン。</h4>
-        <div className="button">
-          <a href="/auth/twitter" className="twitter">
-            <figure className="icon" />
-            Twitter
-          </a>
-        </div>
-      </div>
-      <div className="attention">
-        <h2>注意事項</h2>
-        <p>
-          MZMはβリリース中です。エラーの発生や予告なくデータの削除等が発生する可能性があります。
-        </p>
-      </div>
-      <div className="link">
-        <Link to="/tos">利用規約</Link>
-      </div>
-    </Wrap>
-  )
-}
-
-export default Login

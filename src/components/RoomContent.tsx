@@ -5,25 +5,7 @@ import Messages from './Messages'
 import RoomInfo from './RoomInfo'
 import SettingRoom from './SettingRoom'
 
-const Content = styled.div`
-  flex: 1;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-
-  .messages {
-    display: flex;
-    overflow: hidden;
-    flex-direction: column;
-    justify-content: flex-end;
-    height: 100%;
-    .messages-inner {
-      overflow: auto;
-    }
-  }
-`
-
-function ContentMessage() {
+const ContentMessage = () => {
   return (
     <>
       <div className="messages">
@@ -42,9 +24,28 @@ export default function RoomContent({
   onExpandClick: () => void
 }) {
   return (
-    <Content>
+    <Wrap>
       <RoomInfo onExpandClick={onExpandClick} expand={expand} />
       {expand ? <SettingRoom /> : <ContentMessage />}
-    </Content>
+    </Wrap>
   )
 }
+
+const Wrap = styled.div`
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .messages {
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+    background: var(--color-base);
+    .messages-inner {
+      overflow: auto;
+    }
+  }
+`

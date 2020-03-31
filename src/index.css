@@ -3,20 +3,22 @@
   --navi-height: 40px;
   --color-primary: rgb(29, 161, 242);
   --color-on-primary: hsla(0, 100%, 100%, 0.9);
+  --color-base: hsl(0, 0%, 0%);
   --color-background: #222429;
   --color-on-background: #e1e1e1;
-  --color-surface: rgba(0, 0, 0, 0.3);
+  --color-surface: hsla(0, 100%, 100%, 0.1);
   --color-on-surface: #e1e1e1;
   --color-guide: hsl(0, 0%, 16.5%);
   --color-on-guide: hsla(0, 0%, 100%, 0.7);
   --color-warning: rgb(254, 106, 106);
-  --color-on-warning: rgb(26, 31, 53);
+  --color-on-warning: hsla(0, 0%, 16%, 0.9);
   --color-error: hsl(341, 75%, 50%);
   --color-on-error: hsl(0, 0%, 66%);
   --color-link: #41c7c7;
   --color-input-background: hsl(200, 12%, 85%, 0.24);
   --color-input: hsl(0, 100%, 100%, 0.9);
   --color-border: #5c6069;
+  --color-border-clipper: #39f;
 
   --mobile-menu-width: 70vw;
   --menu-width: 240px;
@@ -56,6 +58,11 @@ a:visited {
 textarea:focus,
 input[type='text']:focus {
   outline: 0;
+}
+
+h4 {
+  margin: 0;
+  padding: 0;
 }
 
 #root {

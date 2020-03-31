@@ -1,9 +1,42 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
-import { removeUser } from '../modules/user'
+import CancelIcon from '@material-ui/icons/Cancel'
 import { closeSettings } from '../modules/ui'
-import Button from './atoms/Button'
+import SettingAccount from './molecules/SettingAccount'
+
+export default function Settings() {
+  const dispatch = useDispatch()
+  const onClose = () => {
+    dispatch(closeSettings())
+  }
+
+  return (
+    <Wrap>
+      <div className="inner">
+        <header>
+          <h2>設定</h2>
+          <div className="setting-close">
+            <CancelIcon className="icon" onClick={onClose} />
+          </div>
+        </header>
+        <div className="user">
+          <ul className="menu">
+            <li>アカウント</li>
+            <li>
+              <div className="logout">
+                <a href="/auth/logout">Logout</a>
+              </div>
+            </li>
+          </ul>
+          <div className="body">
+            <SettingAccount />
+          </div>
+        </div>
+      </div>
+    </Wrap>
+  )
+}
 
 const Wrap = styled.div`
   flex: 1;
@@ -11,65 +44,56 @@ const Wrap = styled.div`
   color: var(--color-on-background);
   font-size: 1em;
 
-  button {
-    height: 40px;
+  header {
+    padding: 0 8px;
+    display: flex;
+    h2 {
+      flex: 1;
+    }
+  }
+
+  .inner {
+    background: var(--color-surface);
+    color: var(--color-on-surface);
+    padding: 8px 16px;
   }
 
   .user {
-    padding: 16px 0 32px;
-    border-bottom: 1px solid var(--color-border);
+    padding: 32px 0 32px;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    .menu {
+      list-style-type: none;
+      padding: 0 8px;
+      margin: 0;
+      > li {
+        padding: 8px 0;
+      }
+    }
+
+    .menu {
+      padding: 0 1em;
+      border-right: 1px solid var(--color-border);
+    }
+    .body {
+      padding: 0 16px;
+      flex: 1;
+    }
   }
 
   .logout {
-    padding: 0 8px;
-  }
-
-  .delete {
-    margin-top: 32px;
-    button {
-      padding: 0 16px;
-      color: var(--color-on-warning);
-      background-color: var(--color-warning);
-      border-color: transparent;
+    display: flex;
+    color: var(--color-warning);
+    a {
+      flex: 1;
     }
   }
 
-  .cancel {
+  .setting-close {
     margin-top: 16px;
-    button {
-      background-color: transparent;
-      border-color: transparent;
+    .icon {
+      width: 32px;
+      cursor: pointer;
     }
   }
 `
-
-export default function Settings() {
-  const dispatch = useDispatch()
-
-  const onDelete = () => {
-    if (window.confirm('本当にアカウントを削除しますか？')) {
-      removeUser()(dispatch)
-    }
-  }
-
-  const onClose = () => {
-    dispatch(closeSettings())
-  }
-
-  return (
-    <Wrap>
-      <h2>設定</h2>
-      <div className="user">
-        <div className="logout">
-          <a href="/auth/logout">Logout</a>
-        </div>
-        <div className="delete">
-          <Button onClick={onDelete}>アカウントの削除</Button>
-        </div>
-      </div>
-      <div className="cancel">
-        <Button onClick={onClose}>キャンセル</Button>
-      </div>
-    </Wrap>
-  )
-}

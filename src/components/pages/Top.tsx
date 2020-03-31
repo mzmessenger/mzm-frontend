@@ -11,8 +11,14 @@ export default function Index() {
 
   return (
     <PageWrapper>
-      {settings ? <Settings /> : <TopContent />}
-      <Menu />
+      {settings ? (
+        <Settings />
+      ) : (
+        <>
+          <TopContent />
+          <Menu />
+        </>
+      )}
     </PageWrapper>
   )
 }

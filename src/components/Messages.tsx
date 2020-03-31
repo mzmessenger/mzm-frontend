@@ -7,7 +7,8 @@ import GetHistoryButton from './ButtonGetHistory'
 
 const Wrap = styled.div`
   .message {
-    margin: 2px;
+    background: var(--color-background);
+    margin: 4px;
     :first-child {
       margin-top: 0;
     }
