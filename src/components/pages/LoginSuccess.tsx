@@ -6,7 +6,7 @@ function LoginSuccess() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    getMyInfo()(dispatch).then(res => {
+    getMyInfo()(dispatch).then((res) => {
       if (res.status === 404) {
         return res.json().then((body: { id: string; twitter: string }) => {
           dispatch(signup(body.twitter))

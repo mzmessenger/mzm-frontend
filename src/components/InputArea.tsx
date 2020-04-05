@@ -115,7 +115,7 @@ export default function InputArea() {
     setRows(1)
   }
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault()
     submit()
   }
@@ -127,7 +127,7 @@ export default function InputArea() {
     }
   }
 
-  const onChange = e => {
+  const onChange = (e) => {
     const value = e.target.value
     if (inputMode === 'normal') {
       dispatch(inputMessage(value))

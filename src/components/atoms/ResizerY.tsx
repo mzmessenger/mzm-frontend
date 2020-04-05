@@ -22,11 +22,11 @@ export default function ResizerY({
   const [diff, setDiff] = useState(0)
   const [startY, setStartY] = useState(0)
 
-  const onDragStart = e => {
+  const onDragStart = (e) => {
     setStartY(e.pageY)
   }
 
-  const onDrag = e => {
+  const onDrag = (e) => {
     if (e.clientY !== 0) {
       const currentDiff = startY - e.pageY
       if (diff !== currentDiff) {

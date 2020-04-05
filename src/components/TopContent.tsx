@@ -13,7 +13,7 @@ export default function TopContent() {
           <div className="inner">
             <h2>おすすめ部屋</h2>
             <div className="rooms">
-              {recommended.map(e => (
+              {recommended.map((e) => (
                 <div className="room" key={e}>
                   <Link to={`/rooms/${e}`}>
                     <RoomElem name={e} unread={0} current={false} />

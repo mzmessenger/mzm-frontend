@@ -62,8 +62,8 @@ export function reducer(
 }
 
 export function addMessages(messages: Message[]) {
-  return async function(dispatch: Dispatch<MessagesAction>) {
-    const promises = messages.map(m => convertToHtml(m.message))
+  return async function (dispatch: Dispatch<MessagesAction>) {
+    const promises = messages.map((m) => convertToHtml(m.message))
     const html = await Promise.all(promises)
     const converted = messages.map((m, i) => {
       return { ...m, html: html[i] }
@@ -76,7 +76,7 @@ export function addMessages(messages: Message[]) {
 }
 
 export function addMessage(message: Message) {
-  return async function(dispatch: Dispatch<MessagesAction>) {
+  return async function (dispatch: Dispatch<MessagesAction>) {
     const html = await convertToHtml(message.message)
     const converted = { ...message, html }
     return dispatch({
@@ -87,7 +87,7 @@ export function addMessage(message: Message) {
 }
 
 export function modifyMessage(message: Message) {
-  return async function(dispatch: Dispatch<MessagesAction>) {
+  return async function (dispatch: Dispatch<MessagesAction>) {
     const html = await convertToHtml(message.message)
     return dispatch({
       type: MessageActionEnum.ModifyMessageSuccess,

@@ -97,9 +97,9 @@ export default function RoomInfo({
 
   useEffect(() => {
     if (id) {
-      getUsers(id).then(res => {
+      getUsers(id).then((res) => {
         if (res.status === 200) {
-          res.json().then(body => {
+          res.json().then((body) => {
             setCount(body.count)
             setUsers(body.users)
           })
@@ -108,7 +108,7 @@ export default function RoomInfo({
     }
   }, [id])
 
-  const clickUser = user => {
+  const clickUser = (user) => {
     dispatch(openUserDetail(user.id, user.account, user.icon))
   }
 

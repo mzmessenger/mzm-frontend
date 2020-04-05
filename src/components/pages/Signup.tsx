@@ -90,7 +90,7 @@ export default function Signup() {
     [setTxt]
   )
 
-  const onSubmit = async evt => {
+  const onSubmit = async (evt) => {
     evt.preventDefault()
     if (errorTxt) {
       return

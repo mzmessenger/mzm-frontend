@@ -15,7 +15,7 @@ const ctx: Worker = self as any
 
 const r = new marked.Renderer()
 
-const escapeTxt = text => escape(text)
+const escapeTxt = (text) => escape(text)
 
 // ignore
 r.heading = escapeTxt
@@ -45,7 +45,7 @@ r.code = (code, lang) => {
 
 // markedで取りこぼしたものをescape
 function postEscape(str: string) {
-  return str.replace(/<marquee[^\s]+marquee>/g, match => {
+  return str.replace(/<marquee[^\s]+marquee>/g, (match) => {
     return escape(match)
   })
 }

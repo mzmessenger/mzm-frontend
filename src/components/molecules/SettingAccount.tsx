@@ -22,8 +22,8 @@ function ShowAccount({
 
   // ターゲット以外の場所にdropしてしまった時にブラウザで画像を開かないように
   useEffect(() => {
-    const _onDragOver = e => e.preventDefault()
-    const _onDrop = e => e.preventDefault()
+    const _onDragOver = (e) => e.preventDefault()
+    const _onDrop = (e) => e.preventDefault()
     document.addEventListener('dragover', _onDragOver, false)
     document.addEventListener('drop', _onDrop, false)
 
@@ -55,7 +55,7 @@ function ShowAccount({
     setEdit(false)
   }
 
-  const onDragOver = e => {
+  const onDragOver = (e) => {
     if (
       e.dataTransfer.types &&
       Array.from(e.dataTransfer.types).includes('Files')
@@ -65,7 +65,7 @@ function ShowAccount({
     }
   }
 
-  const onDrop = e => {
+  const onDrop = (e) => {
     e.preventDefault()
     const data = e.dataTransfer
     const [file] = Array.from(data.files).filter(
