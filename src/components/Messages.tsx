@@ -33,7 +33,7 @@ export default function Messages({ className }) {
 
   const logFlg = messages.length > 0 && currentRoom.existHistory
 
-  const messageElements = messages.map(m => {
+  const messageElements = messages.map((m) => {
     return (
       <div className="message" key={m}>
         <Message id={m} />

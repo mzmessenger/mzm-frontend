@@ -42,7 +42,7 @@ export function signup(account: string) {
 }
 
 export function getMyInfo() {
-  return async function(dispatch: Dispatch<UserAction>) {
+  return async function (dispatch: Dispatch<UserAction>) {
     const res = await fetch('/api/user/@me', { credentials: 'include' })
     if (res.status === 200) {
       const payload: {
@@ -62,7 +62,7 @@ export function getMyInfo() {
 }
 
 export function removeUser() {
-  return async function(dispatch: Dispatch<UserAction>) {
+  return async function (dispatch: Dispatch<UserAction>) {
     const res = await fetch('/auth/user', {
       method: 'DELETE',
       mode: 'cors',

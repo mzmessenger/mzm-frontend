@@ -161,7 +161,7 @@ export function getMessages(roomId: string, socket: WebSocket): RoomsAction {
 }
 
 export function createRoom(name: string) {
-  return async function(
+  return async function (
     dispatch: Dispatch<RoomsAction>,
     getState: () => State
   ) {
@@ -186,9 +186,9 @@ export function createRoom(name: string) {
 }
 
 export function enterRoom(roomName: string) {
-  return async function(dispatch: Dispatch, getState: () => State) {
+  return async function (dispatch: Dispatch, getState: () => State) {
     const room = Object.values(getState().rooms.rooms.byId).find(
-      r => r.name === roomName
+      (r) => r.name === roomName
     )
     if (room) {
       if (!room.receivedMessages && !room.loading) {
@@ -212,7 +212,7 @@ export function enterRoom(roomName: string) {
 }
 
 export function exitRoom(roomId: string) {
-  return async function(
+  return async function (
     dispatch: Dispatch<RoomsAction>,
     getState: () => State
   ) {
@@ -242,7 +242,7 @@ export function getHistory(id: string, roomId: string, socket: WebSocket) {
 }
 
 export function receiveRooms(rooms: ReceiveRoom[], currentRoomId: string) {
-  return async function(
+  return async function (
     dispatch: Dispatch<RoomsAction>,
     getState: () => State
   ) {
@@ -259,7 +259,7 @@ export function receiveRooms(rooms: ReceiveRoom[], currentRoomId: string) {
 }
 
 export function receiveMessage(messageId: string, room: string) {
-  return async function(
+  return async function (
     dispatch: Dispatch<RoomsAction>,
     getState: () => State
   ) {
@@ -286,7 +286,7 @@ export function receiveMessages({
   room: string
   existHistory: boolean
 }) {
-  return async function(dispatch: Dispatch<RoomsAction>) {
+  return async function (dispatch: Dispatch<RoomsAction>) {
     return dispatch({
       type: RoomActionEnum.ReceiveMessages,
       payload: {
@@ -299,7 +299,7 @@ export function receiveMessages({
 }
 
 export function enterSuccess(id: string, name: string) {
-  return async function(
+  return async function (
     dispatch: Dispatch<RoomsAction>,
     getState: () => State
   ) {
@@ -321,7 +321,7 @@ export function enterSuccess(id: string, name: string) {
 }
 
 export function getUsers(roomId: string) {
-  return async function(_dispatch: Dispatch<RoomsAction>) {
+  return async function (_dispatch: Dispatch<RoomsAction>) {
     if (!roomId) {
       return
     }
@@ -337,7 +337,7 @@ export function getUsers(roomId: string) {
 }
 
 export function readMessages(roomId: string) {
-  return async function(
+  return async function (
     _dispatch: Dispatch<RoomsAction>,
     getState: () => State
   ) {

@@ -45,11 +45,11 @@ export default function ModalCraeteRoom({ open, onClose }: Props) {
   const [error, setErrorTxt] = useState('')
   const dispatch = useDispatch()
 
-  const handleSubmit = evt => {
+  const handleSubmit = (evt) => {
     evt.preventDefault()
     // @todo エラー時の処理
     createRoom(txt)(dispatch, store.getState)
-      .then(data => {
+      .then((data) => {
         if (data.status === 200) {
           onClose()
           history.push(`/rooms/${txt}`)
@@ -64,7 +64,7 @@ export default function ModalCraeteRoom({ open, onClose }: Props) {
       })
   }
 
-  const onChange = e => {
+  const onChange = (e) => {
     setTxt(e.target.value)
   }
 

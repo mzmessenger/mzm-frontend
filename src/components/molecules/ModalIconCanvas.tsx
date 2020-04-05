@@ -134,7 +134,7 @@ export default function ModalIconCanvas({
         LIMIT_LENGTH
       )
 
-    sendImgRef.current.toBlob(blob => {
+    sendImgRef.current.toBlob((blob) => {
       setSize(blob.size)
     })
   }
@@ -230,7 +230,7 @@ export default function ModalIconCanvas({
     setTranslate(`translateX(${translateX}px) translateY(${translateY}px)`)
   }
 
-  const onMouseMove = e => {
+  const onMouseMove = (e) => {
     if (!drag) {
       return
     }
@@ -268,12 +268,12 @@ export default function ModalIconCanvas({
   }, [drag, clipLength])
 
   const sendImage = () => {
-    sendImgRef.current.toBlob(blob => {
-      uploadIcon(blob)(dispatch).then(res => {
+    sendImgRef.current.toBlob((blob) => {
+      uploadIcon(blob)(dispatch).then((res) => {
         if (res.ok) {
           onSave()
         } else {
-          res.text().then(text => {
+          res.text().then((text) => {
             alert(`アップロードにエラーが発生しました(${text})`)
           })
         }
@@ -314,23 +314,23 @@ export default function ModalIconCanvas({
             <div className="clipper-inner">
               <div
                 className="face"
-                onMouseDown={e => onMouseDown(e, Drag.MOVE)}
+                onMouseDown={(e) => onMouseDown(e, Drag.MOVE)}
               />
               <div
                 className="point upper-left"
-                onMouseDown={e => onMouseDown(e, Drag.UPPER_LEFT)}
+                onMouseDown={(e) => onMouseDown(e, Drag.UPPER_LEFT)}
               />
               <div
                 className="point upper-right"
-                onMouseDown={e => onMouseDown(e, Drag.UPPER_RIGHT)}
+                onMouseDown={(e) => onMouseDown(e, Drag.UPPER_RIGHT)}
               />
               <div
                 className="point lower-left"
-                onMouseDown={e => onMouseDown(e, Drag.LOWER_LEFT)}
+                onMouseDown={(e) => onMouseDown(e, Drag.LOWER_LEFT)}
               />
               <div
                 className="point lower-right"
-                onMouseDown={e => onMouseDown(e, Drag.LOWER_RIGHT)}
+                onMouseDown={(e) => onMouseDown(e, Drag.LOWER_RIGHT)}
               />
             </div>
           </div>

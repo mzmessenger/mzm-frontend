@@ -95,7 +95,7 @@ async function onMessage(
       // wait converting html
       addMessages(parsed.messages)(dispatch).then(() => {
         receiveMessages({
-          messageIds: parsed.messages.map(m => m.id),
+          messageIds: parsed.messages.map((m) => m.id),
           room: parsed.room,
           existHistory: parsed.existHistory
         })(dispatch)
@@ -127,7 +127,7 @@ function init(
   ws.addEventListener('open', () => {
     dispatch(initSocket(ws, store.getState().rooms.currentRoomName))
   })
-  ws.addEventListener('message', e => {
+  ws.addEventListener('message', (e) => {
     if (e.data === 'ping') {
       ws.send('pong')
       return

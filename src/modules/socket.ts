@@ -69,7 +69,7 @@ export function modifyMessage(
 }
 
 export function incrementIine(messageId: string) {
-  return async function(_dispatch: Dispatch, getState: () => State) {
+  return async function (_dispatch: Dispatch, getState: () => State) {
     sendSocket(getState().socket.socket, {
       cmd: SendSocketCmdEnum.IncrementIine,
       id: messageId

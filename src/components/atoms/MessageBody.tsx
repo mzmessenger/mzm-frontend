@@ -30,7 +30,7 @@ export default function MessageBody({ className, message, html }: Props) {
     if (!messageEl.current) {
       return
     }
-    const listener = e => {
+    const listener = (e) => {
       const href = e.target.getAttribute('href')
       const url = new URL(href)
       if (url.host === location.host) {
@@ -44,11 +44,11 @@ export default function MessageBody({ className, message, html }: Props) {
     }
     messageEl.current
       .querySelectorAll('a')
-      .forEach(e => e.addEventListener('click', listener))
+      .forEach((e) => e.addEventListener('click', listener))
     return () => {
       messageEl.current
         .querySelectorAll('a')
-        .forEach(e => e.removeEventListener('click', listener))
+        .forEach((e) => e.removeEventListener('click', listener))
     }
   }, [messageEl])
 

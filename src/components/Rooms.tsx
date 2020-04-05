@@ -32,7 +32,7 @@ function RoomContainer({
   }
 
   return (
-    <div className="link" onClick={e => onClick(e)}>
+    <div className="link" onClick={(e) => onClick(e)}>
       <RoomElem
         name={room.name}
         unread={room.unread}
@@ -50,7 +50,7 @@ export default function Rooms() {
 
   return (
     <Wrap style={{ padding: '5px 0' }}>
-      {roomIds.map(r => (
+      {roomIds.map((r) => (
         <RoomContainer key={r} id={r} currentRoomName={currentRoomName} />
       ))}
     </Wrap>
