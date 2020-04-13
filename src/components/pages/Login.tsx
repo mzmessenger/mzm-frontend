@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import TwitterIcon from '../../assets/twitter-icon-blue.svg'
+import TwitterIcon from '@material-ui/icons/Twitter'
+import GitHubIcon from '@material-ui/icons/GitHub'
 import Header from '../atoms/LoginHeader'
 import Link from '../atoms/Link'
 
@@ -13,9 +14,13 @@ export default function Login() {
           <Link to="/tos">利用規約</Link>に同意してログイン
         </h4>
         <div className="button">
-          <a href="/auth/twitter" className="twitter">
-            <figure className="icon" />
+          <a href="/auth/twitter" className="login-link">
+            <TwitterIcon className="icon" />
             Twitter
+          </a>
+          <a href="/auth/github" className="login-link">
+            <GitHubIcon className="icon" />
+            GitHub
           </a>
         </div>
       </div>
@@ -25,7 +30,7 @@ export default function Login() {
           MZMはβリリース中です。エラーの発生や予告なくデータの削除等が発生する可能性があります。
         </p>
       </div>
-      <div className="link">
+      <div className="policy-link">
         <Link to="/tos">利用規約</Link>
         <Link to="/privacy-policy">プライバシーポリシー</Link>
       </div>
@@ -40,14 +45,18 @@ const Wrap = styled.div`
 
   .login {
     color: var(--color-on-background);
-    .button {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    h4 {
+      a {
+        margin: 0 0.5em 0 0;
+      }
     }
-    .twitter {
-      height: 40px;
+    .button {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 1em;
       margin: 1em 0 0 0;
+    }
+    .login-link {
       padding: 0 14px 0 10px;
       font-size: 1rem;
       background-color: var(--color-guide);
@@ -59,15 +68,10 @@ const Wrap = styled.div`
       align-items: center;
     }
     .icon {
-      width: 24px;
-      height: 24px;
+      width: 20px;
+      height: 20px;
       background-size: contain;
-      margin: 0 4px 0 0;
-    }
-    .twitter {
-      .icon {
-        background-image: url(${TwitterIcon});
-      }
+      margin: 0 8px 0 0;
     }
   }
 
@@ -83,7 +87,7 @@ const Wrap = styled.div`
     align-items: center;
   }
 
-  .link {
+  .policy-link {
     margin: 40px 0 0 0;
     display: grid;
     grid-template-columns: 1fr 1fr;

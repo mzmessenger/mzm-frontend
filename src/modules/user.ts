@@ -1,4 +1,5 @@
 import { Dispatch } from 'redux'
+import { State } from './index'
 import { UserState, UserAction, UserActionEnum } from './user.types'
 
 export const initState: UserState = {
@@ -41,14 +42,16 @@ export function signup(account: string) {
   }
 }
 
-export function getMyInfo() {
-  return async function (dispatch: Dispatch<UserAction>) {
+export const getMyInfo = () => {
+  return async (dispatch: Dispatch<UserAction>) => {
     const res = await fetch('/api/user/@me', { credentials: 'include' })
     if (res.status === 200) {
       const payload: {
         account: string
         id: string
         icon: string
+        twitterUserName: string | null
+        githubUserName: string | null
       } = await res.json()
       dispatch({
         type: UserActionEnum.SetMe,
@@ -56,6 +59,46 @@ export function getMyInfo() {
       })
     } else if (res.status === 403) {
       dispatch({ type: UserActionEnum.Logout })
+    }
+    return res
+  }
+}
+
+export const removeTwitter = () => {
+  return async (dispatch: Dispatch<UserAction>, getState: () => State) => {
+    const { twitterUserName, githubUserName } = getState().user.me
+    if (!twitterUserName || !githubUserName) {
+      return
+    }
+    const res = await fetch('/auth/twitter', {
+      method: 'DELETE',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8'
+      }
+    })
+    if (res.status === 200) {
+      getMyInfo()(dispatch)
+    }
+    return res
+  }
+}
+
+export const removeGithub = () => {
+  return async (dispatch: Dispatch<UserAction>, getState: () => State) => {
+    const { twitterUserName, githubUserName } = getState().user.me
+    if (!twitterUserName || !githubUserName) {
+      return
+    }
+    const res = await fetch('/auth/github', {
+      method: 'DELETE',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8'
+      }
+    })
+    if (res.status === 200) {
+      getMyInfo()(dispatch)
     }
     return res
   }

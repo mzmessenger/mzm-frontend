@@ -44,7 +44,7 @@ const Wrap = styled.div`
   color: var(--color-on-background);
   font-size: 1em;
 
-  header {
+  .inner > header {
     padding: 0 8px;
     display: flex;
     h2 {
