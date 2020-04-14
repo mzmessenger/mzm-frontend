@@ -1,14 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
-import ImageIcon from '@material-ui/icons/Image'
 import LinkOffIcon from '@material-ui/icons/LinkOff'
 import TwitterIcon from '@material-ui/icons/Twitter'
 import GitHubIcon from '@material-ui/icons/GitHub'
 import { store } from '../../modules/index'
 import { removeTwitter, removeGithub } from '../../modules/user'
 import { State } from '../../modules/index'
-import Button from '../atoms/Button'
 
 export default function ShowAccount() {
   const dispatch = useDispatch()
