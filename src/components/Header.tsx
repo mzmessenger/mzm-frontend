@@ -23,15 +23,15 @@ const Wrap = styled.header`
     font-weight: 500;
   }
 
+  & > a {
+    display: flex;
+    text-decoration: none;
+    color: var(--color-on-surface);
+  }
+
   @media (max-width: ${WIDTH_MOBILE}px) {
     padding: 0 8px 0 16px;
   }
-`
-
-const LinkWrap = styled(Link)`
-  display: flex;
-  text-decoration: none;
-  color: var(--color-on-surface);
 `
 
 export default function Header({ style }: { style?: any }) {
@@ -43,9 +43,9 @@ export default function Header({ style }: { style?: any }) {
 
   return (
     <Wrap style={style}>
-      <LinkWrap className="logo" to="/">
+      <Link className="logo" to="/">
         <div>MZM</div>
-      </LinkWrap>
+      </Link>
       <div style={{ flex: 1 }}></div>
       <MyInfo />
       {device === 'mobile' && <MenuIcon onClick={onClick} />}

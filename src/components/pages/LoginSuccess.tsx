@@ -8,9 +8,12 @@ function LoginSuccess() {
   useEffect(() => {
     getMyInfo()(dispatch).then((res) => {
       if (res.status === 404) {
-        return res.json().then((body: { id: string; twitter: string }) => {
-          dispatch(signup(body.twitter))
-        })
+        return res
+          .json()
+          .then((body: { id: string; twitter?: string; github?: string }) => {
+            const account = body.twitter || body.github || ''
+            dispatch(signup(account))
+          })
       }
     })
   }, [dispatch])

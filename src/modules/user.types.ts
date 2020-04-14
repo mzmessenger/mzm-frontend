@@ -9,6 +9,8 @@ type MyInfo = {
   id: string
   account: string
   iconUrl: string
+  twitterUserName: string | null
+  githubUserName: string | null
 }
 
 export enum UserActionEnum {

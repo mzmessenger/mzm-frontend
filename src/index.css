@@ -14,7 +14,7 @@
   --color-on-warning: hsla(0, 0%, 16%, 0.9);
   --color-error: hsl(341, 75%, 50%);
   --color-on-error: hsl(0, 0%, 66%);
-  --color-link: #41c7c7;
+  --color-link: rgb(27, 149, 224);
   --color-input-background: hsl(200, 12%, 85%, 0.24);
   --color-input: hsl(0, 100%, 100%, 0.9);
   --color-border: #5c6069;
