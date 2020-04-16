@@ -2,15 +2,109 @@ import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 import { State } from '../modules/index'
-import {
-  sendMessage,
-  modifyMessage as sendModifyMessage
-} from '../modules/socket'
+import { sendMessage, sendModifyMessage } from '../modules/socket'
 import { inputMessage, modifyMessage, endToEdit } from '../modules/ui'
 import Button from './atoms/Button'
 import ResizerY from './atoms/ResizerY'
 
 const HEIGHT_KEY = 'mzm:input:height'
+
+export default function InputArea() {
+  const currentRoomId = useSelector((state: State) => state.rooms.currentRoomId)
+  const socket = useSelector((state: State) => state.socket.socket)
+  const txt = useSelector((state: State) => state.ui.txt)
+  const editTxt = useSelector((state: State) => state.ui.editTxt)
+  const editId = useSelector((state: State) => state.ui.editId)
+  const inputMode = useSelector((state: State) => state.ui.inputMode)
+  const dispatch = useDispatch()
+  const [rows, setRows] = useState(
+    inputMode === 'normal' ? txt.split('\n').length : editTxt.split('\n').length
+  )
+  const textareaRef = useRef(null)
+  const [height, _setHeight] = useState(
+    localStorage.getItem(HEIGHT_KEY)
+      ? parseInt(localStorage.getItem(HEIGHT_KEY), 10)
+      : 68
+  )
+
+  const setHeight = (h: number) => {
+    _setHeight(h)
+    localStorage.setItem(HEIGHT_KEY, `${h}`)
+  }
+
+  useEffect(() => {
+    if (inputMode === 'edit') {
+      textareaRef.current.focus()
+    }
+  }, [inputMode])
+
+  const submit = () => {
+    if (inputMode === 'normal') {
+      sendMessage(txt, currentRoomId, socket)
+      dispatch(inputMessage(''))
+    } else if (inputMode === 'edit') {
+      sendModifyMessage(editTxt, editId, socket)
+      dispatch(endToEdit())
+    }
+    setRows(1)
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    submit()
+  }
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.shiftKey && e.keyCode === 13) {
+      submit()
+      e.preventDefault()
+      return
+    }
+  }
+
+  const onChange = (e) => {
+    const value = e.target.value
+    if (inputMode === 'normal') {
+      dispatch(inputMessage(value))
+    } else if (inputMode === 'edit') {
+      dispatch(modifyMessage(value))
+    }
+    setRows(value.split('\n').length)
+  }
+
+  const classNames = ['form-wrap']
+  if (inputMode === 'edit') {
+    classNames.push('edit')
+  }
+
+  return (
+    <Wrap style={{ minHeight: height }}>
+      <ResizerY height={height} setHeight={setHeight} />
+      <div className={classNames.join(' ')}>
+        <form onSubmit={handleSubmit}>
+          <div className="text-area-wrap">
+            <textarea
+              rows={rows}
+              value={inputMode === 'edit' ? editTxt : txt}
+              onChange={onChange}
+              onKeyDown={onKeyDown}
+              ref={textareaRef}
+            />
+          </div>
+          <div className="button-area">
+            <div style={{ flex: '1' }}></div>
+            {inputMode === 'edit' && (
+              <CancelButton onClick={() => dispatch(endToEdit())}>
+                キャンセル
+              </CancelButton>
+            )}
+            <SendButton type="submit">投稿</SendButton>
+          </div>
+        </form>
+      </div>
+    </Wrap>
+  )
+}
 
 const Wrap = styled.div`
   display: flex;
@@ -74,99 +168,3 @@ const CancelButton = styled(Button)`
   height: 40px;
   background: var(--color-guide);
 `
-
-export default function InputArea() {
-  const currentRoomId = useSelector((state: State) => state.rooms.currentRoomId)
-  const socket = useSelector((state: State) => state.socket.socket)
-  const txt = useSelector((state: State) => state.ui.txt)
-  const editTxt = useSelector((state: State) => state.ui.editTxt)
-  const editId = useSelector((state: State) => state.ui.editId)
-  const inputMode = useSelector((state: State) => state.ui.inputMode)
-  const dispatch = useDispatch()
-  const [rows, setRows] = useState(
-    inputMode === 'normal' ? txt.split('\n').length : editTxt.split('\n').length
-  )
-  const textareaRef = useRef(null)
-  const [height, _setHeight] = useState(
-    localStorage.getItem(HEIGHT_KEY)
-      ? parseInt(localStorage.getItem(HEIGHT_KEY), 10)
-      : 68
-  )
-
-  const setHeight = (h: number) => {
-    _setHeight(h)
-    localStorage.setItem(HEIGHT_KEY, `${h}`)
-  }
-
-  useEffect(() => {
-    if (inputMode === 'edit') {
-      textareaRef.current.focus()
-    }
-  }, [inputMode])
-
-  const submit = () => {
-    if (inputMode === 'normal') {
-      sendMessage(txt, currentRoomId, socket)
-      dispatch(inputMessage(''))
-    } else if (inputMode === 'edit') {
-      sendModifyMessage(editTxt, editId, socket)
-      dispatch(endToEdit())
-    }
-    setRows(1)
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    submit()
-  }
-
-  const onKeyUp = (e: React.KeyboardEvent) => {
-    if (e.shiftKey && e.keyCode === 13) {
-      submit()
-      return
-    }
-  }
-
-  const onChange = (e) => {
-    const value = e.target.value
-    if (inputMode === 'normal') {
-      dispatch(inputMessage(value))
-    } else if (inputMode === 'edit') {
-      dispatch(modifyMessage(value))
-    }
-    setRows(value.split('\n').length)
-  }
-
-  const classNames = ['form-wrap']
-  if (inputMode === 'edit') {
-    classNames.push('edit')
-  }
-
-  return (
-    <Wrap style={{ minHeight: height }}>
-      <ResizerY height={height} setHeight={setHeight} />
-      <div className={classNames.join(' ')}>
-        <form onSubmit={handleSubmit}>
-          <div className="text-area-wrap">
-            <textarea
-              rows={rows}
-              value={inputMode === 'edit' ? editTxt : txt}
-              onChange={onChange}
-              onKeyUp={onKeyUp}
-              ref={textareaRef}
-            />
-          </div>
-          <div className="button-area">
-            <div style={{ flex: '1' }}></div>
-            {inputMode === 'edit' && (
-              <CancelButton onClick={() => dispatch(endToEdit())}>
-                キャンセル
-              </CancelButton>
-            )}
-            <SendButton type="submit">投稿</SendButton>
-          </div>
-        </form>
-      </div>
-    </Wrap>
-  )
-}

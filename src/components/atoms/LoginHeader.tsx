@@ -2,6 +2,14 @@ import React from 'react'
 import styled from 'styled-components'
 import Link from './Link'
 
+export default function Login() {
+  return (
+    <Header>
+      <Link to="/">MZM (β)</Link>
+    </Header>
+  )
+}
+
 const Header = styled.header`
   width: 100vw;
   height: 3em;
@@ -15,13 +23,3 @@ const Header = styled.header`
     color: var(--color-on-background);
   }
 `
-
-function Login() {
-  return (
-    <Header>
-      <Link to="/">MZM (β)</Link>
-    </Header>
-  )
-}
-
-export default Login

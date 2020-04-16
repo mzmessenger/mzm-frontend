@@ -2,10 +2,10 @@ jest.mock('../lib/markdown', () => ({
   convertToHtml: jest.fn()
 }))
 
-import { SendSocketCmdEnum } from '../lib/util'
+import { SendSocketCmd } from '../lib/util'
 import * as action from './rooms'
-import { RoomActionEnum } from './rooms.types'
-import { UIActionEnum } from './ui.types'
+import { RoomsActions } from './rooms.types'
+import { UIActions } from './ui.types'
 
 test('enterRoom already entered', async () => {
   const socket = { send: jest.fn() }
@@ -38,18 +38,18 @@ test('enterRoom already entered', async () => {
 
   expect(socket.send.mock.calls.length).toBe(1)
   const [arg] = socket.send.mock.calls[0]
-  expect(JSON.parse(arg).cmd).toStrictEqual(SendSocketCmdEnum.GetMessages)
+  expect(JSON.parse(arg).cmd).toStrictEqual(SendSocketCmd.GetMessages)
 
   const [
     [getMessagesArg],
     [chaneRoomArgs],
     [menuCloseArgs]
   ] = dispatch.mock.calls
-  expect(getMessagesArg.type).toStrictEqual(RoomActionEnum.GetMessages)
-  expect(chaneRoomArgs.type).toStrictEqual(RoomActionEnum.ChangeRoom)
+  expect(getMessagesArg.type).toStrictEqual(RoomsActions.GetMessages)
+  expect(chaneRoomArgs.type).toStrictEqual(RoomsActions.ChangeRoom)
   expect(chaneRoomArgs.payload.id).toStrictEqual('001')
 
-  expect(menuCloseArgs.type).toStrictEqual(UIActionEnum.CloseMenu)
+  expect(menuCloseArgs.type).toStrictEqual(UIActions.CloseMenu)
 })
 
 test('enterRoom does not enter', async () => {
@@ -74,13 +74,13 @@ test('enterRoom does not enter', async () => {
   const [arg] = socket.send.mock.calls[0]
   expect(arg).toBe(
     JSON.stringify({
-      cmd: SendSocketCmdEnum.EnterRoom,
+      cmd: SendSocketCmd.EnterRoom,
       name: 'test'
     })
   )
 
   const [args] = dispatch.mock.calls[0]
-  expect(args.type).toStrictEqual(UIActionEnum.CloseMenu)
+  expect(args.type).toStrictEqual(UIActions.CloseMenu)
 })
 
 test('receiveMessage', async () => {
@@ -111,5 +111,5 @@ test('receiveMessage', async () => {
   // 同じ部屋なら既読処理が呼ばれる
   expect(socket.send.mock.calls.length).toBe(1)
   const [arg] = socket.send.mock.calls[0]
-  expect(JSON.parse(arg).cmd).toStrictEqual(SendSocketCmdEnum.SendAlreadyRead)
+  expect(JSON.parse(arg).cmd).toStrictEqual(SendSocketCmd.SendAlreadyRead)
 })

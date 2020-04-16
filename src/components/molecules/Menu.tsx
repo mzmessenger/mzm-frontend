@@ -8,6 +8,25 @@ import MenuIcon from '../atoms/MobileMenuIcon'
 import Rooms from '../Rooms'
 import RoomNavi from '../RoomNavi'
 
+export default function Menu() {
+  const menuStatus = useSelector((state: State) => state.ui.menuStatus)
+  const className = menuStatus === 'open' ? 'open' : ''
+
+  const dispatch = useDispatch()
+
+  const onClick = () => dispatch(closeMenu())
+
+  return (
+    <Wrap className={className}>
+      <div className="header">
+        <MenuIcon onClick={onClick} />
+      </div>
+      <RoomNavi />
+      <Rooms />
+    </Wrap>
+  )
+}
+
 const Wrap = styled.div`
   width: var(--menu-width);
   color: var(--color-on-surface);
@@ -42,22 +61,3 @@ const Wrap = styled.div`
     }
   }
 `
-
-export default function Menu() {
-  const menuStatus = useSelector((state: State) => state.ui.menuStatus)
-  const className = menuStatus === 'open' ? 'open' : ''
-
-  const dispatch = useDispatch()
-
-  const onClick = () => dispatch(closeMenu())
-
-  return (
-    <Wrap className={className}>
-      <div className="header">
-        <MenuIcon onClick={onClick} />
-      </div>
-      <RoomNavi />
-      <Rooms />
-    </Wrap>
-  )
-}

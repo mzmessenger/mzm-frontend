@@ -3,16 +3,6 @@ import styled from 'styled-components'
 import Add from '@material-ui/icons/Add'
 import CreateRoom from './ModalCreateRoom'
 
-const Wrap = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
-  height: var(--navi-height);
-  align-items: center;
-  border-bottom: 1px solid var(--color-border);
-  cursor: pointer;
-`
-
 export default function RoomNavi() {
   const [modal, setModal] = useState(false)
 
@@ -30,3 +20,13 @@ export default function RoomNavi() {
     </Wrap>
   )
 }
+
+const Wrap = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  height: var(--navi-height);
+  align-items: center;
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+`

@@ -11,56 +11,56 @@ export type UIState = {
   userDetail: { id: string; account: string; icon: string }
 }
 
-export enum UIActionEnum {
-  Onresize = 'UIAction:Onresize',
-  OpenMenu = 'UIAction:OpenMenu',
-  CloseMenu = 'UIAction:CloseMenu',
-  InputText = 'UIAction:InputText',
-  StartEditing = 'UIAction:StartEditing',
-  EndEditing = 'UIAction:EndEditing',
-  ModifyText = 'UIAction:ModifyText',
-  OpenSettings = 'UIAction:OpenSettings',
-  CloseSettings = 'UIAction:CloseSettings',
-  OpenUserDetail = 'UIAction:OpenUserDetail',
-  CloseUserDetail = 'UIAction:CloseUserDetail'
-}
+export const UIActions = {
+  Onresize: 'UIAction:Onresize',
+  OpenMenu: 'UIAction:OpenMenu',
+  CloseMenu: 'UIAction:CloseMenu',
+  InputText: 'UIAction:InputText',
+  StartEditing: 'UIAction:StartEditing',
+  EndEditing: 'UIAction:EndEditing',
+  ModifyText: 'UIAction:ModifyText',
+  OpenSettings: 'UIAction:OpenSettings',
+  CloseSettings: 'UIAction:CloseSettings',
+  OpenUserDetail: 'UIAction:OpenUserDetail',
+  CloseUserDetail: 'UIAction:CloseUserDetail'
+} as const
 
 export type UIAction =
   | {
-      type: UIActionEnum.Onresize
+      type: typeof UIActions.Onresize
       payload: { innerHeight: number; innerWidth: number }
     }
   | {
-      type: UIActionEnum.OpenMenu
+      type: typeof UIActions.OpenMenu
     }
   | {
-      type: UIActionEnum.CloseMenu
+      type: typeof UIActions.CloseMenu
     }
   | {
-      type: UIActionEnum.InputText
+      type: typeof UIActions.InputText
       payload: { txt: string }
     }
   | {
-      type: UIActionEnum.StartEditing
+      type: typeof UIActions.StartEditing
       payload: { id: string; txt: string }
     }
   | {
-      type: UIActionEnum.EndEditing
+      type: typeof UIActions.EndEditing
     }
   | {
-      type: UIActionEnum.ModifyText
+      type: typeof UIActions.ModifyText
       payload: { txt: string }
     }
   | {
-      type: UIActionEnum.OpenSettings
+      type: typeof UIActions.OpenSettings
     }
   | {
-      type: UIActionEnum.CloseSettings
+      type: typeof UIActions.CloseSettings
     }
   | {
-      type: UIActionEnum.OpenUserDetail
+      type: typeof UIActions.OpenUserDetail
       payload: { id: string; account: string; icon: string }
     }
   | {
-      type: UIActionEnum.CloseUserDetail
+      type: typeof UIActions.CloseUserDetail
     }

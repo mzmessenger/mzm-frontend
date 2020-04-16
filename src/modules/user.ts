@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux'
 import { State } from './index'
-import { UserState, UserAction, UserActionEnum } from './user.types'
+import { UserState, UserAction, UserActions } from './user.types'
 
 export const initState: UserState = {
   signup: false,
@@ -9,24 +9,24 @@ export const initState: UserState = {
   me: null
 }
 
-export function reducer(
+export const reducer = (
   state: UserState = initState,
   action: UserAction
-): UserState {
+): UserState => {
   switch (action.type) {
-    case UserActionEnum.Signup: {
+    case UserActions.Signup: {
       return {
         ...initState,
         signup: true,
         signupAccount: action.payload.account
       }
     }
-    case UserActionEnum.Logout:
-    case UserActionEnum.Remove:
+    case UserActions.Logout:
+    case UserActions.Remove:
       return { ...initState, login: false }
-    case UserActionEnum.SetMe:
+    case UserActions.SetMe:
       return { ...state, login: true, me: action.payload }
-    case UserActionEnum.SetIcon: {
+    case UserActions.SetIcon: {
       const iconUrl = `/api/icon/user/${state.me.account}/${action.payload.version}`
       return { ...state, me: { ...state.me, iconUrl } }
     }
@@ -35,9 +35,9 @@ export function reducer(
   }
 }
 
-export function signup(account: string) {
+export const signup = (account: string) => {
   return {
-    type: UserActionEnum.Signup,
+    type: UserActions.Signup,
     payload: { account }
   }
 }
@@ -54,11 +54,11 @@ export const getMyInfo = () => {
         githubUserName: string | null
       } = await res.json()
       dispatch({
-        type: UserActionEnum.SetMe,
+        type: UserActions.SetMe,
         payload: { ...payload, iconUrl: payload.icon }
       })
     } else if (res.status === 403) {
-      dispatch({ type: UserActionEnum.Logout })
+      dispatch({ type: UserActions.Logout })
     }
     return res
   }
@@ -104,8 +104,8 @@ export const removeGithub = () => {
   }
 }
 
-export function removeUser() {
-  return async function (dispatch: Dispatch<UserAction>) {
+export const removeUser = () => {
+  return async (dispatch: Dispatch<UserAction>) => {
     const res = await fetch('/auth/user', {
       method: 'DELETE',
       mode: 'cors',
@@ -114,14 +114,14 @@ export function removeUser() {
       }
     })
     if (res.status === 200) {
-      dispatch({ type: UserActionEnum.Remove })
+      dispatch({ type: UserActions.Remove })
     }
     return res
   }
 }
 
-export function logout(): UserAction {
-  return { type: UserActionEnum.Logout }
+export const logout = (): UserAction => {
+  return { type: UserActions.Logout }
 }
 
 export const uploadIcon = (blob: Blob) => {
@@ -136,7 +136,7 @@ export const uploadIcon = (blob: Blob) => {
 
     if (res.ok) {
       const { version } = await res.json()
-      dispatch({ type: UserActionEnum.SetIcon, payload: { version } })
+      dispatch({ type: UserActions.SetIcon, payload: { version } })
     }
 
     return res

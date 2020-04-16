@@ -16,7 +16,7 @@ import RouterListener from './components/RouterListener'
 const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
 const url = `${protocol}//${window.location.host}/socket`
 
-function App() {
+export default function App() {
   const login = useSelector((state: State) => state.user.login)
   const dispatch = useDispatch()
 
@@ -50,5 +50,3 @@ function App() {
     </Router>
   )
 }
-
-export default App

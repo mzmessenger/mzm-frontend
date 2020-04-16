@@ -5,6 +5,18 @@ import { State } from '../../modules/index'
 import Body from '../atoms/Body'
 import Header from '../Header'
 
+export default function PageWrapper({ children }) {
+  const overlay = useSelector((state: State) => state.ui.overlay)
+
+  return (
+    <Wrap>
+      <Header />
+      <Body>{children}</Body>
+      {overlay && <div className="overlay" />}
+    </Wrap>
+  )
+}
+
 const Wrap = styled.div`
   height: 100vh;
   width: 100vw;
@@ -22,15 +34,3 @@ const Wrap = styled.div`
     z-index: var(--z-index-overlay);
   }
 `
-
-export default function PageWrapper({ children }) {
-  const overlay = useSelector((state: State) => state.ui.overlay)
-
-  return (
-    <Wrap>
-      <Header />
-      <Body>{children}</Body>
-      {overlay && <div className="overlay" />}
-    </Wrap>
-  )
-}

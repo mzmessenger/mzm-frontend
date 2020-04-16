@@ -2,21 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import Header from '../atoms/LoginHeader'
 
-const Wrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  .terms {
-    margin: 20px;
-    max-width: 90vw;
-    padding: 20px;
-    background-color: var(--color-surface);
-    color: var(--color-on-surface);
-  }
-`
-
 export default function Tos() {
   return (
     <Wrap>
@@ -206,3 +191,18 @@ export default function Tos() {
     </Wrap>
   )
 }
+
+const Wrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .terms {
+    margin: 20px;
+    max-width: 90vw;
+    padding: 20px;
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+  }
+`

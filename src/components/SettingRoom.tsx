@@ -5,24 +5,6 @@ import DirectionsRun from '@material-ui/icons/DirectionsRun'
 import { State, store } from '../modules/index'
 import { exitRoom } from '../modules/rooms'
 
-const Wrap = styled.div`
-  padding: 8px 32px;
-  color: var(--color-on-background);
-
-  .icon {
-    color: var(--color-on-guide);
-  }
-
-  .exit {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    .icon {
-      margin-right: 8px;
-    }
-  }
-`
-
 export default function RoomSetting() {
   const dispatch = useDispatch()
   const id = useSelector((state: State) => state.rooms.currentRoomId)
@@ -44,3 +26,21 @@ export default function RoomSetting() {
     </Wrap>
   )
 }
+
+const Wrap = styled.div`
+  padding: 8px 32px;
+  color: var(--color-on-background);
+
+  .icon {
+    color: var(--color-on-guide);
+  }
+
+  .exit {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    .icon {
+      margin-right: 8px;
+    }
+  }
+`

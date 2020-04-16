@@ -2,6 +2,23 @@ import React from 'react'
 import styled from 'styled-components'
 import Modal from '@material-ui/core/Modal'
 
+export type ModalProps = {
+  open: boolean
+  onClose: () => void
+}
+
+export default function ModalBase({
+  open,
+  onClose,
+  children
+}: ModalProps & { children?: React.ReactNode }) {
+  return (
+    <Modal open={open} onClose={onClose}>
+      <ModalInner>{children}</ModalInner>
+    </Modal>
+  )
+}
+
 const ModalInner = styled.div`
   position: absolute;
   top: 50%;
@@ -12,22 +29,3 @@ const ModalInner = styled.div`
     0px 5px 8px 0px rgba(0, 0, 0, 0.14), 0px 1px 14px 0px rgba(0, 0, 0, 0.12);
   outline: none;
 `
-
-export type ModalProps = {
-  open: boolean
-  onClose: () => void
-}
-
-const ModalBase: React.FunctionComponent<ModalProps> = ({
-  open,
-  onClose,
-  children
-}) => {
-  return (
-    <Modal open={open} onClose={onClose}>
-      <ModalInner>{children}</ModalInner>
-    </Modal>
-  )
-}
-
-export default ModalBase

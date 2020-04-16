@@ -8,35 +8,6 @@ import Button from './atoms/Button'
 import Modal, { ModalProps } from './atoms/Modal'
 import InputText from './atoms/InputText'
 
-const ModalInner = styled.form`
-  width: 440px;
-  border-radius: 3px;
-  background-color: var(--color-background);
-  color: var(--color-on-background);
-  h4 {
-    margin: 0;
-    padding: 20px;
-  }
-  .body {
-    padding: 0 20px 20px;
-  }
-`
-
-const Buttons = styled.div`
-  padding: 14px 20px;
-  display: flex;
-  justify-content: flex-end;
-  border-top: 1px solid var(--color-border);
-  button {
-    height: 40px;
-    width: 100px;
-  }
-  button.cancel {
-    border-color: transparent;
-    background-color: transparent;
-  }
-`
-
 type Props = ModalProps
 
 export default function ModalCraeteRoom({ open, onClose }: Props) {
@@ -91,3 +62,32 @@ export default function ModalCraeteRoom({ open, onClose }: Props) {
     </Modal>
   )
 }
+
+const ModalInner = styled.form`
+  width: 440px;
+  border-radius: 3px;
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  h4 {
+    margin: 0;
+    padding: 20px;
+  }
+  .body {
+    padding: 0 20px 20px;
+  }
+`
+
+const Buttons = styled.div`
+  padding: 14px 20px;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid var(--color-border);
+  button {
+    height: 40px;
+    width: 100px;
+  }
+  button.cancel {
+    border-color: transparent;
+    background-color: transparent;
+  }
+`

@@ -8,6 +8,25 @@ import Link from './atoms/Link'
 import MenuIcon from './atoms/MobileMenuIcon'
 import MyInfo from './MyInfo'
 
+export default function Header({ style }: { style?: any }) {
+  const device = useSelector((state: State) => state.ui.device)
+
+  const dispatch = useDispatch()
+
+  const onClick = () => dispatch(openMenu())
+
+  return (
+    <Wrap style={style}>
+      <Link className="logo" to="/">
+        <div>MZM</div>
+      </Link>
+      <div style={{ flex: 1 }}></div>
+      <MyInfo />
+      {device === 'mobile' && <MenuIcon onClick={onClick} />}
+    </Wrap>
+  )
+}
+
 const Wrap = styled.header`
   height: var(--header-height);
   padding: 0 16px;
@@ -33,22 +52,3 @@ const Wrap = styled.header`
     padding: 0 8px 0 16px;
   }
 `
-
-export default function Header({ style }: { style?: any }) {
-  const device = useSelector((state: State) => state.ui.device)
-
-  const dispatch = useDispatch()
-
-  const onClick = () => dispatch(openMenu())
-
-  return (
-    <Wrap style={style}>
-      <Link className="logo" to="/">
-        <div>MZM</div>
-      </Link>
-      <div style={{ flex: 1 }}></div>
-      <MyInfo />
-      {device === 'mobile' && <MenuIcon onClick={onClick} />}
-    </Wrap>
-  )
-}

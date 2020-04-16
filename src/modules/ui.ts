@@ -1,4 +1,4 @@
-import { UIState, UIAction, UIActionEnum } from './ui.types'
+import { UIState, UIAction, UIActions } from './ui.types'
 import { WIDTH_MOBILE } from '../lib/constants'
 
 export const initState: UIState = {
@@ -14,35 +14,38 @@ export const initState: UIState = {
   userDetail: null
 }
 
-export function reducer(state: UIState = initState, action: UIAction): UIState {
+export const reducer = (
+  state: UIState = initState,
+  action: UIAction
+): UIState => {
   switch (action.type) {
-    case UIActionEnum.Onresize:
+    case UIActions.Onresize:
       return {
         ...state,
         device: action.payload.innerWidth <= WIDTH_MOBILE ? 'mobile' : 'pc'
       }
-    case UIActionEnum.OpenMenu:
+    case UIActions.OpenMenu:
       return { ...state, menuStatus: 'open', overlay: true }
-    case UIActionEnum.CloseMenu:
+    case UIActions.CloseMenu:
       return { ...state, menuStatus: 'close', overlay: false }
-    case UIActionEnum.InputText:
+    case UIActions.InputText:
       return { ...state, txt: action.payload.txt }
-    case UIActionEnum.StartEditing:
+    case UIActions.StartEditing:
       return {
         ...state,
         inputMode: 'edit',
         editTxt: action.payload.txt,
         editId: action.payload.id
       }
-    case UIActionEnum.EndEditing:
+    case UIActions.EndEditing:
       return { ...state, inputMode: 'normal', editTxt: '', editId: null }
-    case UIActionEnum.ModifyText:
+    case UIActions.ModifyText:
       return { ...state, editTxt: action.payload.txt }
-    case UIActionEnum.OpenSettings:
+    case UIActions.OpenSettings:
       return { ...state, openSettings: true }
-    case UIActionEnum.CloseSettings:
+    case UIActions.CloseSettings:
       return { ...state, openSettings: false }
-    case UIActionEnum.OpenUserDetail:
+    case UIActions.OpenUserDetail:
       return {
         ...state,
         openUserDetail: true,
@@ -52,57 +55,57 @@ export function reducer(state: UIState = initState, action: UIAction): UIState {
           icon: action.payload.icon
         }
       }
-    case UIActionEnum.CloseUserDetail:
+    case UIActions.CloseUserDetail:
       return { ...state, openUserDetail: false, userDetail: null }
     default:
       return state
   }
 }
 
-export function onResize(innerWidth: number, innerHeight: number): UIAction {
-  return { type: UIActionEnum.Onresize, payload: { innerWidth, innerHeight } }
+export const onResize = (innerWidth: number, innerHeight: number): UIAction => {
+  return { type: UIActions.Onresize, payload: { innerWidth, innerHeight } }
 }
 
-export function openMenu(): UIAction {
-  return { type: UIActionEnum.OpenMenu }
+export const openMenu = (): UIAction => {
+  return { type: UIActions.OpenMenu }
 }
 
-export function closeMenu(): UIAction {
-  return { type: UIActionEnum.CloseMenu }
+export const closeMenu = (): UIAction => {
+  return { type: UIActions.CloseMenu }
 }
 
-export function startToEdit(messageId: string, txt: string): UIAction {
-  return { type: UIActionEnum.StartEditing, payload: { id: messageId, txt } }
+export const startToEdit = (messageId: string, txt: string): UIAction => {
+  return { type: UIActions.StartEditing, payload: { id: messageId, txt } }
 }
 
-export function endToEdit(): UIAction {
-  return { type: UIActionEnum.EndEditing }
+export const endToEdit = (): UIAction => {
+  return { type: UIActions.EndEditing }
 }
 
-export function modifyMessage(txt: string): UIAction {
-  return { type: UIActionEnum.ModifyText, payload: { txt } }
+export const modifyMessage = (txt: string): UIAction => {
+  return { type: UIActions.ModifyText, payload: { txt } }
 }
 
-export function inputMessage(txt: string): UIAction {
-  return { type: UIActionEnum.InputText, payload: { txt } }
+export const inputMessage = (txt: string): UIAction => {
+  return { type: UIActions.InputText, payload: { txt } }
 }
 
-export function openSettings(): UIAction {
-  return { type: UIActionEnum.OpenSettings }
+export const openSettings = (): UIAction => {
+  return { type: UIActions.OpenSettings }
 }
 
-export function closeSettings(): UIAction {
-  return { type: UIActionEnum.CloseSettings }
+export const closeSettings = (): UIAction => {
+  return { type: UIActions.CloseSettings }
 }
 
-export function openUserDetail(
+export const openUserDetail = (
   id: string,
   account: string,
   icon: string
-): UIAction {
-  return { type: UIActionEnum.OpenUserDetail, payload: { id, account, icon } }
+): UIAction => {
+  return { type: UIActions.OpenUserDetail, payload: { id, account, icon } }
 }
 
-export function closeUserDetail(): UIAction {
-  return { type: UIActionEnum.CloseUserDetail }
+export const closeUserDetail = (): UIAction => {
+  return { type: UIActions.CloseUserDetail }
 }

@@ -2,20 +2,6 @@ import React, { useRef, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
-const Wrap = styled.div`
-  padding: 5px 0 0 0;
-  word-break: break-all;
-  p {
-    font-size: 14px;
-    line-height: 20px;
-    margin: 0;
-    white-space: pre-wrap;
-  }
-  a {
-    color: var(--color-link);
-  }
-`
-
 type Props = {
   className?: string
   message: string
@@ -61,3 +47,17 @@ export default function MessageBody({ className, message, html }: Props) {
     ></Wrap>
   )
 }
+
+const Wrap = styled.div`
+  padding: 5px 0 0 0;
+  word-break: break-all;
+  p {
+    font-size: 14px;
+    line-height: 20px;
+    margin: 0;
+    white-space: pre-wrap;
+  }
+  a {
+    color: var(--color-link);
+  }
+`

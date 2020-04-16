@@ -8,60 +8,6 @@ import Header from '../atoms/LoginHeader'
 import InputText from '../atoms/InputText'
 import Button from '../atoms/Button'
 
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  label {
-    width: 100%;
-    color: var(--color-on-surface);
-    font-size: 1em;
-    &.error input {
-      border-color: var(--color-error);
-    }
-  }
-
-  .signup {
-    max-width: 400px;
-    padding: 20px;
-    background-color: var(--color-surface);
-    color: var(--color-on-surface);
-    width: 700px;
-    margin: 40px 0 0 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .footer {
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
-    .create {
-      margin: 10px 0 0 0;
-      height: 40px;
-      width: 80px;
-    }
-  }
-
-  .attention {
-    color: var(--color-on-background);
-    margin: 20px 0 0 0;
-
-    a {
-      color: var(--color-link);
-    }
-  }
-
-  .error-txt {
-    color: var(--color-error);
-    margin: 5px 0 0 0;
-    font-weight: 300;
-  }
-`
-
 const ERROR_TXT =
   '入力された値が半角英数字以外か、すでに存在するアカウントです。'
 
@@ -145,3 +91,57 @@ export default function Signup() {
     </Wrapper>
   )
 }
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  label {
+    width: 100%;
+    color: var(--color-on-surface);
+    font-size: 1em;
+    &.error input {
+      border-color: var(--color-error);
+    }
+  }
+
+  .signup {
+    max-width: 400px;
+    padding: 20px;
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+    width: 700px;
+    margin: 40px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    .create {
+      margin: 10px 0 0 0;
+      height: 40px;
+      width: 80px;
+    }
+  }
+
+  .attention {
+    color: var(--color-on-background);
+    margin: 20px 0 0 0;
+
+    a {
+      color: var(--color-link);
+    }
+  }
+
+  .error-txt {
+    color: var(--color-error);
+    margin: 5px 0 0 0;
+    font-weight: 300;
+  }
+`
