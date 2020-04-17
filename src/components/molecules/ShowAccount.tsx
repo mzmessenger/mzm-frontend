@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import ImageIcon from '@material-ui/icons/Image'
+import { WIDTH_MOBILE } from '../../lib/constants'
 import { State } from '../../modules/index'
 import Button from '../atoms/Button'
 import SocialAccounts from '../atoms/SocialAccounts'
@@ -14,6 +15,7 @@ export default function ShowAccount() {
   const [open, setOpen] = useState(false)
   const [image, setImage] = useState('')
   const [edit, setEdit] = useState(false)
+  const fileInputRef = useRef(null)
 
   // ターゲット以外の場所にdropしてしまった時にブラウザで画像を開かないように
   useEffect(() => {
@@ -34,7 +36,6 @@ export default function ShowAccount() {
   }, [])
 
   const onModalCancel = useCallback(() => {
-    onSave()
     setOpen(false)
   }, [])
 
@@ -60,12 +61,33 @@ export default function ShowAccount() {
     }
   }
 
+  const onClickDrop = () => {
+    fileInputRef.current.click()
+  }
+
+  const openFile = (e) => {
+    const [file] = e.target.files
+    if (!file) {
+      return
+    }
+
+    const reader = new FileReader()
+    reader.onload = () => {
+      setImage(reader.result.toString())
+      setOpen(true)
+    }
+    reader.readAsDataURL(file)
+  }
+
   const onDrop = (e) => {
     e.preventDefault()
+
     const data = e.dataTransfer
+
     const [file] = Array.from(data.files).filter(
       (f: any) => f.type.includes('image/jpeg') || f.type.includes('image/png')
     ) as Blob[]
+
     const reader = new FileReader()
     reader.onload = () => {
       setImage(reader.result.toString())
@@ -78,10 +100,21 @@ export default function ShowAccount() {
     <Wrap>
       <div className="icon">
         {edit && (
-          <div className="drop" onDrop={onDrop} onDragOver={onDragOver}>
+          <div
+            className="drop"
+            onDrop={onDrop}
+            onDragOver={onDragOver}
+            onClick={onClickDrop}
+          >
             <div className="drop-inner">
               <ImageIcon />
               <span>Drop</span>
+              <input
+                type="file"
+                accept=".jpg,.jpeg,.png"
+                onChange={openFile}
+                ref={fileInputRef}
+              />
             </div>
           </div>
         )}
@@ -149,7 +182,7 @@ const Wrap = styled.div`
   .info {
     list-style-type: none;
     margin: 0;
-    padding: 0;
+    padding: 1em 0;
     > li {
       padding: 1em 1em 0;
     }
@@ -172,13 +205,21 @@ const Wrap = styled.div`
       display: flex;
       justify-content: center;
       align-items: center;
+      cursor: pointer;
       .drop-inner {
         display: flex;
         span {
           margin-left: 4px;
           line-height: 27px;
         }
+        input {
+          display: none;
+        }
       }
     }
+  }
+
+  @media (max-width: ${WIDTH_MOBILE}px) {
+    flex-direction: column;
   }
 `

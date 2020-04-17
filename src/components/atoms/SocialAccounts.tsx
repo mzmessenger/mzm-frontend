@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import LinkOffIcon from '@material-ui/icons/LinkOff'
 import TwitterIcon from '@material-ui/icons/Twitter'
 import GitHubIcon from '@material-ui/icons/GitHub'
+import { WIDTH_MOBILE } from '../../lib/constants'
 import { store } from '../../modules/index'
 import { removeTwitter, removeGithub } from '../../modules/user'
 import { State } from '../../modules/index'
@@ -106,6 +107,15 @@ const Wrap = styled.div`
 
     .account-link-icon {
       margin: 0 8px 0 0;
+    }
+  }
+
+  @media (max-width: ${WIDTH_MOBILE}px) {
+    .accounts {
+      flex-direction: column;
+      .login-account {
+        margin: 0.5em 0 0 0;
+      }
     }
   }
 `

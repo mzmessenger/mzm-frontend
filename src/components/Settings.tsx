@@ -2,6 +2,7 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import CancelIcon from '@material-ui/icons/Cancel'
+import { WIDTH_MOBILE } from '../lib/constants'
 import { closeSettings } from '../modules/ui'
 import SettingAccount from './molecules/SettingAccount'
 
@@ -94,6 +95,29 @@ const Wrap = styled.div`
     .icon {
       width: 32px;
       cursor: pointer;
+    }
+  }
+
+  @media (max-width: ${WIDTH_MOBILE}px) {
+    padding-left: 0;
+    padding-right: 0;
+
+    .user {
+      flex-direction: column;
+
+      .menu {
+        display: flex;
+        > li {
+          padding-left: 1em;
+          &:first-child {
+            padding-left: 0;
+          }
+        }
+      }
+
+      .body {
+        padding: 0;
+      }
     }
   }
 `

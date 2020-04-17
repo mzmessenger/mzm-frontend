@@ -2,6 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { State } from '../../modules/index'
+import { WIDTH_MOBILE } from '../../lib/constants'
 
 export default function Body({
   children,
@@ -24,4 +25,8 @@ const Wrap = styled.div`
   height: 100%;
   display: flex;
   overflow: hidden;
+
+  @media (max-width: ${WIDTH_MOBILE}px) {
+    overflow: auto;
+  }
 `

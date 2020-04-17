@@ -33,7 +33,7 @@ export default function MyInfo() {
 }
 
 const Wrap = styled.div`
-  padding: 8px;
+  padding: 8px 0;
   .profile-wrap {
     display: flex;
   }
