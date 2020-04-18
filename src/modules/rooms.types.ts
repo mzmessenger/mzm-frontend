@@ -35,42 +35,42 @@ export type RoomsState = {
   scrollTargetIndex: number | 'bottom'
 }
 
-export enum RoomActionEnum {
-  ReceiveRooms = 'roomAction:receive',
-  ReceiveMessage = 'roomAction:receiveMessage',
-  ReceiveMessages = 'roomAction:receiveMessages',
-  ReloadMessages = 'roomAction:reloadMessages',
-  GetMessages = 'roomAction:getMessages',
-  EnterRoomSuccess = 'roomAction:enterRoomSuccess',
-  ExitRoom = 'roomAction:exitRoom',
-  CreateRoom = 'roomAction:createRoom',
-  ChangeRoom = 'roomAction:changeRoom',
+export const RoomsActions = {
+  ReceiveRooms: 'roomAction:receive',
+  ReceiveMessage: 'roomAction:receiveMessage',
+  ReceiveMessages: 'roomAction:receiveMessages',
+  ReloadMessages: 'roomAction:reloadMessages',
+  GetMessages: 'roomAction:getMessages',
+  EnterRoomSuccess: 'roomAction:enterRoomSuccess',
+  ExitRoom: 'roomAction:exitRoom',
+  CreateRoom: 'roomAction:createRoom',
+  ChangeRoom: 'roomAction:changeRoom',
   // 既読
-  AlreadyRead = 'roomAction:alreadyRead'
-}
+  AlreadyRead: 'roomAction:alreadyRead'
+} as const
 
 export type RoomsAction =
   | {
-      type: RoomActionEnum.ReceiveRooms
+      type: typeof RoomsActions.ReceiveRooms
       payload: { rooms: ReceiveRoom[] }
     }
   | {
-      type: RoomActionEnum.ReceiveMessage
+      type: typeof RoomsActions.ReceiveMessage
       payload: { message: string; room: string }
     }
   | {
-      type: RoomActionEnum.EnterRoomSuccess
+      type: typeof RoomsActions.EnterRoomSuccess
       payload: { id: string; name: string; loading: boolean }
     }
   | {
-      type: RoomActionEnum.ExitRoom
+      type: typeof RoomsActions.ExitRoom
     }
   | {
-      type: RoomActionEnum.CreateRoom
+      type: typeof RoomsActions.CreateRoom
       payload: { id: string; name: string }
     }
   | {
-      type: RoomActionEnum.ReceiveMessages
+      type: typeof RoomsActions.ReceiveMessages
       payload: {
         room: string
         existHistory: boolean
@@ -78,25 +78,25 @@ export type RoomsAction =
       }
     }
   | {
-      type: RoomActionEnum.ChangeRoom
+      type: typeof RoomsActions.ChangeRoom
       payload: {
         id: string
       }
     }
   | {
-      type: RoomActionEnum.GetMessages
+      type: typeof RoomsActions.GetMessages
       payload: {
         id: string
       }
     }
   | {
-      type: RoomActionEnum.AlreadyRead
+      type: typeof RoomsActions.AlreadyRead
       payload: {
         room: string
       }
     }
   | {
-      type: RoomActionEnum.ReloadMessages
+      type: typeof RoomsActions.ReloadMessages
       payload: {
         room: string
       }

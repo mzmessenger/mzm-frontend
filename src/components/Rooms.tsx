@@ -6,26 +6,18 @@ import { State, store } from '../modules/index'
 import { readMessages } from '../modules/rooms'
 import RoomElem from './atoms/RoomElem'
 
-const Wrap = styled.div`
-  padding: 5px 0;
-  cursor: pointer;
-  .link {
-    padding: 4px;
-  }
-`
-
-function RoomContainer({
+const RoomContainer = ({
   id,
   currentRoomName
 }: {
   id: string
   currentRoomName: string
-}) {
+}) => {
   const history = useHistory()
   const dispatch = useDispatch()
   const room = useSelector((state: State) => state.rooms.rooms.byId[id])
 
-  function onClick(e: React.MouseEvent) {
+  const onClick = (e: React.MouseEvent) => {
     e.preventDefault()
     history.push(`/rooms/${room.name}`)
     readMessages(room.id)(dispatch, store.getState)
@@ -56,3 +48,10 @@ export default function Rooms() {
     </Wrap>
   )
 }
+const Wrap = styled.div`
+  padding: 5px 0;
+  cursor: pointer;
+  .link {
+    padding: 4px;
+  }
+`

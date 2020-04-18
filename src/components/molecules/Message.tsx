@@ -86,7 +86,7 @@ const PresentationalMessage = ({
   )
 }
 
-function ContainerMessage({ id }: { id: string }) {
+const ContainerMessage = ({ id }: { id: string }) => {
   const myAccount = useSelector((state: State) => state.user.me.account)
   const messageObj = useSelector(
     (state: State) => state.messages.messages.byId[id]

@@ -1,8 +1,8 @@
 import { Dispatch } from 'redux'
-import { sendSocket, SendSocketMessage, SendSocketCmdEnum } from '../lib/util'
+import { sendSocket, SendSocketMessage, SendSocketCmd } from '../lib/util'
 import { State } from './index'
 import {
-  RoomActionEnum,
+  RoomsActions,
   RoomsAction,
   ReceiveRoom,
   RoomsState,
@@ -20,12 +20,12 @@ export const initState: RoomsState = {
   scrollTargetIndex: 'bottom'
 }
 
-export function reducer(
+export const reducer = (
   state: RoomsState = initState,
   action: RoomsAction
-): RoomsState {
+): RoomsState => {
   switch (action.type) {
-    case RoomActionEnum.ReceiveRooms: {
+    case RoomsActions.ReceiveRooms: {
       const allIds = []
       for (const r of action.payload.rooms) {
         if (!allIds.includes(r.id)) {
@@ -46,21 +46,21 @@ export function reducer(
       state.rooms.allIds = allIds
       return { ...state }
     }
-    case RoomActionEnum.CreateRoom: {
+    case RoomsActions.CreateRoom: {
       return {
         ...state,
         currentRoomId: action.payload.id,
         currentRoomName: action.payload.name
       }
     }
-    case RoomActionEnum.GetMessages: {
+    case RoomsActions.GetMessages: {
       const room = state.rooms.byId[action.payload.id]
       if (room) {
         state.rooms.byId[action.payload.id] = { ...room, loading: true }
       }
       return { ...state }
     }
-    case RoomActionEnum.ChangeRoom: {
+    case RoomsActions.ChangeRoom: {
       return {
         ...state,
         currentRoomId: action.payload.id,
@@ -68,7 +68,7 @@ export function reducer(
         scrollTargetIndex: 'bottom'
       }
     }
-    case RoomActionEnum.EnterRoomSuccess: {
+    case RoomsActions.EnterRoomSuccess: {
       const room = state.rooms.byId[action.payload.id]
       if (room) {
         state.rooms.byId[action.payload.id] = {
@@ -83,14 +83,14 @@ export function reducer(
         currentRoomName: action.payload.name
       }
     }
-    case RoomActionEnum.ExitRoom: {
+    case RoomsActions.ExitRoom: {
       return {
         ...state,
         currentRoomId: '',
         currentRoomName: ''
       }
     }
-    case RoomActionEnum.ReceiveMessage: {
+    case RoomsActions.ReceiveMessage: {
       const isCurrent = action.payload.room === state.currentRoomId
       const room = state.rooms.byId[action.payload.room]
 
@@ -105,7 +105,7 @@ export function reducer(
         scrollTargetIndex: 'bottom'
       }
     }
-    case RoomActionEnum.ReceiveMessages: {
+    case RoomsActions.ReceiveMessages: {
       const roomId = action.payload.room
       // uniq
       const arr = [
@@ -134,14 +134,14 @@ export function reducer(
         scrollTargetIndex
       }
     }
-    case RoomActionEnum.AlreadyRead: {
+    case RoomsActions.AlreadyRead: {
       state.rooms.byId[action.payload.room] = {
         ...state.rooms.byId[action.payload.room],
         unread: 0
       }
       return { ...state }
     }
-    case RoomActionEnum.ReloadMessages: {
+    case RoomsActions.ReloadMessages: {
       state.rooms.byId[action.payload.room].messages = [
         ...state.rooms.byId[action.payload.room].messages
       ]
@@ -152,19 +152,16 @@ export function reducer(
   }
 }
 
-export function getMessages(roomId: string, socket: WebSocket): RoomsAction {
+export const getMessages = (roomId: string, socket: WebSocket): RoomsAction => {
   sendSocket(socket, {
-    cmd: SendSocketCmdEnum.GetMessages,
+    cmd: SendSocketCmd.GetMessages,
     room: roomId
   })
-  return { type: RoomActionEnum.GetMessages, payload: { id: roomId } }
+  return { type: RoomsActions.GetMessages, payload: { id: roomId } }
 }
 
-export function createRoom(name: string) {
-  return async function (
-    dispatch: Dispatch<RoomsAction>,
-    getState: () => State
-  ) {
+export const createRoom = (name: string) => {
+  return async (dispatch: Dispatch<RoomsAction>, getState: () => State) => {
     const res = await fetch('/api/rooms', {
       method: 'POST',
       mode: 'cors',
@@ -175,9 +172,9 @@ export function createRoom(name: string) {
     })
     if (res.status === 200) {
       const room: { id: string; name: string } = await res.json()
-      sendSocket(getState().socket.socket, { cmd: SendSocketCmdEnum.GetRooms })
+      sendSocket(getState().socket.socket, { cmd: SendSocketCmd.GetRooms })
       dispatch({
-        type: RoomActionEnum.CreateRoom,
+        type: RoomsActions.CreateRoom,
         payload: { id: room.id, name: room.name }
       })
     }
@@ -185,8 +182,8 @@ export function createRoom(name: string) {
   }
 }
 
-export function enterRoom(roomName: string) {
-  return async function (dispatch: Dispatch, getState: () => State) {
+export const enterRoom = (roomName: string) => {
+  return async (dispatch: Dispatch, getState: () => State) => {
     const room = Object.values(getState().rooms.rooms.byId).find(
       (r) => r.name === roomName
     )
@@ -195,7 +192,7 @@ export function enterRoom(roomName: string) {
         dispatch(getMessages(room.id, getState().socket.socket))
       }
       dispatch({
-        type: RoomActionEnum.ChangeRoom,
+        type: RoomsActions.ChangeRoom,
         payload: {
           id: room.id
         }
@@ -204,18 +201,15 @@ export function enterRoom(roomName: string) {
       return
     }
     sendSocket(getState().socket.socket, {
-      cmd: SendSocketCmdEnum.EnterRoom,
+      cmd: SendSocketCmd.EnterRoom,
       name: roomName
     })
     dispatch(closeMenu())
   }
 }
 
-export function exitRoom(roomId: string) {
-  return async function (
-    dispatch: Dispatch<RoomsAction>,
-    getState: () => State
-  ) {
+export const exitRoom = (roomId: string) => {
+  return async (dispatch: Dispatch<RoomsAction>, getState: () => State) => {
     const res = await fetch('/api/rooms/enter', {
       method: 'DELETE',
       mode: 'cors',
@@ -225,32 +219,29 @@ export function exitRoom(roomId: string) {
       body: JSON.stringify({ room: roomId })
     })
     if (res.status === 200) {
-      sendSocket(getState().socket.socket, { cmd: SendSocketCmdEnum.GetRooms })
-      dispatch({ type: RoomActionEnum.ExitRoom })
+      sendSocket(getState().socket.socket, { cmd: SendSocketCmd.GetRooms })
+      dispatch({ type: RoomsActions.ExitRoom })
     }
     return res
   }
 }
 
-export function getHistory(id: string, roomId: string, socket: WebSocket) {
+export const getHistory = (id: string, roomId: string, socket: WebSocket) => {
   const message: SendSocketMessage = {
-    cmd: SendSocketCmdEnum.GetMessages,
+    cmd: SendSocketCmd.GetMessages,
     room: roomId,
     id: id
   }
   sendSocket(socket, message)
 }
 
-export function receiveRooms(rooms: ReceiveRoom[], currentRoomId: string) {
-  return async function (
-    dispatch: Dispatch<RoomsAction>,
-    getState: () => State
-  ) {
+export const receiveRooms = (rooms: ReceiveRoom[], currentRoomId: string) => {
+  return async (dispatch: Dispatch<RoomsAction>, getState: () => State) => {
     if (currentRoomId) {
       dispatch(getMessages(currentRoomId, getState().socket.socket))
     }
     dispatch({
-      type: RoomActionEnum.ReceiveRooms,
+      type: RoomsActions.ReceiveRooms,
       payload: {
         rooms: rooms
       }
@@ -258,17 +249,14 @@ export function receiveRooms(rooms: ReceiveRoom[], currentRoomId: string) {
   }
 }
 
-export function receiveMessage(messageId: string, room: string) {
-  return async function (
-    dispatch: Dispatch<RoomsAction>,
-    getState: () => State
-  ) {
+export const receiveMessage = (messageId: string, room: string) => {
+  return async (dispatch: Dispatch<RoomsAction>, getState: () => State) => {
     // 現在みている部屋だったら既読フラグを返す
     if (room === getState().rooms.currentRoomId) {
       readMessages(room)(dispatch, getState)
     }
     return dispatch({
-      type: RoomActionEnum.ReceiveMessage,
+      type: RoomsActions.ReceiveMessage,
       payload: {
         message: messageId,
         room: room
@@ -277,7 +265,7 @@ export function receiveMessage(messageId: string, room: string) {
   }
 }
 
-export function receiveMessages({
+export const receiveMessages = ({
   messageIds,
   room,
   existHistory
@@ -285,10 +273,10 @@ export function receiveMessages({
   messageIds: string[]
   room: string
   existHistory: boolean
-}) {
-  return async function (dispatch: Dispatch<RoomsAction>) {
+}) => {
+  return async (dispatch: Dispatch<RoomsAction>) => {
     return dispatch({
-      type: RoomActionEnum.ReceiveMessages,
+      type: RoomsActions.ReceiveMessages,
       payload: {
         room: room,
         existHistory: existHistory,
@@ -298,15 +286,12 @@ export function receiveMessages({
   }
 }
 
-export function enterSuccess(id: string, name: string) {
-  return async function (
-    dispatch: Dispatch<RoomsAction>,
-    getState: () => State
-  ) {
+export const enterSuccess = (id: string, name: string) => {
+  return async (dispatch: Dispatch<RoomsAction>, getState: () => State) => {
     const room = getState().rooms.rooms.byId[id]
     // すでに入っている部屋だったら部屋の再取得をしない
     if (!room) {
-      sendSocket(getState().socket.socket, { cmd: SendSocketCmdEnum.GetRooms })
+      sendSocket(getState().socket.socket, { cmd: SendSocketCmd.GetRooms })
     }
     let loading = false
     if (room && !room.receivedMessages && !loading) {
@@ -314,14 +299,14 @@ export function enterSuccess(id: string, name: string) {
       loading = true
     }
     dispatch({
-      type: RoomActionEnum.EnterRoomSuccess,
+      type: RoomsActions.EnterRoomSuccess,
       payload: { id: id, name: name, loading }
     })
   }
 }
 
-export function getUsers(roomId: string) {
-  return async function (_dispatch: Dispatch<RoomsAction>) {
+export const getUsers = (roomId: string) => {
+  return async (_dispatch: Dispatch<RoomsAction>) => {
     if (!roomId) {
       return
     }
@@ -336,25 +321,22 @@ export function getUsers(roomId: string) {
   }
 }
 
-export function readMessages(roomId: string) {
-  return async function (
-    _dispatch: Dispatch<RoomsAction>,
-    getState: () => State
-  ) {
+export const readMessages = (roomId: string) => {
+  return async (_dispatch: Dispatch<RoomsAction>, getState: () => State) => {
     sendSocket(getState().socket.socket, {
-      cmd: SendSocketCmdEnum.SendAlreadyRead,
+      cmd: SendSocketCmd.SendAlreadyRead,
       room: roomId
     })
   }
 }
 
-export function alreadyRead(roomId: string): RoomsAction {
-  return { type: RoomActionEnum.AlreadyRead, payload: { room: roomId } }
+export const alreadyRead = (roomId: string): RoomsAction => {
+  return { type: RoomsActions.AlreadyRead, payload: { room: roomId } }
 }
 
-export function reloadMessage(roomId: string): RoomsAction {
+export const reloadMessage = (roomId: string): RoomsAction => {
   return {
-    type: RoomActionEnum.ReloadMessages,
+    type: RoomsActions.ReloadMessages,
     payload: { room: roomId }
   }
 }

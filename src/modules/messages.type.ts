@@ -19,28 +19,28 @@ export type Message = {
   createdAt: string
 }
 
-export enum MessageActionEnum {
-  AddMessages = 'messageAction:addMessages',
-  AddMessage = 'messageAction:addMessage',
-  ModifyMessageSuccess = 'messageAction:modifyMessageSuccess',
-  UpdateIine = 'roomAction:UpdateIine'
-}
+export const MessagesActions = {
+  AddMessages: 'messageAction:addMessages',
+  AddMessage: 'messageAction:addMessage',
+  ModifyMessageSuccess: 'messageAction:modifyMessageSuccess',
+  UpdateIine: 'roomAction:UpdateIine'
+} as const
 
 export type MessagesAction =
   | {
-      type: MessageActionEnum.AddMessages
+      type: typeof MessagesActions.AddMessages
       payload: { messages: Message[] }
     }
   | {
-      type: MessageActionEnum.AddMessage
+      type: typeof MessagesActions.AddMessage
       payload: { message: Message }
     }
   | {
-      type: MessageActionEnum.ModifyMessageSuccess
+      type: typeof MessagesActions.ModifyMessageSuccess
       payload: { message: Message }
     }
   | {
-      type: MessageActionEnum.UpdateIine
+      type: typeof MessagesActions.UpdateIine
       payload: {
         message: string
         iine: number

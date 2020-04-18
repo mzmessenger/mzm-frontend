@@ -2,7 +2,7 @@ import { Dispatch } from 'redux'
 import {
   MessagesState,
   MessagesAction,
-  MessageActionEnum,
+  MessagesActions,
   Message
 } from './messages.type'
 import { convertToHtml } from '../lib/markdown'
@@ -14,12 +14,12 @@ export const initState: MessagesState = {
   }
 }
 
-export function reducer(
+export const reducer = (
   state: MessagesState = initState,
   action: MessagesAction
-): MessagesState {
+): MessagesState => {
   switch (action.type) {
-    case MessageActionEnum.AddMessages: {
+    case MessagesActions.AddMessages: {
       const allIds = [...state.messages.allIds]
       for (const message of action.payload.messages) {
         if (!allIds.includes(message.id)) {
@@ -31,7 +31,7 @@ export function reducer(
       state.messages.allIds = allIds
       return { ...state }
     }
-    case MessageActionEnum.AddMessage: {
+    case MessagesActions.AddMessage: {
       const allIds = [...state.messages.allIds, action.payload.message.id]
       state.messages.byId[action.payload.message.id] = {
         ...action.payload.message
@@ -39,7 +39,7 @@ export function reducer(
       state.messages.allIds = [...allIds]
       return { ...state }
     }
-    case MessageActionEnum.ModifyMessageSuccess: {
+    case MessagesActions.ModifyMessageSuccess: {
       const message = state.messages.byId[action.payload.message.id]
       state.messages.byId[action.payload.message.id] = {
         ...message,
@@ -48,7 +48,7 @@ export function reducer(
       }
       return { ...state }
     }
-    case MessageActionEnum.UpdateIine: {
+    case MessagesActions.UpdateIine: {
       const message = state.messages.byId[action.payload.message]
       state.messages.byId[action.payload.message] = {
         ...message,
@@ -61,36 +61,36 @@ export function reducer(
   return state
 }
 
-export function addMessages(messages: Message[]) {
-  return async function (dispatch: Dispatch<MessagesAction>) {
+export const addMessages = (messages: Message[]) => {
+  return async (dispatch: Dispatch<MessagesAction>) => {
     const promises = messages.map((m) => convertToHtml(m.message))
     const html = await Promise.all(promises)
     const converted = messages.map((m, i) => {
       return { ...m, html: html[i] }
     })
     return dispatch({
-      type: MessageActionEnum.AddMessages,
+      type: MessagesActions.AddMessages,
       payload: { messages: converted }
     })
   }
 }
 
-export function addMessage(message: Message) {
-  return async function (dispatch: Dispatch<MessagesAction>) {
+export const addMessage = (message: Message) => {
+  return async (dispatch: Dispatch<MessagesAction>) => {
     const html = await convertToHtml(message.message)
     const converted = { ...message, html }
     return dispatch({
-      type: MessageActionEnum.AddMessage,
+      type: MessagesActions.AddMessage,
       payload: { message: converted }
     })
   }
 }
 
-export function modifyMessage(message: Message) {
-  return async function (dispatch: Dispatch<MessagesAction>) {
+export const modifyMessage = (message: Message) => {
+  return async (dispatch: Dispatch<MessagesAction>) => {
     const html = await convertToHtml(message.message)
     return dispatch({
-      type: MessageActionEnum.ModifyMessageSuccess,
+      type: MessagesActions.ModifyMessageSuccess,
       payload: {
         message: { ...message, html: html }
       }
@@ -98,9 +98,9 @@ export function modifyMessage(message: Message) {
   }
 }
 
-export function updateIine(messageId: string, iine: number): MessagesAction {
+export const updateIine = (messageId: string, iine: number): MessagesAction => {
   return {
-    type: MessageActionEnum.UpdateIine,
+    type: MessagesActions.UpdateIine,
     payload: {
       message: messageId,
       iine

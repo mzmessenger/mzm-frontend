@@ -44,7 +44,7 @@ r.code = (code, lang) => {
 }
 
 // markedで取りこぼしたものをescape
-function postEscape(str: string) {
+const postEscape = (str: string) => {
   return str.replace(/<marquee[^\s]+marquee>/g, (match) => {
     return escape(match)
   })

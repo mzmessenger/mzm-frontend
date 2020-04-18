@@ -5,6 +5,29 @@ import { useSelector, useDispatch } from 'react-redux'
 import { State } from '../modules/index'
 import { closeUserDetail } from '../modules/ui'
 
+export default function UserDetail() {
+  const userDetail = useSelector((state: State) => state.ui.userDetail)
+  const dispatch = useDispatch()
+
+  const close = () => {
+    dispatch(closeUserDetail())
+  }
+
+  return (
+    <Wrap>
+      <header>
+        <Clear onClick={close} />
+      </header>
+      <div className="icon">
+        <img src={userDetail.icon} />
+      </div>
+      <div className="account">
+        <div>{userDetail.account}</div>
+      </div>
+    </Wrap>
+  )
+}
+
 const Wrap = styled.div`
   background-color: var(--color-surface);
   color: var(--color-on-surface);
@@ -38,26 +61,3 @@ const Wrap = styled.div`
     }
   }
 `
-
-export default function UserDetail() {
-  const userDetail = useSelector((state: State) => state.ui.userDetail)
-  const dispatch = useDispatch()
-
-  const close = () => {
-    dispatch(closeUserDetail())
-  }
-
-  return (
-    <Wrap>
-      <header>
-        <Clear onClick={close} />
-      </header>
-      <div className="icon">
-        <img src={userDetail.icon} />
-      </div>
-      <div className="account">
-        <div>{userDetail.account}</div>
-      </div>
-    </Wrap>
-  )
-}

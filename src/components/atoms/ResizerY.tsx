@@ -1,15 +1,6 @@
 import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
 
-const Wrap = styled.div`
-  width: 100%;
-  height: 8px;
-  cursor: row-resize;
-  content: '';
-  background: 0 0;
-  opacity: 0;
-`
-
 export default function ResizerY({
   height,
   setHeight
@@ -53,3 +44,12 @@ export default function ResizerY({
     ></Wrap>
   )
 }
+
+const Wrap = styled.div`
+  width: 100%;
+  height: 8px;
+  cursor: row-resize;
+  content: '';
+  background: 0 0;
+  opacity: 0;
+`

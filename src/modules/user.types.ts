@@ -13,32 +13,32 @@ type MyInfo = {
   githubUserName: string | null
 }
 
-export enum UserActionEnum {
-  Signup = 'UserAction:Signup',
-  Logout = 'UserAction:Logout',
-  SetMe = 'UserAction:SetMe',
-  SetIcon = 'UserAction:SetIcon',
-  Remove = 'UserAction:Remove'
-}
+export const UserActions = {
+  Signup: 'UserAction:Signup',
+  Logout: 'UserAction:Logout',
+  SetMe: 'UserAction:SetMe',
+  SetIcon: 'UserAction:SetIcon',
+  Remove: 'UserAction:Remove'
+} as const
 
 export type UserAction =
   | {
-      type: UserActionEnum.Signup
+      type: typeof UserActions.Signup
       payload: { account?: string }
     }
   | {
-      type: UserActionEnum.Logout
+      type: typeof UserActions.Logout
     }
   | {
-      type: UserActionEnum.SetMe
+      type: typeof UserActions.SetMe
       payload: MyInfo
     }
   | {
-      type: UserActionEnum.SetIcon
+      type: typeof UserActions.SetIcon
       payload: {
         version: string
       }
     }
   | {
-      type: UserActionEnum.Remove
+      type: typeof UserActions.Remove
     }

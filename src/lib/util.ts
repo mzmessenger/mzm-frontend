@@ -1,48 +1,48 @@
-export function sendSocket(socket: WebSocket, message: SendSocketMessage) {
+export const sendSocket = (socket: WebSocket, message: SendSocketMessage) => {
   if (!socket) {
     return
   }
   socket.send(JSON.stringify(message))
 }
 
-export enum SendSocketCmdEnum {
-  SendMessage = 'message:send',
-  GetMessages = 'messages:room',
-  GetRooms = 'rooms:get',
-  EnterRoom = 'rooms:enter',
-  ModifyMessage = 'message:modify',
-  SendAlreadyRead = 'rooms:read',
-  IncrementIine = 'message:iine'
-}
+export const SendSocketCmd = {
+  SendMessage: 'message:send',
+  GetMessages: 'messages:room',
+  GetRooms: 'rooms:get',
+  EnterRoom: 'rooms:enter',
+  ModifyMessage: 'message:modify',
+  SendAlreadyRead: 'rooms:read',
+  IncrementIine: 'message:iine'
+} as const
 
 export type SendSocketMessage =
   | {
-      cmd: SendSocketCmdEnum.SendMessage
+      cmd: typeof SendSocketCmd.SendMessage
       message: string
       room: string
     }
   | {
-      cmd: SendSocketCmdEnum.GetMessages
+      cmd: typeof SendSocketCmd.GetMessages
       room: string
       id?: string
     }
   | {
-      cmd: SendSocketCmdEnum.GetRooms
+      cmd: typeof SendSocketCmd.GetRooms
     }
   | {
-      cmd: SendSocketCmdEnum.EnterRoom
+      cmd: typeof SendSocketCmd.EnterRoom
       name: string
     }
   | {
-      cmd: SendSocketCmdEnum.ModifyMessage
+      cmd: typeof SendSocketCmd.ModifyMessage
       id: string
       message: string
     }
   | {
-      cmd: SendSocketCmdEnum.SendAlreadyRead
+      cmd: typeof SendSocketCmd.SendAlreadyRead
       room: string
     }
   | {
-      cmd: SendSocketCmdEnum.IncrementIine
+      cmd: typeof SendSocketCmd.IncrementIine
       id: string
     }

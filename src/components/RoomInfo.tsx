@@ -8,67 +8,7 @@ import { openUserDetail } from '../modules/ui'
 import { WIDTH_MOBILE } from '../lib/constants'
 import { State } from '../modules/index'
 
-const Wrap = styled.div`
-  display: flex;
-  min-height: var(--navi-height);
-  padding: 0 16px;
-  align-items: center;
-  color: var(--color-on-guide);
-  border-bottom: 1px solid var(--color-border);
-
-  .room-name {
-    flex: 1;
-    font-size: 18px;
-    line-height: 30px;
-  }
-
-  .room-users {
-    display: flex;
-    align-items: center;
-    .count {
-      padding: 0 0 0 4px;
-    }
-    .users {
-      min-width: 230px;
-      padding: 0 8px;
-      display: flex;
-      img {
-        cursor: pointer;
-        padding-left: 3px;
-        width: 20px;
-        height: 20px;
-      }
-    }
-  }
-
-  .expand-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition-duration: 0.5s;
-
-    &.expand {
-      transform: rotate(180deg);
-    }
-  }
-
-  .icon {
-    cursor: pointer;
-    color: var(--color-on-guide);
-    margin: 0 8px 0;
-  }
-
-  @media (max-width: ${WIDTH_MOBILE}px) {
-    padding: 0 8px;
-    .room-users {
-      .users {
-        display: none;
-      }
-    }
-  }
-`
-
-async function getUsers(roomId: string) {
+const getUsers = async (roomId: string) => {
   if (!roomId) {
     return
   }
@@ -138,3 +78,63 @@ export default function RoomInfo({
     </Wrap>
   )
 }
+
+const Wrap = styled.div`
+  display: flex;
+  min-height: var(--navi-height);
+  padding: 0 16px;
+  align-items: center;
+  color: var(--color-on-guide);
+  border-bottom: 1px solid var(--color-border);
+
+  .room-name {
+    flex: 1;
+    font-size: 18px;
+    line-height: 30px;
+  }
+
+  .room-users {
+    display: flex;
+    align-items: center;
+    .count {
+      padding: 0 0 0 4px;
+    }
+    .users {
+      min-width: 230px;
+      padding: 0 8px;
+      display: flex;
+      img {
+        cursor: pointer;
+        padding-left: 3px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+  .expand-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition-duration: 0.5s;
+
+    &.expand {
+      transform: rotate(180deg);
+    }
+  }
+
+  .icon {
+    cursor: pointer;
+    color: var(--color-on-guide);
+    margin: 0 8px 0;
+  }
+
+  @media (max-width: ${WIDTH_MOBILE}px) {
+    padding: 0 8px;
+    .room-users {
+      .users {
+        display: none;
+      }
+    }
+  }
+`

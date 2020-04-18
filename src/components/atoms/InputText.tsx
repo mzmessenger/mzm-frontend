@@ -1,6 +1,24 @@
 import React, { ChangeEvent } from 'react'
 import styled from 'styled-components'
 
+export default function Signup({
+  value,
+  onChange,
+  error,
+  style
+}: {
+  value: string
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void
+  error?: boolean
+  style?: any
+}) {
+  return (
+    <Wrap style={style} className={error ? 'error' : ''}>
+      <input type="text" value={value} onChange={onChange} />
+    </Wrap>
+  )
+}
+
 const Wrap = styled.div`
   display: flex;
   min-height: 40px;
@@ -21,21 +39,3 @@ const Wrap = styled.div`
     flex: 1;
   }
 `
-
-export default function Signup({
-  value,
-  onChange,
-  error,
-  style
-}: {
-  value: string
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void
-  error?: boolean
-  style?: any
-}) {
-  return (
-    <Wrap style={style} className={error ? 'error' : ''}>
-      <input type="text" value={value} onChange={onChange} />
-    </Wrap>
-  )
-}

@@ -9,7 +9,7 @@
 const path = require('path')
 const rmtcmd = require('rmtcmd')
 
-async function deploy({ config, remote, local }) {
+const deploy = async ({ config, remote, local }) => {
   await remote(`sudo hostname`)
   await local('npm run test', { cwd: __dirname })
 

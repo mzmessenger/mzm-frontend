@@ -5,19 +5,6 @@ import { State } from '../modules/index'
 import Message from './molecules/Message'
 import GetHistoryButton from './ButtonGetHistory'
 
-const Wrap = styled.div`
-  .message {
-    background: var(--color-background);
-    margin: 4px;
-    :first-child {
-      margin-top: 0;
-    }
-    :last-child {
-      margin-bottom: 0;
-    }
-  }
-`
-
 export default function Messages({ className }) {
   const currentRoomId = useSelector((state: State) => state.rooms.currentRoomId)
   const currentRoom = useSelector(
@@ -64,3 +51,16 @@ export default function Messages({ className }) {
     </Wrap>
   )
 }
+
+const Wrap = styled.div`
+  .message {
+    background: var(--color-background);
+    margin: 4px;
+    :first-child {
+      margin-top: 0;
+    }
+    :last-child {
+      margin-bottom: 0;
+    }
+  }
+`
