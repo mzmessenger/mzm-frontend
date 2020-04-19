@@ -1,10 +1,11 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
+import Settings from '@material-ui/icons/Settings'
 import { WIDTH_MOBILE } from '../../lib/constants'
 import { State } from '../../modules/index'
-import { closeMenu } from '../../modules/ui'
-import MenuIcon from '../atoms/MobileMenuIcon'
+import { closeMenu, openSettings } from '../../modules/ui'
+import MenuIcon from './MobileMenuIcon'
 import Rooms from '../Rooms'
 import RoomNavi from '../RoomNavi'
 
@@ -14,12 +15,15 @@ export default function Menu() {
 
   const dispatch = useDispatch()
 
-  const onClick = () => dispatch(closeMenu())
+  const onClickMenu = () => dispatch(closeMenu())
+  const clickSettings = () => dispatch(openSettings())
 
   return (
     <Wrap className={className}>
       <div className="header">
-        <MenuIcon onClick={onClick} />
+        <MenuIcon onClick={onClickMenu} />
+        <div className="space"></div>
+        <Settings className="settings" onClick={clickSettings} />
       </div>
       <RoomNavi />
       <Rooms />
@@ -56,8 +60,14 @@ const Wrap = styled.div`
     z-index: var(--z-index-on-overlay);
 
     .header {
-      display: block;
+      display: flex;
       border-bottom: 1px solid var(--color-border);
+      .space {
+        flex: 1;
+      }
+      .settings {
+        padding: 8px;
+      }
     }
   }
 `

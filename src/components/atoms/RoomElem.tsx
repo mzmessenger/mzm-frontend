@@ -4,11 +4,12 @@ import Home from '@material-ui/icons/Home'
 
 type Props = {
   name: string
+  iconUrl: string
   unread: number
   current: boolean
 }
 
-export default function RoomElem({ name, unread, current }: Props) {
+export default function RoomElem({ name, iconUrl, unread, current }: Props) {
   const className = current ? 'current' : ''
   const unreadClass = ['unread']
   if (unread > 0) {
@@ -17,7 +18,9 @@ export default function RoomElem({ name, unread, current }: Props) {
 
   return (
     <RoomWrap className={className}>
-      <Home style={{ margin: '0 5px 0 0' }} />
+      <div className="room-icon">
+        {iconUrl ? <img src={iconUrl} /> : <Home />}
+      </div>
       <div className="room-name">{name}</div>
       <div className={unreadClass.join(' ')}>{unread}</div>
     </RoomWrap>
@@ -25,14 +28,27 @@ export default function RoomElem({ name, unread, current }: Props) {
 }
 
 const RoomWrap = styled.div`
-  padding: 0 4px;
+  padding: 4px 8px 0;
+  &:last-child {
+    padding-bottom: 4px;
+  }
   display: flex;
   align-items: center;
   color: var(--color-on-surface);
   height: 34px;
+  .room-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 8px 0 0;
+    img {
+      max-height: 100%;
+      max-width: 100%;
+    }
+  }
   .room-name {
-    font-size: 16px;
-    line-height: 20px;
     flex: 1;
   }
   &.current {

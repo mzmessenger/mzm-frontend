@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import CancelIcon from '@material-ui/icons/Cancel'
 import { WIDTH_MOBILE } from '../lib/constants'
 import { closeSettings } from '../modules/ui'
-import SettingAccount from './molecules/SettingAccount'
+import SettingAccount from './molecules/SettingUser'
 
 export default function Settings() {
   const dispatch = useDispatch()
