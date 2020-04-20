@@ -1,12 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
-import { State } from '../modules/index'
-import { openMenu } from '../modules/ui'
-import { WIDTH_MOBILE } from '../lib/constants'
-import Link from './atoms/Link'
-import MenuIcon from './atoms/MobileMenuIcon'
-import MyInfo from './MyInfo'
+import { State } from '../../modules/index'
+import { openMenu } from '../../modules/ui'
+import { WIDTH_MOBILE } from '../../lib/constants'
+import Link from '../atoms/Link'
+import MenuIcon from './MobileMenuIcon'
+import MyInfo from '../MyInfo'
 
 export default function Header({ style }: { style?: any }) {
   const device = useSelector((state: State) => state.ui.device)
@@ -21,7 +21,9 @@ export default function Header({ style }: { style?: any }) {
         <div>MZM</div>
       </Link>
       <div style={{ flex: 1 }}></div>
-      <MyInfo />
+      <div className="profile">
+        <MyInfo />
+      </div>
       {device === 'mobile' && <MenuIcon onClick={onClick} />}
     </Wrap>
   )
@@ -50,5 +52,8 @@ const Wrap = styled.header`
 
   @media (max-width: ${WIDTH_MOBILE}px) {
     padding: 0 8px 0 16px;
+    > .profile {
+      display: none;
+    }
   }
 `

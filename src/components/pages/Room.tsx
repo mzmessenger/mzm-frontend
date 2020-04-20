@@ -1,20 +1,15 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
 import { State } from '../../modules/index'
 import Menu from '../molecules/Menu'
-import RoomContent from '../RoomContent'
+import RoomContent from '../molecules/RoomContent'
 import PageWrapper from '../templates/PageWrapper'
 import Settings from '../Settings'
 import UserDetail from '../UserDetail'
 
 export default function PageRoom() {
-  const [roomSetting, setRoomSetting] = useState(false)
   const settings = useSelector((state: State) => state.ui.openSettings)
   const openUserDetail = useSelector((state: State) => state.ui.openUserDetail)
-
-  const onExpandClick = () => {
-    setRoomSetting(!roomSetting)
-  }
 
   return (
     <PageWrapper>
@@ -22,7 +17,7 @@ export default function PageRoom() {
         <Settings />
       ) : (
         <>
-          <RoomContent expand={roomSetting} onExpandClick={onExpandClick} />
+          <RoomContent />
           <Menu />
         </>
       )}

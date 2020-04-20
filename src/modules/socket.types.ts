@@ -31,7 +31,7 @@ export type ReceiveMessage =
     }
   | {
       cmd: 'rooms'
-      rooms: { id: string; name: string; unread: number }[]
+      rooms: { id: string; name: string; iconUrl: string; unread: number }[]
     }
   | {
       cmd: 'messages:room'

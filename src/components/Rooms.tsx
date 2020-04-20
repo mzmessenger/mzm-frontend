@@ -28,6 +28,7 @@ const RoomContainer = ({
       <RoomElem
         name={room.name}
         unread={room.unread}
+        iconUrl={room.iconUrl}
         current={room.name === currentRoomName}
       />
     </div>
@@ -51,7 +52,4 @@ export default function Rooms() {
 const Wrap = styled.div`
   padding: 5px 0;
   cursor: pointer;
-  .link {
-    padding: 4px;
-  }
 `

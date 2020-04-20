@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { State } from '../../modules/index'
 import Body from '../atoms/Body'
-import Header from '../Header'
+import Header from '../molecules/Header'
 
 export default function PageWrapper({ children }) {
   const overlay = useSelector((state: State) => state.ui.overlay)

@@ -25,7 +25,12 @@ export const reducer = (
         device: action.payload.innerWidth <= WIDTH_MOBILE ? 'mobile' : 'pc'
       }
     case UIActions.OpenMenu:
-      return { ...state, menuStatus: 'open', overlay: true }
+      return {
+        ...state,
+        menuStatus: 'open',
+        overlay: true,
+        openSettings: false
+      }
     case UIActions.CloseMenu:
       return { ...state, menuStatus: 'close', overlay: false }
     case UIActions.InputText:
@@ -42,7 +47,7 @@ export const reducer = (
     case UIActions.ModifyText:
       return { ...state, editTxt: action.payload.txt }
     case UIActions.OpenSettings:
-      return { ...state, openSettings: true }
+      return { ...state, openSettings: true, overlay: false }
     case UIActions.CloseSettings:
       return { ...state, openSettings: false }
     case UIActions.OpenUserDetail:

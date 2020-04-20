@@ -17,7 +17,8 @@ export const initState: RoomsState = {
   rooms: { byId: {}, allIds: [] },
   currentRoomId: '',
   currentRoomName: initCurrentRoomName,
-  scrollTargetIndex: 'bottom'
+  scrollTargetIndex: 'bottom',
+  openRoomSetting: false
 }
 
 export const reducer = (
@@ -34,6 +35,7 @@ export const reducer = (
           const room: Room = {
             id: r.id,
             name: r.name,
+            iconUrl: r.iconUrl,
             unread: r.unread,
             messages: [],
             loading: false,
@@ -65,7 +67,8 @@ export const reducer = (
         ...state,
         currentRoomId: action.payload.id,
         currentRoomName: state.rooms.byId[action.payload.id].name,
-        scrollTargetIndex: 'bottom'
+        scrollTargetIndex: 'bottom',
+        openRoomSetting: false
       }
     }
     case RoomsActions.EnterRoomSuccess: {
@@ -147,6 +150,8 @@ export const reducer = (
       ]
       return { ...state }
     }
+    case RoomsActions.ToggleSetting:
+      return { ...state, openRoomSetting: !state.openRoomSetting }
     default:
       return state
   }
@@ -338,5 +343,32 @@ export const reloadMessage = (roomId: string): RoomsAction => {
   return {
     type: RoomsActions.ReloadMessages,
     payload: { room: roomId }
+  }
+}
+
+export const toggleRoomSetting = (): RoomsAction => {
+  return { type: RoomsActions.ToggleSetting }
+}
+
+export const closeRoomSetting = (): RoomsAction => {
+  return { type: RoomsActions.CloseSetting }
+}
+
+export const uploadIcon = (name: string, blob: Blob) => {
+  return async (dispatch: Dispatch<RoomsAction>) => {
+    const formData = new FormData()
+    formData.append('icon', blob)
+    const res = await fetch(`/api/icon/rooms/${name}`, {
+      method: 'POST',
+      body: formData,
+      credentials: 'include'
+    })
+
+    if (res.ok) {
+      const { id, version } = await res.json()
+      dispatch({ type: RoomsActions.SetIcon, payload: { id, version } })
+    }
+
+    return res
   }
 }

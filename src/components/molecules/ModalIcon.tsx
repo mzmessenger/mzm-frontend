@@ -1,14 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
-import { uploadIcon } from '../../modules/user'
 import Modal from '../atoms/Modal'
 import Button from '../atoms/Button'
 
 type Props = {
   image: string
   open: boolean
-  onSave: () => void
+  onSave: (image: Blob) => void
   onCancel: () => void
 }
 
@@ -66,13 +64,7 @@ const getMoveTo = (
   return { x: currentX, y: currentY }
 }
 
-export default function ModalIconCanvas({
-  image,
-  open,
-  onSave,
-  onCancel
-}: Props) {
-  const dispatch = useDispatch()
+export default function ModalIcon({ image, open, onSave, onCancel }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const sendImgRef = useRef<HTMLCanvasElement>(null)
   const imgRef = useRef<HTMLImageElement>(null)
@@ -268,17 +260,7 @@ export default function ModalIconCanvas({
   }, [drag, clipLength])
 
   const sendImage = () => {
-    sendImgRef.current.toBlob((blob) => {
-      uploadIcon(blob)(dispatch).then((res) => {
-        if (res.ok) {
-          onSave()
-        } else {
-          res.text().then((text) => {
-            alert(`アップロードにエラーが発生しました(${text})`)
-          })
-        }
-      })
-    })
+    sendImgRef.current.toBlob((blob) => onSave(blob))
   }
 
   const sizeStr =

@@ -4,9 +4,10 @@ import styled from 'styled-components'
 import Home from '@material-ui/icons/Home'
 import Person from '@material-ui/icons/Person'
 import ExpandMore from '@material-ui/icons/ExpandMore'
-import { openUserDetail } from '../modules/ui'
-import { WIDTH_MOBILE } from '../lib/constants'
-import { State } from '../modules/index'
+import { State } from '../../modules/index'
+import { openUserDetail } from '../../modules/ui'
+import { toggleRoomSetting } from '../../modules/rooms'
+import { WIDTH_MOBILE } from '../../lib/constants'
 
 const getUsers = async (roomId: string) => {
   if (!roomId) {
@@ -22,15 +23,10 @@ const getUsers = async (roomId: string) => {
   return res
 }
 
-export default function RoomInfo({
-  onExpandClick,
-  expand
-}: {
-  onExpandClick: () => void
-  expand: boolean
-}) {
+export default function RoomInfo() {
   const id = useSelector((state: State) => state.rooms.currentRoomId)
   const name = useSelector((state: State) => state.rooms.currentRoomName) || ''
+  const expand = useSelector((state: State) => state.rooms.openRoomSetting)
   const [count, setCount] = useState(0)
   const [users, setUsers] = useState([])
   const dispatch = useDispatch()
@@ -59,6 +55,10 @@ export default function RoomInfo({
   const expandClassName = ['expand-icon']
   if (expand) {
     expandClassName.push('expand')
+  }
+
+  const onExpandClick = () => {
+    dispatch(toggleRoomSetting())
   }
 
   return (

@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import Link from './atoms/Link'
-import RoomElem from './atoms/RoomElem'
 
 const recommended = ['要望室', 'test']
 
@@ -15,9 +14,7 @@ export default function TopContent() {
             <div className="rooms">
               {recommended.map((e) => (
                 <div className="room" key={e}>
-                  <Link to={`/rooms/${e}`}>
-                    <RoomElem name={e} unread={0} current={false} />
-                  </Link>
+                  <Link to={`/rooms/${e}`}>{e}</Link>
                 </div>
               ))}
             </div>
@@ -51,9 +48,15 @@ const Content = styled.div`
       .room {
         display: flex;
         align-items: center;
+        margin-top: 8px;
+        &:first-child {
+          margin-top: 0;
+        }
         a {
-          font-size: 24px;
-          line-height: 20px;
+          font-size: 20px;
+          border: solid 1px var(--color-link);
+          border-radius: 2px;
+          padding: 4px 8px;
         }
       }
     }

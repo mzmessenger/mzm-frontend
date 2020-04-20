@@ -9,9 +9,11 @@ export type Message = {
   updated: boolean
   createdAt: string
 }
+
 export type Room = {
   id: string
   name: string
+  iconUrl: string
   unread: number
   messages: string[]
   loading: boolean
@@ -22,6 +24,7 @@ export type Room = {
 export type ReceiveRoom = {
   id: string
   name: string
+  iconUrl: string
   unread: number
 }
 
@@ -33,6 +36,7 @@ export type RoomsState = {
   currentRoomId: string
   currentRoomName: string
   scrollTargetIndex: number | 'bottom'
+  openRoomSetting: boolean
 }
 
 export const RoomsActions = {
@@ -46,7 +50,10 @@ export const RoomsActions = {
   CreateRoom: 'roomAction:createRoom',
   ChangeRoom: 'roomAction:changeRoom',
   // 既読
-  AlreadyRead: 'roomAction:alreadyRead'
+  AlreadyRead: 'roomAction:alreadyRead',
+  ToggleSetting: 'roomAction:toggleSetting',
+  CloseSetting: 'roomAction:closeSetting',
+  SetIcon: 'roomAction:setIcon'
 } as const
 
 export type RoomsAction =
@@ -100,4 +107,10 @@ export type RoomsAction =
       payload: {
         room: string
       }
+    }
+  | { type: typeof RoomsActions.ToggleSetting }
+  | { type: typeof RoomsActions.CloseSetting }
+  | {
+      type: typeof RoomsActions.SetIcon
+      payload: { id: string; version: string }
     }
