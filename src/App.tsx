@@ -1,16 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { Suspense, lazy, useEffect } from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { State } from './modules/index'
 import { onResize } from './modules/ui'
 import Socket from './components/Socket'
-import Login from './components/pages/Login'
-import PageTop from './components/pages/Top'
-import PageRoom from './components/pages/Room'
-import PageSignup from './components/pages/Signup'
-import PageTos from './components/pages/Tos'
-import PagePrivacyPolicy from './components/pages/PrivacyPolicy'
-import LoginSuccess from './components/pages/LoginSuccess'
 import RouterListener from './components/RouterListener'
 
 const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
@@ -34,17 +27,30 @@ export default function App() {
     }
   }, [])
 
-  const Top = login ? PageTop : Login
-  const Room = login ? PageRoom : Login
+  const Top = login
+    ? lazy(() => import('./components/pages/Top'))
+    : lazy(() => import('./components/pages/Login'))
+  const Room = login
+    ? lazy(() => import('./components/pages/Room'))
+    : lazy(() => import('./components/pages/Login'))
+
+  const PageSignup = lazy(() => import('./components/pages/Signup'))
+  const PageTos = lazy(() => import('./components/pages/Tos'))
+  const PagePrivacyPolicy = lazy(() =>
+    import('./components/pages/PrivacyPolicy')
+  )
+  const LoginSuccess = lazy(() => import('./components/pages/LoginSuccess'))
 
   return (
     <Router>
-      <Route path="/" exact component={Top} />
-      <Route path="/rooms" component={Room} />
-      <Route path="/signup" component={PageSignup} />
-      <Route path="/tos" component={PageTos} />
-      <Route path="/privacy-policy" component={PagePrivacyPolicy} />
-      <Route path="/login/success" component={LoginSuccess} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Route path="/" exact component={Top} />
+        <Route path="/rooms" component={Room} />
+        <Route path="/signup" component={PageSignup} />
+        <Route path="/tos" component={PageTos} />
+        <Route path="/privacy-policy" component={PagePrivacyPolicy} />
+        <Route path="/login/success" component={LoginSuccess} />
+      </Suspense>
       <RouterListener />
       <Socket url={url} />
     </Router>

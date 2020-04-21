@@ -1,10 +1,9 @@
-import React from 'react'
+import React, { lazy } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import InputArea from '../InputArea'
 import Messages from '../Messages'
 import RoomInfo from './RoomInfo'
-import SettingRoom from './SettingRoom'
 import { State } from '../../modules/index'
 
 const ContentMessage = () => {
@@ -20,6 +19,7 @@ const ContentMessage = () => {
 
 export default function RoomContent() {
   const expand = useSelector((state: State) => state.rooms.openRoomSetting)
+  const SettingRoom = lazy(() => import('./SettingRoom'))
 
   return (
     <Wrap>

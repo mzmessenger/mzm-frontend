@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, lazy } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { WIDTH_MOBILE } from '../../lib/constants'
@@ -7,7 +7,6 @@ import { uploadIcon } from '../../modules/user'
 import Button from '../atoms/Button'
 import SocialAccounts from '../atoms/SocialAccounts'
 import DropImage from '../atoms/DropImage'
-import ModalIcon from './ModalIcon'
 
 export default function SettingAccount() {
   const dispatch = useDispatch()
@@ -17,6 +16,8 @@ export default function SettingAccount() {
   const [open, setOpen] = useState(false)
   const [image, setImage] = useState('')
   const [edit, setEdit] = useState(false)
+
+  const ModalIcon = lazy(() => import('./ModalIcon'))
 
   const onModalSave = useCallback((image: Blob) => {
     uploadIcon(image)(dispatch).then((res) => {
