@@ -45,6 +45,7 @@ export default function DropImage({
     const reader = new FileReader()
     reader.onload = () => {
       onloadFile(reader.result.toString())
+      fileInputRef.current.value = ''
     }
     reader.readAsDataURL(file)
   }
@@ -61,6 +62,7 @@ export default function DropImage({
     const reader = new FileReader()
     reader.onload = () => {
       onloadFile(reader.result.toString())
+      fileInputRef.current.value = ''
     }
     reader.readAsDataURL(file)
   }
