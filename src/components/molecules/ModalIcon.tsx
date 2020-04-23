@@ -19,7 +19,7 @@ const Drag = {
 } as const
 type Drag = typeof Drag[keyof typeof Drag]
 
-const MIN_LENGTH = 100
+const MIN_LENGTH = 30
 const LIMIT_LENGTH = 400
 
 const getLength = (
@@ -42,7 +42,7 @@ const getLength = (
   if (maxLength < length) {
     return maxLength
   }
-  return length
+  return Math.floor(length)
 }
 
 const getMoveTo = (
@@ -83,6 +83,7 @@ export default function ModalIcon({ image, open, onSave, onCancel }: Props) {
   const [top, setTop] = useState(0)
   const [translate, setTranslate] = useState('')
   const [maxLength, setMaxLength] = useState(0)
+  const [minLength, setMinLength] = useState(MIN_LENGTH)
   const [scale, setScale] = useState(1)
 
   const clipImage = (
@@ -136,8 +137,11 @@ export default function ModalIcon({ image, open, onSave, onCancel }: Props) {
     const _height = imgRef.current.naturalHeight
     let _scale = 1
     if (_width > LIMIT_LENGTH) {
-      _scale = LIMIT_LENGTH / _width
+      _scale = Math.floor((LIMIT_LENGTH / _width) * 100) / 100
     }
+
+    setMinLength(_width * 0.1 > MIN_LENGTH ? _width * 0.1 : MIN_LENGTH)
+
     setHeight(_height * _scale)
     setWidth(_width * _scale)
     setScale(_scale)
@@ -174,14 +178,22 @@ export default function ModalIcon({ image, open, onSave, onCancel }: Props) {
     const current = getCurrentPosition()
     if (type === Drag.UPPER_LEFT) {
       setMaxLength(
-        Math.min(clipLength + current.left, clipLength + current.top)
+        Math.floor(
+          Math.min(clipLength + current.left, clipLength + current.top)
+        )
       )
     } else if (type === Drag.UPPER_RIGHT) {
-      setMaxLength(Math.min(width - current.left, clipLength + current.top))
+      setMaxLength(
+        Math.floor(Math.min(width - current.left, clipLength + current.top))
+      )
     } else if (type === Drag.LOWER_LEFT) {
-      setMaxLength(Math.min(width + current.left, height - current.top))
+      setMaxLength(
+        Math.floor(Math.min(width + current.left, height - current.top))
+      )
     } else if (type === Drag.LOWER_RIGHT) {
-      setMaxLength(Math.min(clipLength + current.left, height - current.top))
+      setMaxLength(
+        Math.floor(Math.min(width - current.left, height - current.top))
+      )
     }
   }
 
@@ -240,10 +252,10 @@ export default function ModalIcon({ image, open, onSave, onCancel }: Props) {
         dragType,
         startClipLength,
         diff,
-        MIN_LENGTH,
+        minLength,
         maxLength
       )
-      setClipLength(length)
+      setClipLength(Math.floor(length))
 
       const moveTo = getMoveTo(dragType, left, top, startClipLength - length)
       move(moveTo.x, moveTo.y, length)
@@ -267,7 +279,7 @@ export default function ModalIcon({ image, open, onSave, onCancel }: Props) {
     size > 1000 * 1000 ? `${size / 1000 / 1000}MB` : `${size / 1000}KB`
 
   return (
-    <Modal open={open} onClose={onCancel}>
+    <Modal open={open} onClose={() => {}}>
       <Wrap className={drag ? 'drag' : ''}>
         <img
           src={image}
@@ -368,7 +380,6 @@ const Wrap = styled.div`
   }
 
   .canvas-wrap {
-    margin: 0.5em;
     position: relative;
     img {
       position: absolute;
@@ -435,6 +446,7 @@ const Wrap = styled.div`
   }
 
   .info {
+    margin-top: 0.5em;
     border-top: 1px solid var(--color-border);
     padding: 8px;
     display: grid;

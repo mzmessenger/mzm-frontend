@@ -55,9 +55,15 @@ export default function RoomSetting() {
 
   const onEdit = () => setEdit(true)
 
-  const onSave = () => setEdit(false)
+  const onSave = () => {
+    setImage('')
+    setEdit(false)
+  }
 
-  const onCancel = () => setEdit(false)
+  const onCancel = () => {
+    setImage('')
+    setEdit(false)
+  }
 
   return (
     <Wrap>
