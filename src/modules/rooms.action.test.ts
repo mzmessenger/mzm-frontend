@@ -7,6 +7,81 @@ import * as action from './rooms'
 import { RoomsActions } from './rooms.types'
 import { UIActions } from './ui.types'
 
+test('changeRoom', async () => {
+  const socket = { send: jest.fn() }
+  const dispatch = jest.fn()
+  const getState = () => ({
+    socket: {
+      socket
+    },
+    rooms: {
+      rooms: {
+        byId: {
+          '001': {
+            id: '001',
+            name: 'test',
+            messages: [],
+            loading: false,
+            receivedMessages: false,
+            existHistory: false,
+            unread: 0
+          }
+        },
+        allIds: ['001']
+      }
+    }
+  })
+
+  action.changeRoom('001')(dispatch, getState as any)
+
+  expect(dispatch.mock.calls.length).toBe(3)
+
+  expect(socket.send.mock.calls.length).toBe(1)
+  const [arg] = socket.send.mock.calls[0]
+  expect(JSON.parse(arg).cmd).toStrictEqual(SendSocketCmd.GetMessages)
+
+  const [
+    [getMessagesArg],
+    [chaneRoomArgs],
+    [menuCloseArgs]
+  ] = dispatch.mock.calls
+  expect(getMessagesArg.type).toStrictEqual(RoomsActions.GetMessages)
+  expect(chaneRoomArgs.type).toStrictEqual(RoomsActions.ChangeRoom)
+  expect(chaneRoomArgs.payload.id).toStrictEqual('001')
+
+  expect(menuCloseArgs.type).toStrictEqual(UIActions.CloseMenu)
+})
+
+test('changeRoom not enter', async () => {
+  const socket = { send: jest.fn() }
+  const dispatch = jest.fn()
+  const getState = () => ({
+    socket: {
+      socket
+    },
+    rooms: {
+      rooms: {
+        byId: {
+          '001': {
+            id: '001',
+            name: 'test',
+            messages: [],
+            loading: false,
+            receivedMessages: false,
+            existHistory: false,
+            unread: 0
+          }
+        },
+        allIds: ['001']
+      }
+    }
+  })
+
+  action.changeRoom('aaa')(dispatch, getState as any)
+
+  expect(dispatch.mock.calls.length).toBe(0)
+})
+
 test('enterRoom already entered', async () => {
   const socket = { send: jest.fn() }
   const dispatch = jest.fn()

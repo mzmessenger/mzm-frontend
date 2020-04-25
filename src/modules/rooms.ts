@@ -208,7 +208,6 @@ export const changeRoom = (roomId: string) => {
       dispatch(closeMenu())
       return
     }
-    dispatch(closeMenu())
   }
 }
 
