@@ -17,6 +17,7 @@ export const initState: RoomsState = {
   rooms: { byId: {}, allIds: [] },
   currentRoomId: '',
   currentRoomName: initCurrentRoomName,
+  currentRoomIcon: null,
   scrollTargetIndex: 'bottom',
   openRoomSetting: false
 }
@@ -52,7 +53,8 @@ export const reducer = (
       return {
         ...state,
         currentRoomId: action.payload.id,
-        currentRoomName: action.payload.name
+        currentRoomName: action.payload.name,
+        currentRoomIcon: ''
       }
     }
     case RoomsActions.GetMessages: {
@@ -67,6 +69,7 @@ export const reducer = (
         ...state,
         currentRoomId: action.payload.id,
         currentRoomName: state.rooms.byId[action.payload.id].name,
+        currentRoomIcon: state.rooms.byId[action.payload.id].iconUrl,
         scrollTargetIndex: 'bottom',
         openRoomSetting: false
       }
@@ -83,14 +86,16 @@ export const reducer = (
       return {
         ...state,
         currentRoomId: action.payload.id,
-        currentRoomName: action.payload.name
+        currentRoomName: action.payload.name,
+        currentRoomIcon: action.payload.iconUrl
       }
     }
     case RoomsActions.ExitRoom: {
       return {
         ...state,
         currentRoomId: '',
-        currentRoomName: ''
+        currentRoomName: '',
+        currentRoomIcon: ''
       }
     }
     case RoomsActions.ReceiveMessage: {
@@ -187,11 +192,9 @@ export const createRoom = (name: string) => {
   }
 }
 
-export const enterRoom = (roomName: string) => {
+export const changeRoom = (roomId: string) => {
   return async (dispatch: Dispatch, getState: () => State) => {
-    const room = Object.values(getState().rooms.rooms.byId).find(
-      (r) => r.name === roomName
-    )
+    const room = getState().rooms.rooms.byId[roomId]
     if (room) {
       if (!room.receivedMessages && !room.loading) {
         dispatch(getMessages(room.id, getState().socket.socket))
@@ -205,9 +208,21 @@ export const enterRoom = (roomName: string) => {
       dispatch(closeMenu())
       return
     }
+    dispatch(closeMenu())
+  }
+}
+
+export const enterRoom = (roomName: string) => {
+  return async (dispatch: Dispatch, getState: () => State) => {
+    const room = Object.values(getState().rooms.rooms.byId).find(
+      (r) => r.name === roomName
+    )
+    if (room) {
+      changeRoom(room.id)(dispatch, getState)
+    }
     sendSocket(getState().socket.socket, {
       cmd: SendSocketCmd.EnterRoom,
-      name: roomName
+      name: encodeURIComponent(roomName)
     })
     dispatch(closeMenu())
   }
@@ -291,7 +306,7 @@ export const receiveMessages = ({
   }
 }
 
-export const enterSuccess = (id: string, name: string) => {
+export const enterSuccess = (id: string, name: string, iconUrl: string) => {
   return async (dispatch: Dispatch<RoomsAction>, getState: () => State) => {
     const room = getState().rooms.rooms.byId[id]
     // すでに入っている部屋だったら部屋の再取得をしない
@@ -305,7 +320,7 @@ export const enterSuccess = (id: string, name: string) => {
     }
     dispatch({
       type: RoomsActions.EnterRoomSuccess,
-      payload: { id: id, name: name, loading }
+      payload: { id: id, name: name, iconUrl, loading }
     })
   }
 }

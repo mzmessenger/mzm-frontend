@@ -27,10 +27,8 @@ export default function RouterListener() {
     }
 
     if (login && room) {
-      enterRoom(history.location.pathname.split('/')[2])(
-        dispatch,
-        store.getState
-      )
+      console.log(room)
+      enterRoom(room)(dispatch, store.getState)
     }
 
     if (room) {

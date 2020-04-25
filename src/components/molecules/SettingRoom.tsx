@@ -17,12 +17,13 @@ const IconImage = ({ iconUrl }: { iconUrl: string }) => {
 export default function RoomSetting() {
   const dispatch = useDispatch()
   const id = useSelector((state: State) => state.rooms.currentRoomId)
-  const name = useSelector((state: State) => state.rooms.currentRoomName) || ''
+  const _name = useSelector((state: State) => state.rooms.currentRoomName)
   const byId = useSelector((state: State) => state.rooms.rooms.byId)
   const [image, setImage] = useState('')
   const [open, setOpen] = useState(false)
   const [edit, setEdit] = useState(false)
 
+  const name = _name || ''
   const iconUrl = byId[id]?.iconUrl
 
   const onClick = () => {
@@ -69,11 +70,23 @@ export default function RoomSetting() {
     <Wrap>
       <div className="inner">
         <h2>部屋設定</h2>
-        <div className="room-info">
+        <div className="room-wrap">
           <div className="room-body">
             <div className="room-icon">
               {edit && <DropImage onloadFile={onloadFile} />}
               {!edit && <IconImage iconUrl={iconUrl} />}
+            </div>
+            <div className="room-info">
+              <ul>
+                <li>
+                  <h4>ID</h4>
+                  <span>{id}</span>
+                </li>
+                <li>
+                  <h4>部屋名</h4>
+                  <span>{name}</span>
+                </li>
+              </ul>
             </div>
             <div className="button">
               {edit && (
@@ -123,7 +136,7 @@ const Wrap = styled.div`
     padding: 8px 16px;
   }
 
-  .room-info {
+  .room-wrap {
     padding: 32px 0 32px;
     border-top: 1px solid var(--color-border);
   }
@@ -133,8 +146,6 @@ const Wrap = styled.div`
   }
 
   .room-icon {
-    flex: 1;
-
     .drop,
     > svg,
     img {
@@ -147,6 +158,21 @@ const Wrap = styled.div`
     img {
       border: 1px solid var(--color-border);
       border-radius: 4px;
+    }
+  }
+
+  .room-info {
+    flex: 1;
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      > li {
+        padding: 1em 1em 0;
+      }
+    }
+    span {
+      font-size: 16px;
     }
   }
 
