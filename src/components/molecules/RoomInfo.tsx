@@ -23,13 +23,20 @@ const getUsers = async (roomId: string) => {
   return res
 }
 
+const RoomIcon = ({ iconUrl }: { iconUrl: string }) => {
+  return iconUrl ? <img src={iconUrl} /> : <Home fontSize="small" />
+}
+
 export default function RoomInfo() {
   const id = useSelector((state: State) => state.rooms.currentRoomId)
-  const name = useSelector((state: State) => state.rooms.currentRoomName) || ''
+  const _name = useSelector((state: State) => state.rooms.currentRoomName)
+  const iconUrl = useSelector((state: State) => state.rooms.currentRoomIcon)
   const expand = useSelector((state: State) => state.rooms.openRoomSetting)
   const [count, setCount] = useState(0)
   const [users, setUsers] = useState([])
   const dispatch = useDispatch()
+
+  const name = _name || ''
 
   useEffect(() => {
     if (id) {
@@ -63,10 +70,10 @@ export default function RoomInfo() {
 
   return (
     <Wrap>
-      <Home className="icon" fontSize="small" />
-      <span style={{ flex: 1 }} className="room-name">
-        {name}
-      </span>
+      <div className="room-icon">
+        <RoomIcon iconUrl={iconUrl} />
+      </div>
+      <span className="room-name">{name}</span>
       <div className="room-users">
         <Person />
         <div className="count">{count}</div>
@@ -121,12 +128,22 @@ const Wrap = styled.div`
     &.expand {
       transform: rotate(180deg);
     }
+
+    .icon {
+      cursor: pointer;
+      color: var(--color-on-guide);
+      margin: 0 8px 0;
+    }
   }
 
-  .icon {
+  .room-icon {
     cursor: pointer;
     color: var(--color-on-guide);
     margin: 0 8px 0;
+    img {
+      width: 20px;
+      height: 20px;
+    }
   }
 
   @media (max-width: ${WIDTH_MOBILE}px) {

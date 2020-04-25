@@ -3,7 +3,7 @@ import { escape } from 'validator'
 import { expose } from 'comlink'
 
 // bundle size
-import highlight from 'highlight.js/lib/highlight'
+import highlight from 'highlight.js/lib/core'
 import shell from 'highlight.js/lib/languages/shell'
 import javascript from 'highlight.js/lib/languages/javascript'
 import css from 'highlight.js/lib/languages/css'

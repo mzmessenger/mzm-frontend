@@ -43,6 +43,7 @@ export type ReceiveMessage =
       cmd: 'rooms:enter:success'
       id: string
       name: string
+      iconUrl: string
     }
   | {
       cmd: 'message:modify'

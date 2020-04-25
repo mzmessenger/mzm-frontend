@@ -82,7 +82,7 @@ const onMessage = async (
       if (history.location.pathname !== parsed.name) {
         history.push(`/rooms/${parsed.name}`)
       }
-      enterSuccess(parsed.id, parsed.name)(dispatch, getState)
+      enterSuccess(parsed.id, parsed.name, parsed.iconUrl)(dispatch, getState)
     } else if (parsed.cmd === 'rooms:read') {
       dispatch(alreadyRead(parsed.room))
     } else if (parsed.cmd === 'message:iine') {

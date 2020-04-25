@@ -3,23 +3,24 @@ import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { State, store } from '../modules/index'
-import { readMessages } from '../modules/rooms'
+import { readMessages, changeRoom } from '../modules/rooms'
+import { Room } from '../modules/rooms.types'
 import RoomElem from './atoms/RoomElem'
 
 const RoomContainer = ({
-  id,
-  currentRoomName
+  room,
+  currentRoomId
 }: {
-  id: string
-  currentRoomName: string
+  room: Room
+  currentRoomId: string
 }) => {
   const history = useHistory()
   const dispatch = useDispatch()
-  const room = useSelector((state: State) => state.rooms.rooms.byId[id])
 
   const onClick = (e: React.MouseEvent) => {
     e.preventDefault()
     history.push(`/rooms/${room.name}`)
+    changeRoom(room.id)(dispatch, store.getState)
     readMessages(room.id)(dispatch, store.getState)
   }
 
@@ -29,7 +30,7 @@ const RoomContainer = ({
         name={room.name}
         unread={room.unread}
         iconUrl={room.iconUrl}
-        current={room.name === currentRoomName}
+        current={room.id === currentRoomId}
       />
     </div>
   )
@@ -37,14 +38,13 @@ const RoomContainer = ({
 
 export default function Rooms() {
   const roomIds = useSelector((state: State) => state.rooms.rooms.allIds)
-  const currentRoomName = useSelector(
-    (state: State) => state.rooms.currentRoomName
-  )
+  const currentRoomId = useSelector((state: State) => state.rooms.currentRoomId)
+  const rooms = useSelector((state: State) => state.rooms.rooms.byId)
 
   return (
     <Wrap style={{ padding: '5px 0' }}>
       {roomIds.map((r) => (
-        <RoomContainer key={r} id={r} currentRoomName={currentRoomName} />
+        <RoomContainer key={r} room={rooms[r]} currentRoomId={currentRoomId} />
       ))}
     </Wrap>
   )

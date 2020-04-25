@@ -35,6 +35,7 @@ export type RoomsState = {
   }
   currentRoomId: string
   currentRoomName: string
+  currentRoomIcon: string
   scrollTargetIndex: number | 'bottom'
   openRoomSetting: boolean
 }
@@ -67,7 +68,7 @@ export type RoomsAction =
     }
   | {
       type: typeof RoomsActions.EnterRoomSuccess
-      payload: { id: string; name: string; loading: boolean }
+      payload: { id: string; name: string; iconUrl: string; loading: boolean }
     }
   | {
       type: typeof RoomsActions.ExitRoom

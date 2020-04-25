@@ -74,7 +74,7 @@ module.exports = {
     ]),
     new workboxPlugin.GenerateSW({
       offlineGoogleAnalytics: true,
-      exclude: [/^manifest.json$/],
+      exclude: [/^manifest.json$/, /\.(?:js|css)$/],
       swDest: 'sw.js',
       cacheId: 'mzm',
       clientsClaim: true,
