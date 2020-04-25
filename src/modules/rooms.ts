@@ -219,6 +219,7 @@ export const enterRoom = (roomName: string) => {
     )
     if (room) {
       changeRoom(room.id)(dispatch, getState)
+      return
     }
     sendSocket(getState().socket.socket, {
       cmd: SendSocketCmd.EnterRoom,

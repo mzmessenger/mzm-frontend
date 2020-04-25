@@ -27,7 +27,6 @@ export default function RouterListener() {
     }
 
     if (login && room) {
-      console.log(room)
       enterRoom(room)(dispatch, store.getState)
     }
 
