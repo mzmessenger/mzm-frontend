@@ -6,43 +6,48 @@ export const sendSocket = (socket: WebSocket, message: SendSocketMessage) => {
 }
 
 export const SendSocketCmd = {
-  SendMessage: 'message:send',
-  GetMessages: 'messages:room',
-  GetRooms: 'rooms:get',
-  EnterRoom: 'rooms:enter',
-  ModifyMessage: 'message:modify',
-  SendAlreadyRead: 'rooms:read',
-  IncrementIine: 'message:iine'
+  ROOMS_GET: 'rooms:get',
+  ROOMS_ENTER: 'rooms:enter',
+  ROOMS_READ: 'rooms:read',
+  ROOMS_SORT: 'rooms:sort',
+  MESSAGE_SEND: 'message:send',
+  MESSAGE_IINE: 'message:iine',
+  MESSAGE_MODIFY: 'message:modify',
+  MESSAGES_ROOM: 'messages:room'
 } as const
 
 export type SendSocketMessage =
   | {
-      cmd: typeof SendSocketCmd.SendMessage
-      message: string
-      room: string
+      cmd: typeof SendSocketCmd.ROOMS_GET
     }
   | {
-      cmd: typeof SendSocketCmd.GetMessages
-      room: string
-      id?: string
-    }
-  | {
-      cmd: typeof SendSocketCmd.GetRooms
-    }
-  | {
-      cmd: typeof SendSocketCmd.EnterRoom
+      cmd: typeof SendSocketCmd.ROOMS_ENTER
       name: string
     }
   | {
-      cmd: typeof SendSocketCmd.ModifyMessage
+      cmd: typeof SendSocketCmd.ROOMS_READ
+      room: string
+    }
+  | {
+      cmd: typeof SendSocketCmd.ROOMS_SORT
+      roomOrder: string[]
+    }
+  | {
+      cmd: typeof SendSocketCmd.MESSAGE_SEND
+      message: string
+      room: string
+    }
+  | {
+      cmd: typeof SendSocketCmd.MESSAGE_IINE
+      id: string
+    }
+  | {
+      cmd: typeof SendSocketCmd.MESSAGE_MODIFY
       id: string
       message: string
     }
   | {
-      cmd: typeof SendSocketCmd.SendAlreadyRead
+      cmd: typeof SendSocketCmd.MESSAGES_ROOM
       room: string
-    }
-  | {
-      cmd: typeof SendSocketCmd.IncrementIine
-      id: string
+      id?: string
     }
