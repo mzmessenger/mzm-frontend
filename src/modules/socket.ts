@@ -14,7 +14,8 @@ import {
   receiveMessages,
   enterSuccess,
   alreadyRead,
-  reloadMessage
+  reloadMessage,
+  setRoomOrder
 } from '../modules/rooms'
 import {
   addMessages,
@@ -57,10 +58,11 @@ const onMessage = async (
   try {
     const parsed: ReceiveMessage = JSON.parse(e.data)
     if (parsed.cmd === 'rooms') {
-      receiveRooms(parsed.rooms, getState().rooms.currentRoomId)(
-        dispatch,
-        getState
-      )
+      receiveRooms(
+        parsed.rooms,
+        parsed.roomOrder,
+        getState().rooms.currentRoomId
+      )(dispatch, getState)
     } else if (parsed.cmd === 'message:receive') {
       addMessage(parsed.message)(dispatch).then(() => {
         receiveMessage(parsed.message.id, parsed.room)(dispatch, getState)
@@ -88,6 +90,8 @@ const onMessage = async (
     } else if (parsed.cmd === 'message:iine') {
       dispatch(updateIine(parsed.id, parsed.iine))
       dispatch(reloadMessage(parsed.room))
+    } else if (parsed.cmd === 'rooms:sort:success') {
+      setRoomOrder(parsed.roomOrder)(dispatch, getState)
     }
   } catch (e) {
     console.error(e)

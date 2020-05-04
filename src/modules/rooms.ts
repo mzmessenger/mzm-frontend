@@ -29,8 +29,9 @@ export const reducer = (
 ): RoomsState => {
   switch (action.type) {
     case RoomsActions.SetRooms: {
+      const { rooms, roomOrder } = action.payload
       const allIds = []
-      for (const r of action.payload.rooms) {
+      for (const r of rooms) {
         if (!allIds.includes(r.id)) {
           allIds.push(r.id)
 
@@ -47,15 +48,14 @@ export const reducer = (
           state.rooms.byId[r.id] = room
         }
       }
+      allIds.sort((a, b) => roomOrder.indexOf(a) - roomOrder.indexOf(b))
       state.rooms.allIds = allIds
-      return { ...state }
-    }
-    case RoomsActions.SetRoomIds: {
-      state.rooms.allIds = [...action.payload.allIds]
+      state.rooms.order = roomOrder
       return { ...state }
     }
     case RoomsActions.SetRoomOrder: {
       state.rooms.order = [...action.payload.roomOrder]
+      state.rooms.allIds = [...action.payload.allIds]
       return { ...state }
     }
     case RoomsActions.CreateRoom: {
@@ -264,51 +264,50 @@ export const getHistory = (id: string, roomId: string, socket: WebSocket) => {
   sendSocket(socket, message)
 }
 
-const sendSortRoom = (roomOrder: string[]) => {
-  return async (dispatch: Dispatch<RoomsAction>, getState: () => State) => {
-    const { allIds } = getState().rooms.rooms
-    if (
-      allIds.length !== 0 &&
-      JSON.stringify(allIds) !== JSON.stringify(roomOrder)
-    ) {
-      const back = [...allIds]
-      for (const e of roomOrder) {
-        if (back.includes(e)) {
-          delete back[back.indexOf(e)]
-        }
-      }
-      const newOrder = [...roomOrder, ...back.filter((e) => !!e)]
-      dispatch({
-        type: RoomsActions.SetRoomIds,
-        payload: { allIds: newOrder }
-      })
-      sortRoom(newOrder)(dispatch, getState)
-    }
-  }
-}
-
-export const receiveRooms = (rooms: ReceiveRoom[], currentRoomId: string) => {
+export const receiveRooms = (
+  rooms: ReceiveRoom[],
+  roomOrder: string[],
+  currentRoomId: string
+) => {
   return async (dispatch: Dispatch<RoomsAction>, getState: () => State) => {
     if (currentRoomId) {
       dispatch(getMessages(currentRoomId, getState().socket.socket))
     }
+
     dispatch({
       type: RoomsActions.SetRooms,
       payload: {
-        rooms: rooms
+        rooms: rooms,
+        roomOrder: roomOrder
       }
     })
-    sendSortRoom(getState().rooms.rooms.order)(dispatch, getState)
   }
+}
+
+const sortRoomIds = (roomIds: string[], roomOrder: string[]) => {
+  return [...roomIds].sort(
+    (a, b) => roomOrder.indexOf(a) - roomOrder.indexOf(b)
+  )
 }
 
 export const setRoomOrder = (roomOrder: string[]) => {
   return async (dispatch: Dispatch<RoomsAction>, getState: () => State) => {
+    const newOrder = sortRoomIds(getState().rooms.rooms.allIds, roomOrder)
     dispatch({
       type: RoomsActions.SetRoomOrder,
-      payload: { roomOrder }
+      payload: { roomOrder, allIds: newOrder }
     })
-    sendSortRoom(roomOrder)(dispatch, getState)
+  }
+}
+
+export const changeRoomOrder = (roomOrder: string[]) => {
+  return async (dispatch: Dispatch<RoomsAction>, getState: () => State) => {
+    const newOrder = sortRoomIds(getState().rooms.rooms.allIds, roomOrder)
+    dispatch({
+      type: RoomsActions.SetRoomOrder,
+      payload: { roomOrder, allIds: newOrder }
+    })
+    sortRoom(newOrder)(dispatch, getState)
   }
 }
 
