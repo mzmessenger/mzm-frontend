@@ -38,7 +38,7 @@ test('changeRoom', async () => {
 
   expect(socket.send.mock.calls.length).toBe(1)
   const [arg] = socket.send.mock.calls[0]
-  expect(JSON.parse(arg).cmd).toStrictEqual(SendSocketCmd.GetMessages)
+  expect(JSON.parse(arg).cmd).toStrictEqual(SendSocketCmd.MESSAGES_ROOM)
 
   const [
     [getMessagesArg],
@@ -113,7 +113,7 @@ test('enterRoom already entered', async () => {
 
   expect(socket.send.mock.calls.length).toBe(1)
   const [arg] = socket.send.mock.calls[0]
-  expect(JSON.parse(arg).cmd).toStrictEqual(SendSocketCmd.GetMessages)
+  expect(JSON.parse(arg).cmd).toStrictEqual(SendSocketCmd.MESSAGES_ROOM)
 
   const [
     [getMessagesArg],
@@ -149,7 +149,7 @@ test('enterRoom does not enter', async () => {
   const [arg] = socket.send.mock.calls[0]
   expect(arg).toBe(
     JSON.stringify({
-      cmd: SendSocketCmd.EnterRoom,
+      cmd: SendSocketCmd.ROOMS_ENTER,
       name: 'test'
     })
   )
@@ -186,5 +186,5 @@ test('receiveMessage', async () => {
   // 同じ部屋なら既読処理が呼ばれる
   expect(socket.send.mock.calls.length).toBe(1)
   const [arg] = socket.send.mock.calls[0]
-  expect(JSON.parse(arg).cmd).toStrictEqual(SendSocketCmd.SendAlreadyRead)
+  expect(JSON.parse(arg).cmd).toStrictEqual(SendSocketCmd.ROOMS_READ)
 })

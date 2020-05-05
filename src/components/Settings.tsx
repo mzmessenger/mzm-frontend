@@ -4,9 +4,9 @@ import styled from 'styled-components'
 import CancelIcon from '@material-ui/icons/Cancel'
 import { WIDTH_MOBILE } from '../lib/constants'
 import { closeSettings } from '../modules/ui'
-import SettingAccount from './molecules/SettingUser'
+import SettingAccount from './SettingUser'
 
-export default function Settings() {
+const Settings = () => {
   const dispatch = useDispatch()
   const onClose = () => {
     dispatch(closeSettings())
@@ -38,6 +38,7 @@ export default function Settings() {
     </Wrap>
   )
 }
+export default Settings
 
 const Wrap = styled.div`
   flex: 1;

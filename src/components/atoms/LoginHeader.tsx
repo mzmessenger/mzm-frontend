@@ -2,13 +2,14 @@ import React from 'react'
 import styled from 'styled-components'
 import Link from './Link'
 
-export default function Login() {
+const LoginHeader = () => {
   return (
     <Header>
       <Link to="/">MZM (β)</Link>
     </Header>
   )
 }
+export default LoginHeader
 
 const Header = styled.header`
   width: 100vw;

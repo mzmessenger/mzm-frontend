@@ -4,11 +4,11 @@ import dayjs from 'dayjs'
 import styled from 'styled-components'
 import CreateIcon from '@material-ui/icons/Create'
 import ThumbUpIcon from '@material-ui/icons/ThumbUp'
-import { sanitize } from '../../lib/sanitize'
-import { State, store } from '../../modules/index'
-import { startToEdit } from '../../modules/ui'
-import { incrementIine } from '../../modules/socket'
-import MessageBody from '../atoms/MessageBody'
+import { sanitize } from '../lib/sanitize'
+import { State, store } from '../modules/index'
+import { startToEdit } from '../modules/ui'
+import { incrementIine } from '../modules/socket'
+import MessageBody from './atoms/MessageBody'
 
 type Props = {
   message: string
@@ -86,7 +86,7 @@ const PresentationalMessage = ({
   )
 }
 
-const ContainerMessage = ({ id }: { id: string }) => {
+const Message = ({ id }: { id: string }) => {
   const myAccount = useSelector((state: State) => state.user.me.account)
   const messageObj = useSelector(
     (state: State) => state.messages.messages.byId[id]
@@ -126,10 +126,7 @@ const ContainerMessage = ({ id }: { id: string }) => {
     />
   )
 }
-
-export default function Message({ id }: { id: string }) {
-  return <ContainerMessage id={id} />
-}
+export default Message
 
 const MessageWrap = styled.div`
   --icon-size: 32px;

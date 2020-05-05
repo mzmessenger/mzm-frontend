@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from 'react'
 import styled from 'styled-components'
 
-export default function Signup({
+const InputText = ({
   value,
   onChange,
   error,
@@ -11,13 +11,14 @@ export default function Signup({
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
   error?: boolean
   style?: any
-}) {
+}) => {
   return (
     <Wrap style={style} className={error ? 'error' : ''}>
       <input type="text" value={value} onChange={onChange} />
     </Wrap>
   )
 }
+export default InputText
 
 const Wrap = styled.div`
   display: flex;

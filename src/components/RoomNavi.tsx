@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Add from '@material-ui/icons/Add'
 import CreateRoom from './ModalCreateRoom'
 
-export default function RoomNavi() {
+const RoomNavi = () => {
   const [modal, setModal] = useState(false)
 
   const onClose = useCallback(() => {
@@ -20,6 +20,7 @@ export default function RoomNavi() {
     </Wrap>
   )
 }
+export default RoomNavi
 
 const Wrap = styled.div`
   display: flex;

@@ -32,6 +32,7 @@ export type RoomsState = {
   rooms: {
     byId: { [key: string]: Room }
     allIds: string[]
+    order: string[]
   }
   currentRoomId: string
   currentRoomName: string
@@ -41,7 +42,8 @@ export type RoomsState = {
 }
 
 export const RoomsActions = {
-  ReceiveRooms: 'roomAction:receive',
+  SetRooms: 'roomAction:setRooms',
+  SetRoomOrder: 'roomAction:setRoomOrder',
   ReceiveMessage: 'roomAction:receiveMessage',
   ReceiveMessages: 'roomAction:receiveMessages',
   ReloadMessages: 'roomAction:reloadMessages',
@@ -59,8 +61,8 @@ export const RoomsActions = {
 
 export type RoomsAction =
   | {
-      type: typeof RoomsActions.ReceiveRooms
-      payload: { rooms: ReceiveRoom[] }
+      type: typeof RoomsActions.SetRooms
+      payload: { rooms: ReceiveRoom[]; roomOrder: string[] }
     }
   | {
       type: typeof RoomsActions.ReceiveMessage
@@ -114,4 +116,8 @@ export type RoomsAction =
   | {
       type: typeof RoomsActions.SetIcon
       payload: { id: string; version: string }
+    }
+  | {
+      type: typeof RoomsActions.SetRoomOrder
+      payload: { roomOrder: string[]; allIds: string[] }
     }

@@ -11,7 +11,7 @@ import Button from '../atoms/Button'
 const ERROR_TXT =
   '入力された値が半角英数字以外か、すでに存在するアカウントです。'
 
-export default function Signup() {
+const Signup = () => {
   const history = useHistory()
   const signupAccount = useSelector((state: State) => state.user.signupAccount)
   if (!signupAccount) {
@@ -91,6 +91,7 @@ export default function Signup() {
     </Wrapper>
   )
 }
+export default Signup
 
 const Wrapper = styled.div`
   display: flex;

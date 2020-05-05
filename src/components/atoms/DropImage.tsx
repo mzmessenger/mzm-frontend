@@ -2,11 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import ImageIcon from '@material-ui/icons/Image'
 
-export default function DropImage({
-  onloadFile
-}: {
-  onloadFile: (file: string) => void
-}) {
+const DropImage = ({ onloadFile }: { onloadFile: (file: string) => void }) => {
   const fileInputRef = useRef(null)
 
   // ターゲット以外の場所にdropしてしまった時にブラウザで画像を開かないように
@@ -86,6 +82,7 @@ export default function DropImage({
     </Wrap>
   )
 }
+export default DropImage
 
 const Wrap = styled.div`
   border: dashed 2px var(--color-border);

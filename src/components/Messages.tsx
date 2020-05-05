@@ -2,10 +2,10 @@ import React, { useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { State } from '../modules/index'
-import Message from './molecules/Message'
+import Message from './Message'
 import GetHistoryButton from './ButtonGetHistory'
 
-export default function Messages({ className }) {
+const Messages = ({ className }) => {
   const currentRoomId = useSelector((state: State) => state.rooms.currentRoomId)
   const currentRoom = useSelector(
     (state: State) => state.rooms.rooms.byId[currentRoomId]
@@ -51,6 +51,7 @@ export default function Messages({ className }) {
     </Wrap>
   )
 }
+export default Messages
 
 const Wrap = styled.div`
   .message {

@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux'
 import { sendSocket, SendSocketMessage, SendSocketCmd } from '../lib/util'
 import { State } from './index'
+import { sortRoom } from './socket'
 import {
   RoomsActions,
   RoomsAction,
@@ -14,7 +15,7 @@ const splited = location.pathname.split('/')
 const initCurrentRoomName = splited[1] === 'rooms' ? splited[2] : ''
 
 export const initState: RoomsState = {
-  rooms: { byId: {}, allIds: [] },
+  rooms: { byId: {}, allIds: [], order: [] },
   currentRoomId: '',
   currentRoomName: initCurrentRoomName,
   currentRoomIcon: null,
@@ -27,9 +28,10 @@ export const reducer = (
   action: RoomsAction
 ): RoomsState => {
   switch (action.type) {
-    case RoomsActions.ReceiveRooms: {
+    case RoomsActions.SetRooms: {
+      const { rooms, roomOrder } = action.payload
       const allIds = []
-      for (const r of action.payload.rooms) {
+      for (const r of rooms) {
         if (!allIds.includes(r.id)) {
           allIds.push(r.id)
 
@@ -46,7 +48,14 @@ export const reducer = (
           state.rooms.byId[r.id] = room
         }
       }
+      allIds.sort((a, b) => roomOrder.indexOf(a) - roomOrder.indexOf(b))
       state.rooms.allIds = allIds
+      state.rooms.order = roomOrder
+      return { ...state }
+    }
+    case RoomsActions.SetRoomOrder: {
+      state.rooms.order = [...action.payload.roomOrder]
+      state.rooms.allIds = [...action.payload.allIds]
       return { ...state }
     }
     case RoomsActions.CreateRoom: {
@@ -164,7 +173,7 @@ export const reducer = (
 
 export const getMessages = (roomId: string, socket: WebSocket): RoomsAction => {
   sendSocket(socket, {
-    cmd: SendSocketCmd.GetMessages,
+    cmd: SendSocketCmd.MESSAGES_ROOM,
     room: roomId
   })
   return { type: RoomsActions.GetMessages, payload: { id: roomId } }
@@ -182,7 +191,7 @@ export const createRoom = (name: string) => {
     })
     if (res.status === 200) {
       const room: { id: string; name: string } = await res.json()
-      sendSocket(getState().socket.socket, { cmd: SendSocketCmd.GetRooms })
+      sendSocket(getState().socket.socket, { cmd: SendSocketCmd.ROOMS_GET })
       dispatch({
         type: RoomsActions.CreateRoom,
         payload: { id: room.id, name: room.name }
@@ -221,7 +230,7 @@ export const enterRoom = (roomName: string) => {
       return
     }
     sendSocket(getState().socket.socket, {
-      cmd: SendSocketCmd.EnterRoom,
+      cmd: SendSocketCmd.ROOMS_ENTER,
       name: encodeURIComponent(roomName)
     })
     dispatch(closeMenu())
@@ -239,7 +248,7 @@ export const exitRoom = (roomId: string) => {
       body: JSON.stringify({ room: roomId })
     })
     if (res.status === 200) {
-      sendSocket(getState().socket.socket, { cmd: SendSocketCmd.GetRooms })
+      sendSocket(getState().socket.socket, { cmd: SendSocketCmd.ROOMS_GET })
       dispatch({ type: RoomsActions.ExitRoom })
     }
     return res
@@ -248,24 +257,57 @@ export const exitRoom = (roomId: string) => {
 
 export const getHistory = (id: string, roomId: string, socket: WebSocket) => {
   const message: SendSocketMessage = {
-    cmd: SendSocketCmd.GetMessages,
+    cmd: SendSocketCmd.MESSAGES_ROOM,
     room: roomId,
     id: id
   }
   sendSocket(socket, message)
 }
 
-export const receiveRooms = (rooms: ReceiveRoom[], currentRoomId: string) => {
+export const receiveRooms = (
+  rooms: ReceiveRoom[],
+  roomOrder: string[],
+  currentRoomId: string
+) => {
   return async (dispatch: Dispatch<RoomsAction>, getState: () => State) => {
     if (currentRoomId) {
       dispatch(getMessages(currentRoomId, getState().socket.socket))
     }
+
     dispatch({
-      type: RoomsActions.ReceiveRooms,
+      type: RoomsActions.SetRooms,
       payload: {
-        rooms: rooms
+        rooms: rooms,
+        roomOrder: roomOrder
       }
     })
+  }
+}
+
+const sortRoomIds = (roomIds: string[], roomOrder: string[]) => {
+  return [...roomIds].sort(
+    (a, b) => roomOrder.indexOf(a) - roomOrder.indexOf(b)
+  )
+}
+
+export const setRoomOrder = (roomOrder: string[]) => {
+  return async (dispatch: Dispatch<RoomsAction>, getState: () => State) => {
+    const newOrder = sortRoomIds(getState().rooms.rooms.allIds, roomOrder)
+    dispatch({
+      type: RoomsActions.SetRoomOrder,
+      payload: { roomOrder, allIds: newOrder }
+    })
+  }
+}
+
+export const changeRoomOrder = (roomOrder: string[]) => {
+  return async (dispatch: Dispatch<RoomsAction>, getState: () => State) => {
+    const newOrder = sortRoomIds(getState().rooms.rooms.allIds, roomOrder)
+    dispatch({
+      type: RoomsActions.SetRoomOrder,
+      payload: { roomOrder, allIds: newOrder }
+    })
+    sortRoom(newOrder)(dispatch, getState)
   }
 }
 
@@ -311,7 +353,7 @@ export const enterSuccess = (id: string, name: string, iconUrl: string) => {
     const room = getState().rooms.rooms.byId[id]
     // すでに入っている部屋だったら部屋の再取得をしない
     if (!room) {
-      sendSocket(getState().socket.socket, { cmd: SendSocketCmd.GetRooms })
+      sendSocket(getState().socket.socket, { cmd: SendSocketCmd.ROOMS_GET })
     }
     let loading = false
     if (room && !room.receivedMessages && !loading) {
@@ -344,7 +386,7 @@ export const getUsers = (roomId: string) => {
 export const readMessages = (roomId: string) => {
   return async (_dispatch: Dispatch<RoomsAction>, getState: () => State) => {
     sendSocket(getState().socket.socket, {
-      cmd: SendSocketCmd.SendAlreadyRead,
+      cmd: SendSocketCmd.ROOMS_READ,
       room: roomId
     })
   }

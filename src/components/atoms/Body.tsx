@@ -4,13 +4,13 @@ import styled from 'styled-components'
 import { State } from '../../modules/index'
 import { WIDTH_MOBILE } from '../../lib/constants'
 
-export default function Body({
+const Body = ({
   children,
   className
 }: {
-  children?: any
+  children?: React.ReactNode
   className?: string
-}) {
+}) => {
   const menuStatus = useSelector((state: State) => state.ui.menuStatus)
   const classNames = menuStatus === 'open' ? ['open'] : ['']
   if (className) {
@@ -19,6 +19,7 @@ export default function Body({
 
   return <Wrap className={classNames.join(' ')}>{children}</Wrap>
 }
+export default Body
 
 const Wrap = styled.div`
   width: 100%;

@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Header from '../atoms/LoginHeader'
 
-export default function Tos() {
+const Tos = () => {
   return (
     <Wrap>
       <Header />
@@ -191,6 +191,7 @@ export default function Tos() {
     </Wrap>
   )
 }
+export default Tos
 
 const Wrap = styled.div`
   display: flex;

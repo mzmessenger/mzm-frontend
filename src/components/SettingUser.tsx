@@ -1,11 +1,11 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
-import { removeUser } from '../../modules/user'
-import Button from '../atoms/Button'
+import { removeUser } from '../modules/user'
+import Button from './atoms/Button'
 import SettingAccount from './SettingAccount'
 
-export default function SettingUser() {
+const SettingUser = () => {
   const dispatch = useDispatch()
 
   const onDelete = () => {
@@ -23,6 +23,7 @@ export default function SettingUser() {
     </Wrap>
   )
 }
+export default SettingUser
 
 const Wrap = styled.div`
   .delete {

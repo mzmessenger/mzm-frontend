@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import LinkOffIcon from '@material-ui/icons/LinkOff'
 import TwitterIcon from '@material-ui/icons/Twitter'
 import GitHubIcon from '@material-ui/icons/GitHub'
-import { WIDTH_MOBILE } from '../../lib/constants'
-import { store } from '../../modules/index'
-import { removeTwitter, removeGithub } from '../../modules/user'
-import { State } from '../../modules/index'
+import { WIDTH_MOBILE } from '../lib/constants'
+import { store } from '../modules/index'
+import { removeTwitter, removeGithub } from '../modules/user'
+import { State } from '../modules/index'
 
-export default function ShowAccount() {
+const ShowAccount = () => {
   const dispatch = useDispatch()
   const twitter = useSelector((state: State) => state.user.me.twitterUserName)
   const github = useSelector((state: State) => state.user.me.githubUserName)
@@ -71,6 +71,7 @@ export default function ShowAccount() {
     </Wrap>
   )
 }
+export default ShowAccount
 
 const Wrap = styled.div`
   .accounts {

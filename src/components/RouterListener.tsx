@@ -5,7 +5,7 @@ import { State, store } from '../modules/index'
 import { getMyInfo } from '../modules/user'
 import { enterRoom } from '../modules/rooms'
 
-export default function RouterListener() {
+const RouterListener = () => {
   const history = useHistory()
   const currentRoomName = useSelector(
     (state: State) => state.rooms.currentRoomName
@@ -45,3 +45,4 @@ export default function RouterListener() {
 
   return <></>
 }
+export default RouterListener

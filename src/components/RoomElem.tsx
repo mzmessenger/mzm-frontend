@@ -7,9 +7,10 @@ type Props = {
   iconUrl: string
   unread: number
   current: boolean
+  onClick: (e: React.MouseEvent) => void
 }
 
-export default function RoomElem({ name, iconUrl, unread, current }: Props) {
+const RoomElem = ({ name, iconUrl, unread, current, onClick }: Props) => {
   const className = current ? 'current' : ''
   const unreadClass = ['unread']
   if (unread > 0) {
@@ -17,7 +18,7 @@ export default function RoomElem({ name, iconUrl, unread, current }: Props) {
   }
 
   return (
-    <RoomWrap className={className}>
+    <RoomWrap className={className} onClick={onClick}>
       <div className="room-icon">
         {iconUrl ? <img src={iconUrl} /> : <Home />}
       </div>
@@ -26,6 +27,7 @@ export default function RoomElem({ name, iconUrl, unread, current }: Props) {
     </RoomWrap>
   )
 }
+export default RoomElem
 
 const RoomWrap = styled.div`
   padding: 4px 8px 0;

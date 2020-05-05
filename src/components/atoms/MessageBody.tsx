@@ -8,7 +8,7 @@ type Props = {
   html: string
 }
 
-export default function MessageBody({ className, message, html }: Props) {
+const MessageBody = ({ className, message, html }: Props) => {
   const history = useHistory()
   const messageEl = useRef(null)
 
@@ -47,6 +47,7 @@ export default function MessageBody({ className, message, html }: Props) {
     ></Wrap>
   )
 }
+export default MessageBody
 
 const Wrap = styled.div`
   padding: 5px 0 0 0;

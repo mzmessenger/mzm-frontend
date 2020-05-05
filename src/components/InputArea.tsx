@@ -9,7 +9,7 @@ import ResizerY from './atoms/ResizerY'
 
 const HEIGHT_KEY = 'mzm:input:height'
 
-export default function InputArea() {
+const InputArea = () => {
   const currentRoomId = useSelector((state: State) => state.rooms.currentRoomId)
   const socket = useSelector((state: State) => state.socket.socket)
   const txt = useSelector((state: State) => state.ui.txt)
@@ -105,6 +105,7 @@ export default function InputArea() {
     </Wrap>
   )
 }
+export default InputArea
 
 const Wrap = styled.div`
   display: flex;

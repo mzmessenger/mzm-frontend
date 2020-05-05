@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { State } from '../modules/index'
 import { closeUserDetail } from '../modules/ui'
 
-export default function UserDetail() {
+const UserDetail = () => {
   const userDetail = useSelector((state: State) => state.ui.userDetail)
   const dispatch = useDispatch()
 
@@ -27,6 +27,7 @@ export default function UserDetail() {
     </Wrap>
   )
 }
+export default UserDetail
 
 const Wrap = styled.div`
   background-color: var(--color-surface);

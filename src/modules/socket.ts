@@ -14,7 +14,8 @@ import {
   receiveMessages,
   enterSuccess,
   alreadyRead,
-  reloadMessage
+  reloadMessage,
+  setRoomOrder
 } from '../modules/rooms'
 import {
   addMessages,
@@ -57,10 +58,11 @@ const onMessage = async (
   try {
     const parsed: ReceiveMessage = JSON.parse(e.data)
     if (parsed.cmd === 'rooms') {
-      receiveRooms(parsed.rooms, getState().rooms.currentRoomId)(
-        dispatch,
-        getState
-      )
+      receiveRooms(
+        parsed.rooms,
+        parsed.roomOrder,
+        getState().rooms.currentRoomId
+      )(dispatch, getState)
     } else if (parsed.cmd === 'message:receive') {
       addMessage(parsed.message)(dispatch).then(() => {
         receiveMessage(parsed.message.id, parsed.room)(dispatch, getState)
@@ -88,6 +90,8 @@ const onMessage = async (
     } else if (parsed.cmd === 'message:iine') {
       dispatch(updateIine(parsed.id, parsed.iine))
       dispatch(reloadMessage(parsed.room))
+    } else if (parsed.cmd === 'rooms:sort:success') {
+      setRoomOrder(parsed.roomOrder)(dispatch, getState)
     }
   } catch (e) {
     console.error(e)
@@ -105,11 +109,11 @@ export const initSocket = (
       const state = getState()
       if (state.rooms.currentRoomName) {
         sendSocket(ws, {
-          cmd: SendSocketCmd.EnterRoom,
+          cmd: SendSocketCmd.ROOMS_ENTER,
           name: state.rooms.currentRoomName
         })
       } else {
-        sendSocket(ws, { cmd: SendSocketCmd.GetRooms })
+        sendSocket(ws, { cmd: SendSocketCmd.ROOMS_GET })
       }
       dispatch({ type: SocketActions.Init, payload: ws })
     })
@@ -139,7 +143,7 @@ export const sendMessage = (
   socket: WebSocket
 ) => {
   const send: SendSocketMessage = {
-    cmd: SendSocketCmd.SendMessage,
+    cmd: SendSocketCmd.MESSAGE_SEND,
     message: message,
     room: roomId
   }
@@ -152,7 +156,7 @@ export const sendModifyMessage = (
   socket: WebSocket
 ) => {
   const send: SendSocketMessage = {
-    cmd: SendSocketCmd.ModifyMessage,
+    cmd: SendSocketCmd.MESSAGE_MODIFY,
     message: message,
     id: messageId
   }
@@ -162,8 +166,17 @@ export const sendModifyMessage = (
 export const incrementIine = (messageId: string) => {
   return async (_dispatch: Dispatch, getState: () => State) => {
     sendSocket(getState().socket.socket, {
-      cmd: SendSocketCmd.IncrementIine,
+      cmd: SendSocketCmd.MESSAGE_IINE,
       id: messageId
+    })
+  }
+}
+
+export const sortRoom = (roomOrder: string[]) => {
+  return async (_dispatch: Dispatch, getState: () => State) => {
+    sendSocket(getState().socket.socket, {
+      cmd: SendSocketCmd.ROOMS_SORT,
+      roomOrder
     })
   }
 }
