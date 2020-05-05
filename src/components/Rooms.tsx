@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom'
 import { State, store } from '../modules/index'
 import { readMessages, changeRoom, changeRoomOrder } from '../modules/rooms'
 import { Room } from '../modules/rooms.types'
-import RoomElem from './atoms/RoomElem'
+import RoomElem from './RoomElem'
 
 const DropZone = ({
   room,
@@ -60,7 +60,7 @@ const DropZone = ({
   )
 }
 
-export default function Rooms() {
+const Rooms = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const roomIds = useSelector((state: State) => state.rooms.rooms.allIds)
@@ -109,6 +109,8 @@ export default function Rooms() {
     </Wrap>
   )
 }
+export default Rooms
+
 const Wrap = styled.div`
   padding: 5px 0;
   cursor: pointer;

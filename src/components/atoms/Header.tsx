@@ -8,7 +8,7 @@ import Link from '../atoms/Link'
 import MenuIcon from './MobileMenuIcon'
 import MyInfo from '../MyInfo'
 
-export default function Header({ style }: { style?: any }) {
+const Header = ({ style }: { style?: any }) => {
   const device = useSelector((state: State) => state.ui.device)
 
   const dispatch = useDispatch()
@@ -28,6 +28,7 @@ export default function Header({ style }: { style?: any }) {
     </Wrap>
   )
 }
+export default Header
 
 const Wrap = styled.header`
   height: var(--header-height);

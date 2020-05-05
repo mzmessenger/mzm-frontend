@@ -1,10 +1,10 @@
 import React, { lazy } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import InputArea from '../InputArea'
-import Messages from '../Messages'
+import InputArea from './InputArea'
+import Messages from './Messages'
 import RoomInfo from './RoomInfo'
-import { State } from '../../modules/index'
+import { State } from '../modules/index'
 
 const ContentMessage = () => {
   return (
@@ -17,7 +17,7 @@ const ContentMessage = () => {
   )
 }
 
-export default function RoomContent() {
+const RoomContent = () => {
   const expand = useSelector((state: State) => state.rooms.openRoomSetting)
   const SettingRoom = lazy(() => import('./SettingRoom'))
 
@@ -28,6 +28,7 @@ export default function RoomContent() {
     </Wrap>
   )
 }
+export default RoomContent
 
 const Wrap = styled.div`
   flex: 1;

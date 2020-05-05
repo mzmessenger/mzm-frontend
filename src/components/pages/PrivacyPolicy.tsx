@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Header from '../atoms/LoginHeader'
 
-export default function PrivacyPolicy() {
+const PrivacyPolicy = () => {
   return (
     <Wrap>
       <Header />
@@ -56,6 +56,7 @@ export default function PrivacyPolicy() {
     </Wrap>
   )
 }
+export default PrivacyPolicy
 
 const Wrap = styled.div`
   display: flex;

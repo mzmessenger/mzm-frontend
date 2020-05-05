@@ -4,10 +4,10 @@ import styled from 'styled-components'
 import Home from '@material-ui/icons/Home'
 import Person from '@material-ui/icons/Person'
 import ExpandMore from '@material-ui/icons/ExpandMore'
-import { State } from '../../modules/index'
-import { openUserDetail } from '../../modules/ui'
-import { toggleRoomSetting } from '../../modules/rooms'
-import { WIDTH_MOBILE } from '../../lib/constants'
+import { State } from '../modules/index'
+import { openUserDetail } from '../modules/ui'
+import { toggleRoomSetting } from '../modules/rooms'
+import { WIDTH_MOBILE } from '../lib/constants'
 
 const getUsers = async (roomId: string) => {
   if (!roomId) {
@@ -27,7 +27,7 @@ const RoomIcon = ({ iconUrl }: { iconUrl: string }) => {
   return iconUrl ? <img src={iconUrl} /> : <Home fontSize="small" />
 }
 
-export default function RoomInfo() {
+const RoomInfo = () => {
   const id = useSelector((state: State) => state.rooms.currentRoomId)
   const _name = useSelector((state: State) => state.rooms.currentRoomName)
   const iconUrl = useSelector((state: State) => state.rooms.currentRoomIcon)
@@ -85,6 +85,7 @@ export default function RoomInfo() {
     </Wrap>
   )
 }
+export default RoomInfo
 
 const Wrap = styled.div`
   display: flex;

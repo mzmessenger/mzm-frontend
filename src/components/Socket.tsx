@@ -8,7 +8,7 @@ type Props = {
   url: string
 }
 
-export default function Socket({ url }: Props) {
+const Socket = ({ url }: Props) => {
   const history = useHistory()
   const login = useSelector((state: State) => state.user.login)
   const dispatch = useDispatch()
@@ -21,3 +21,4 @@ export default function Socket({ url }: Props) {
 
   return <></>
 }
+export default Socket

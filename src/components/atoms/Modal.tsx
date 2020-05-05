@@ -7,17 +7,18 @@ export type ModalProps = {
   onClose: () => void
 }
 
-export default function ModalBase({
+const ModalBase = ({
   open,
   onClose,
   children
-}: ModalProps & { children?: React.ReactNode }) {
+}: ModalProps & { children?: React.ReactNode }) => {
   return (
     <Modal open={open} onClose={onClose}>
       <ModalInner>{children}</ModalInner>
     </Modal>
   )
 }
+export default ModalBase
 
 const ModalInner = styled.div`
   position: absolute;

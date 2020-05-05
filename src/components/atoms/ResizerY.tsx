@@ -1,13 +1,13 @@
 import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
 
-export default function ResizerY({
+const ResizerY = ({
   height,
   setHeight
 }: {
   height: number
   setHeight: (h: number) => void
-}) {
+}) => {
   const timerRef = useRef(0)
   const [defaultHeight, setDefault] = useState(height)
   const [diff, setDiff] = useState(0)
@@ -44,6 +44,7 @@ export default function ResizerY({
     ></Wrap>
   )
 }
+export default ResizerY
 
 const Wrap = styled.div`
   width: 100%;

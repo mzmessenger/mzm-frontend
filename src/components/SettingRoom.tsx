@@ -3,18 +3,18 @@ import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import DirectionsRun from '@material-ui/icons/DirectionsRun'
 import Home from '@material-ui/icons/Home'
-import { WIDTH_MOBILE } from '../../lib/constants'
-import { State, store } from '../../modules/index'
-import { exitRoom, uploadIcon } from '../../modules/rooms'
-import DropImage from '../atoms/DropImage'
-import Button from '../atoms/Button'
-import ModalIcon from './ModalIcon'
+import { WIDTH_MOBILE } from '../lib/constants'
+import { State, store } from '../modules/index'
+import { exitRoom, uploadIcon } from '../modules/rooms'
+import DropImage from './atoms/DropImage'
+import Button from './atoms/Button'
+import ModalIcon from './atoms/ModalIcon'
 
 const IconImage = ({ iconUrl }: { iconUrl: string }) => {
   return iconUrl ? <img src={iconUrl} /> : <Home />
 }
 
-export default function RoomSetting() {
+const RoomSetting = () => {
   const dispatch = useDispatch()
   const id = useSelector((state: State) => state.rooms.currentRoomId)
   const _name = useSelector((state: State) => state.rooms.currentRoomName)
@@ -125,6 +125,7 @@ export default function RoomSetting() {
     </Wrap>
   )
 }
+export default RoomSetting
 
 const Wrap = styled.div`
   padding: 8px 32px;

@@ -5,7 +5,7 @@ import GitHubIcon from '@material-ui/icons/GitHub'
 import Header from '../atoms/LoginHeader'
 import Link from '../atoms/Link'
 
-export default function Login() {
+const Login = () => {
   return (
     <Wrap>
       <Header />
@@ -37,6 +37,7 @@ export default function Login() {
     </Wrap>
   )
 }
+export default Login
 
 const Wrap = styled.div`
   display: flex;

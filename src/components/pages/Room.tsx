@@ -1,12 +1,12 @@
 import React, { lazy } from 'react'
 import { useSelector } from 'react-redux'
 import { State } from '../../modules/index'
-import Menu from '../molecules/Menu'
-import RoomContent from '../molecules/RoomContent'
+import Menu from '../atoms/Menu'
+import RoomContent from '../RoomContent'
 import PageWrapper from '../templates/PageWrapper'
 import UserDetail from '../UserDetail'
 
-export default function PageRoom() {
+const PageRoom = () => {
   const settings = useSelector((state: State) => state.ui.openSettings)
   const openUserDetail = useSelector((state: State) => state.ui.openUserDetail)
 
@@ -26,3 +26,5 @@ export default function PageRoom() {
     </PageWrapper>
   )
 }
+
+export default PageRoom

@@ -9,7 +9,7 @@ import MenuIcon from './MobileMenuIcon'
 import Rooms from '../Rooms'
 import RoomNavi from '../RoomNavi'
 
-export default function Menu() {
+const Menu = () => {
   const menuStatus = useSelector((state: State) => state.ui.menuStatus)
   const className = menuStatus === 'open' ? 'open' : ''
 
@@ -30,6 +30,7 @@ export default function Menu() {
     </Wrap>
   )
 }
+export default Menu
 
 const Wrap = styled.div`
   width: var(--menu-width);

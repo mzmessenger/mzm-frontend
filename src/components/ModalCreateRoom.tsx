@@ -10,7 +10,7 @@ import InputText from './atoms/InputText'
 
 type Props = ModalProps
 
-export default function ModalCraeteRoom({ open, onClose }: Props) {
+const ModalCraeteRoom = ({ open, onClose }: Props) => {
   const history = useHistory()
   const [txt, setTxt] = useState('')
   const [error, setErrorTxt] = useState('')
@@ -62,6 +62,7 @@ export default function ModalCraeteRoom({ open, onClose }: Props) {
     </Modal>
   )
 }
+export default ModalCraeteRoom
 
 const ModalInner = styled.form`
   width: 440px;

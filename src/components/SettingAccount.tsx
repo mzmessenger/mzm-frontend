@@ -1,14 +1,14 @@
 import React, { useState, useCallback, lazy } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
-import { WIDTH_MOBILE } from '../../lib/constants'
-import { State } from '../../modules/index'
-import { uploadIcon } from '../../modules/user'
-import Button from '../atoms/Button'
-import SocialAccounts from '../atoms/SocialAccounts'
-import DropImage from '../atoms/DropImage'
+import { WIDTH_MOBILE } from '../lib/constants'
+import { State } from '../modules/index'
+import { uploadIcon } from '../modules/user'
+import Button from './atoms/Button'
+import SocialAccounts from './SocialAccounts'
+import DropImage from './atoms/DropImage'
 
-export default function SettingAccount() {
+const SettingAccount = () => {
   const dispatch = useDispatch()
   const id = useSelector((state: State) => state.user.me.id)
   const account = useSelector((state: State) => state.user.me.account)
@@ -17,7 +17,7 @@ export default function SettingAccount() {
   const [image, setImage] = useState('')
   const [edit, setEdit] = useState(false)
 
-  const ModalIcon = lazy(() => import('./ModalIcon'))
+  const ModalIcon = lazy(() => import('./atoms/ModalIcon'))
 
   const onModalSave = useCallback((image: Blob) => {
     uploadIcon(image)(dispatch).then((res) => {
@@ -98,6 +98,7 @@ export default function SettingAccount() {
     </Wrap>
   )
 }
+export default SettingAccount
 
 const Wrap = styled.div`
   display: flex;

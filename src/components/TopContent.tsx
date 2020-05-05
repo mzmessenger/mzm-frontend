@@ -4,9 +4,9 @@ import Link from './atoms/Link'
 
 const recommended = ['要望室', 'test']
 
-export default function TopContent() {
+const TopContent = () => {
   return (
-    <Content>
+    <Wrap>
       <div className="content">
         <div className="recommended">
           <div className="inner">
@@ -21,11 +21,12 @@ export default function TopContent() {
           </div>
         </div>
       </div>
-    </Content>
+    </Wrap>
   )
 }
+export default TopContent
 
-const Content = styled.div`
+const Wrap = styled.div`
   width: 100%;
   flex: 1;
   .content {

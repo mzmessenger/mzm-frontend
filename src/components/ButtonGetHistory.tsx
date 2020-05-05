@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { State } from '../modules/index'
 import { getHistory } from '../modules/rooms'
 
-export default function ButtonGetHistory({ oldestId }: { oldestId: string }) {
+const ButtonGetHistory = ({ oldestId }: { oldestId: string }) => {
   const currentRoomId = useSelector((state: State) => state.rooms.currentRoomId)
   const socket = useSelector((state: State) => state.socket.socket)
   const onClick = () => {
@@ -17,6 +17,7 @@ export default function ButtonGetHistory({ oldestId }: { oldestId: string }) {
     </Wrap>
   )
 }
+export default ButtonGetHistory
 
 const Wrap = styled.div`
   width: 100%;

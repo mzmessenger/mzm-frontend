@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { getMyInfo, signup } from '../../modules/user'
 
-export default function LoginSuccess() {
+const LoginSuccess = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -20,3 +20,5 @@ export default function LoginSuccess() {
 
   return <></>
 }
+
+export default LoginSuccess

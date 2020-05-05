@@ -3,9 +3,9 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { State } from '../../modules/index'
 import Body from '../atoms/Body'
-import Header from '../molecules/Header'
+import Header from '../atoms/Header'
 
-export default function PageWrapper({ children }) {
+const PageWrapper = ({ children }: { children?: React.ReactNode }) => {
   const overlay = useSelector((state: State) => state.ui.overlay)
 
   return (
@@ -16,6 +16,7 @@ export default function PageWrapper({ children }) {
     </Wrap>
   )
 }
+export default PageWrapper
 
 const Wrap = styled.div`
   height: 100vh;

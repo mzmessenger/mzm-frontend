@@ -10,13 +10,7 @@ type Props = {
   onClick: (e: React.MouseEvent) => void
 }
 
-export default function RoomElem({
-  name,
-  iconUrl,
-  unread,
-  current,
-  onClick
-}: Props) {
+const RoomElem = ({ name, iconUrl, unread, current, onClick }: Props) => {
   const className = current ? 'current' : ''
   const unreadClass = ['unread']
   if (unread > 0) {
@@ -33,6 +27,7 @@ export default function RoomElem({
     </RoomWrap>
   )
 }
+export default RoomElem
 
 const RoomWrap = styled.div`
   padding: 4px 8px 0;
