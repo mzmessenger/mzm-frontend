@@ -1,36 +1,36 @@
 import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
 
-const ResizerY = ({
-  height,
-  setHeight
+const ResizerX = ({
+  width,
+  setWidth
 }: {
-  height: number
-  setHeight: (h: number) => void
+  width: number
+  setWidth: (w: number) => void
 }) => {
   const timerRef = useRef(0)
-  const [defaultHeight, setDefault] = useState(height)
+  const [defaultWidth, setDefault] = useState(width)
   const [diff, setDiff] = useState(0)
-  const [startY, setStartY] = useState(0)
+  const [startX, setStartX] = useState(0)
 
-  const onDragStart = (e: React.DragEvent) => setStartY(e.pageY)
+  const onDragStart = (e: React.DragEvent) => setStartX(e.pageX)
 
   const onDrag = (e: React.DragEvent) => {
-    if (e.clientY !== 0) {
-      const currentDiff = startY - e.pageY
+    if (e.clientX !== 0) {
+      const currentDiff = startX - e.pageX
       if (diff !== currentDiff) {
         setDiff(currentDiff)
         clearTimeout(timerRef.current)
         timerRef.current = setTimeout(() => {
-          setHeight(defaultHeight + currentDiff)
+          setWidth(defaultWidth + currentDiff)
         }, 5)
       }
     }
   }
   const onDragEnd = () => {
-    const current = defaultHeight + diff
+    const current = defaultWidth + diff
     setDefault(current)
-    setHeight(current)
+    setWidth(current)
   }
 
   return (
@@ -42,12 +42,12 @@ const ResizerY = ({
     ></Wrap>
   )
 }
-export default ResizerY
+export default ResizerX
 
 const Wrap = styled.div`
-  width: 100%;
-  height: 8px;
-  cursor: row-resize;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
   content: '';
   background: 0 0;
   opacity: 0;

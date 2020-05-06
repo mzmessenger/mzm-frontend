@@ -9,17 +9,15 @@ import MenuIcon from './MobileMenuIcon'
 import Rooms from '../Rooms'
 import RoomNavi from '../RoomNavi'
 
-const Menu = () => {
+const Menu = ({ style }: { style: React.CSSProperties }) => {
+  const dispatch = useDispatch()
   const menuStatus = useSelector((state: State) => state.ui.menuStatus)
   const className = menuStatus === 'open' ? 'open' : ''
-
-  const dispatch = useDispatch()
-
   const onClickMenu = () => dispatch(closeMenu())
   const clickSettings = () => dispatch(openSettings())
 
   return (
-    <Wrap className={className}>
+    <Wrap className={className} style={style}>
       <div className="header">
         <MenuIcon onClick={onClickMenu} />
         <div className="space"></div>
@@ -33,9 +31,7 @@ const Menu = () => {
 export default Menu
 
 const Wrap = styled.div`
-  width: var(--menu-width);
   color: var(--color-on-surface);
-  border-left: 1px solid var(--color-border);
 
   .header {
     height: var(--header-height);

@@ -35,6 +35,7 @@ const Wrap = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  border-right: 1px solid var(--color-border);
 
   .messages {
     display: flex;
