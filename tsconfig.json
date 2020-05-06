@@ -6,8 +6,8 @@
     "noImplicitAny": false,
     "esModuleInterop": true,
     "module": "esnext",
-    "target": "es2017",
-    "jsx": "preserve",
+    "target": "es2019",
+    "jsx": "react",
     "moduleResolution": "node",
     "typeRoots": ["node_modules/@types", "./typings"]
   },

@@ -27,21 +27,11 @@ module.exports = {
         exclude: /node_modules/,
         use: [
           {
-            loader: 'babel-loader',
+            loader: 'ts-loader',
             options: {
-              presets: [
-                [
-                  '@babel/preset-env',
-                  {
-                    exclude: ['transform-regenerator']
-                  }
-                ],
-                '@babel/preset-react'
-              ],
-              cacheDirectory: true
+              transpileOnly: true
             }
-          },
-          'ts-loader'
+          }
         ]
       },
       {
