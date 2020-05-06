@@ -61,4 +61,20 @@ const Wrap = styled.div`
   a {
     color: var(--color-link);
   }
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    > li {
+      padding: 0;
+    }
+    > li:before {
+      content: '-';
+      margin: 0 0.5em 0 0;
+    }
+    .check {
+      margin: 0 0.5em 0 0;
+    }
+  }
 `

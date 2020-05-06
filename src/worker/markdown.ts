@@ -15,15 +15,13 @@ const ctx: Worker = self as any
 
 const r = new marked.Renderer()
 
-const escapeTxt = (text) => escape(text)
+const escapeTxt = (text: string) => escape(text)
 
 // ignore
 r.heading = escapeTxt
 r.html = escapeTxt
 r.heading = escapeTxt
 r.hr = () => ''
-r.list = escapeTxt
-r.listitem = escapeTxt
 r.table = escapeTxt
 r.tablerow = escapeTxt
 r.tablecell = escapeTxt
@@ -33,6 +31,11 @@ r.codespan = escapeTxt
 r.br = () => ''
 r.image = escapeTxt
 r.text = escapeTxt
+
+// @todo
+r.checkbox = (checked: boolean) => {
+  return `<span class="check">${checked ? '[x]' : '[ ]'}</span>`
+}
 
 r.code = (code, lang) => {
   lang = lang ? lang : 'bash'
