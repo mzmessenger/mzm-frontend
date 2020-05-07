@@ -3,10 +3,12 @@ import styled from 'styled-components'
 
 const ResizerX = ({
   width,
-  setWidth
+  setWidth,
+  style
 }: {
   width: number
   setWidth: (w: number) => void
+  style?: React.CSSProperties
 }) => {
   const timerRef = useRef(0)
   const [defaultWidth, setDefault] = useState(width)
@@ -35,6 +37,7 @@ const ResizerX = ({
 
   return (
     <Wrap
+      style={style}
       draggable={true}
       onDragStart={onDragStart}
       onDrag={onDrag}

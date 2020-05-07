@@ -8,20 +8,24 @@ import PageWrapper from '../templates/PageWrapper'
 import UserDetail from '../UserDetail'
 
 const WIDTH_KEY = 'mzm:menu:width'
+const MIN_WIDTH = 240
 
 const PageRoom = () => {
   const settings = useSelector((state: State) => state.ui.openSettings)
   const openUserDetail = useSelector((state: State) => state.ui.openUserDetail)
+  const device = useSelector((state: State) => state.ui.device)
   const [width, _setWidth] = useState(
     localStorage.getItem(WIDTH_KEY)
       ? parseInt(localStorage.getItem(WIDTH_KEY), 10)
-      : 240
+      : MIN_WIDTH
   )
   const setWidth = (w: number) => {
     _setWidth(w)
     localStorage.setItem(WIDTH_KEY, `${w}`)
   }
   const Settings = lazy(() => import('../Settings'))
+  const isMobile = device === 'mobile'
+  console.log(device)
 
   return (
     <PageWrapper>
@@ -30,8 +34,12 @@ const PageRoom = () => {
       ) : (
         <>
           <RoomContent />
-          <ResizerX width={width} setWidth={setWidth} />
-          <Menu style={{ minWidth: width }} />
+          <ResizerX
+            style={{ display: isMobile ? 'none' : '' }}
+            width={width}
+            setWidth={setWidth}
+          />
+          <Menu style={{ minWidth: isMobile ? MIN_WIDTH : width }} />
         </>
       )}
       {openUserDetail && <UserDetail />}
