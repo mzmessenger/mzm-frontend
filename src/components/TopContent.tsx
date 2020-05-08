@@ -29,6 +29,7 @@ export default TopContent
 const Wrap = styled.div`
   width: 100%;
   flex: 1;
+  border-right: 1px solid var(--color-border);
   .content {
     display: flex;
     flex-direction: column;
