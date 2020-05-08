@@ -1,31 +1,57 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import Settings from '@material-ui/icons/Settings'
 import { WIDTH_MOBILE } from '../../lib/constants'
 import { State } from '../../modules/index'
 import { closeMenu, openSettings } from '../../modules/ui'
+import ResizerX from '../atoms/ResizerX'
 import MenuIcon from './MobileMenuIcon'
 import Rooms from '../Rooms'
 import RoomNavi from '../RoomNavi'
 
-const Menu = ({ style }: { style: React.CSSProperties }) => {
+const WIDTH_KEY = 'mzm:menu:width'
+const MIN_WIDTH = 240
+
+const Menu = () => {
   const dispatch = useDispatch()
   const menuStatus = useSelector((state: State) => state.ui.menuStatus)
+  const device = useSelector((state: State) => state.ui.device)
   const className = menuStatus === 'open' ? 'open' : ''
+  const [width, _setWidth] = useState(
+    localStorage.getItem(WIDTH_KEY)
+      ? parseInt(localStorage.getItem(WIDTH_KEY), 10)
+      : MIN_WIDTH
+  )
+
+  const setWidth = (w: number) => {
+    _setWidth(w)
+    localStorage.setItem(WIDTH_KEY, `${w}`)
+  }
+  const isMobile = device === 'mobile'
   const onClickMenu = () => dispatch(closeMenu())
   const clickSettings = () => dispatch(openSettings())
 
   return (
-    <Wrap className={className} style={style}>
-      <div className="header">
-        <MenuIcon onClick={onClickMenu} />
-        <div className="space"></div>
-        <Settings className="settings" onClick={clickSettings} />
-      </div>
-      <RoomNavi />
-      <Rooms />
-    </Wrap>
+    <>
+      <ResizerX
+        style={{ display: isMobile ? 'none' : '' }}
+        width={width}
+        setWidth={setWidth}
+      />
+      <Wrap
+        className={className}
+        style={{ minWidth: isMobile ? MIN_WIDTH : width }}
+      >
+        <div className="header">
+          <MenuIcon onClick={onClickMenu} />
+          <div className="space"></div>
+          <Settings className="settings" onClick={clickSettings} />
+        </div>
+        <RoomNavi />
+        <Rooms />
+      </Wrap>
+    </>
   )
 }
 export default Menu
