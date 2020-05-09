@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
+import CancelIcon from '@material-ui/icons/Cancel'
 import Modal, { ModalProps } from './atoms/Modal'
 import { State, store } from '../modules/index'
 import { getNextUsers } from '../modules/rooms'
@@ -43,7 +44,10 @@ const ModalUsersList = ({ open, onClose, roomId }: Props) => {
   return (
     <Modal open={open} onClose={onClose}>
       <ModalInner>
-        <h4>入室中ユーザー</h4>
+        <header>
+          <h4>入室中ユーザー</h4>
+          <CancelIcon className="cancel" onClick={onClose} />
+        </header>
         <div className="count">{users?.count || 0}</div>
         <div className="users" onScroll={onScroll}>
           <ul ref={listWrapRef}>
@@ -64,14 +68,21 @@ const ModalInner = styled.form`
   color: var(--color-on-background);
   padding: 20px;
 
-  h4 {
-    margin: 0;
+  header {
+    display: flex;
+    h4 {
+      margin: 0;
+      flex: 1;
+    }
+    .cancel {
+      cursor: pointer;
+    }
   }
 
   .count {
     display: flex;
     justify-content: flex-end;
-    padding: 0 0 0.5em 0;
+    padding: 0.5em 0.2em 0.5em 0;
     border-bottom: 1px solid var(--color-border);
   }
 
