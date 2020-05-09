@@ -10,6 +10,13 @@ export type Message = {
   createdAt: string
 }
 
+export type RoomUser = {
+  account: string
+  icon: string
+  userId: string
+  enterId: string
+}
+
 export type Room = {
   id: string
   name: string
@@ -34,6 +41,10 @@ export type RoomsState = {
     allIds: string[]
     order: string[]
   }
+  users: {
+    byId: { [key: string]: { count: number; users: RoomUser[] } }
+    allIds: string[]
+  }
   currentRoomId: string
   currentRoomName: string
   currentRoomIcon: string
@@ -56,7 +67,9 @@ export const RoomsActions = {
   AlreadyRead: 'roomAction:alreadyRead',
   ToggleSetting: 'roomAction:toggleSetting',
   CloseSetting: 'roomAction:closeSetting',
-  SetIcon: 'roomAction:setIcon'
+  SetIcon: 'roomAction:setIcon',
+  SetRoomUsers: 'roomAction:setRoomUsers',
+  SetNextRoomUsers: 'roomAction:setNextRoomUsers'
 } as const
 
 export type RoomsAction =
@@ -120,4 +133,12 @@ export type RoomsAction =
   | {
       type: typeof RoomsActions.SetRoomOrder
       payload: { roomOrder: string[]; allIds: string[] }
+    }
+  | {
+      type: typeof RoomsActions.SetRoomUsers
+      payload: { room: string; users: RoomUser[]; count: number }
+    }
+  | {
+      type: typeof RoomsActions.SetNextRoomUsers
+      payload: { room: string; users: RoomUser[] }
     }
