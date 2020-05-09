@@ -16,6 +16,7 @@ const initCurrentRoomName = splited[1] === 'rooms' ? splited[2] : ''
 
 export const initState: RoomsState = {
   rooms: { byId: {}, allIds: [], order: [] },
+  users: { byId: {}, allIds: [] },
   currentRoomId: '',
   currentRoomName: initCurrentRoomName,
   currentRoomIcon: null,
@@ -166,6 +167,24 @@ export const reducer = (
     }
     case RoomsActions.ToggleSetting:
       return { ...state, openRoomSetting: !state.openRoomSetting }
+    case RoomsActions.SetRoomUsers: {
+      state.users.byId[action.payload.room] = {
+        users: action.payload.users,
+        count: action.payload.count
+      }
+      if (!state.users.allIds.includes(action.payload.room)) {
+        state.users.allIds = [...state.users.allIds, action.payload.room]
+      }
+      return { ...state }
+    }
+    case RoomsActions.SetNextRoomUsers: {
+      const users = state.users.byId[action.payload.room]
+      state.users.byId[action.payload.room] = {
+        ...users,
+        users: [...users.users, ...action.payload.users]
+      }
+      return { ...state }
+    }
     default:
       return state
   }
@@ -368,7 +387,7 @@ export const enterSuccess = (id: string, name: string, iconUrl: string) => {
 }
 
 export const getUsers = (roomId: string) => {
-  return async (_dispatch: Dispatch<RoomsAction>) => {
+  return async (dispatch: Dispatch<RoomsAction>) => {
     if (!roomId) {
       return
     }
@@ -379,6 +398,48 @@ export const getUsers = (roomId: string) => {
         'Content-Type': 'application/json; charset=utf-8'
       }
     })
+
+    if (res.status === 200) {
+      res.json().then((body) => {
+        dispatch({
+          type: RoomsActions.SetRoomUsers,
+          payload: { room: roomId, users: body.users, count: body.count }
+        })
+      })
+    }
+
+    return res
+  }
+}
+
+export const getNextUsers = (roomId: string) => {
+  return async (dispatch: Dispatch<RoomsAction>, getState: () => State) => {
+    if (!roomId) {
+      return
+    }
+    const { users, count } = getState().rooms.users.byId[roomId]
+    if (users.length >= count) {
+      return
+    }
+    const lastId = users[users.length - 1].enterId
+    const query = new URLSearchParams([['threshold', lastId]])
+    const res = await fetch(`/api/rooms/${roomId}/users?${query.toString()}`, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8'
+      }
+    })
+
+    if (res.status === 200) {
+      res.json().then((body) => {
+        dispatch({
+          type: RoomsActions.SetNextRoomUsers,
+          payload: { room: roomId, users: body.users }
+        })
+      })
+    }
+
     return res
   }
 }

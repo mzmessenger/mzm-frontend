@@ -6,48 +6,28 @@ import Person from '@material-ui/icons/Person'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import { State } from '../modules/index'
 import { openUserDetail } from '../modules/ui'
-import { toggleRoomSetting } from '../modules/rooms'
+import { toggleRoomSetting, getUsers } from '../modules/rooms'
 import { WIDTH_MOBILE } from '../lib/constants'
-
-const getUsers = async (roomId: string) => {
-  if (!roomId) {
-    return
-  }
-  const res = await fetch(`/api/rooms/${roomId}/users`, {
-    method: 'GET',
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8'
-    }
-  })
-  return res
-}
+import ModalUsersList from './ModalUsersList'
 
 const RoomIcon = ({ iconUrl }: { iconUrl: string }) => {
   return iconUrl ? <img src={iconUrl} /> : <Home fontSize="small" />
 }
 
 const RoomInfo = () => {
+  const dispatch = useDispatch()
   const id = useSelector((state: State) => state.rooms.currentRoomId)
   const _name = useSelector((state: State) => state.rooms.currentRoomName)
   const iconUrl = useSelector((state: State) => state.rooms.currentRoomIcon)
   const expand = useSelector((state: State) => state.rooms.openRoomSetting)
-  const [count, setCount] = useState(0)
-  const [users, setUsers] = useState([])
-  const dispatch = useDispatch()
+  const users = useSelector((state: State) => state.rooms.users.byId[id])
+  const [open, setOpen] = useState(false)
 
   const name = _name || ''
 
   useEffect(() => {
     if (id) {
-      getUsers(id).then((res) => {
-        if (res.status === 200) {
-          res.json().then((body) => {
-            setCount(body.count)
-            setUsers(body.users)
-          })
-        }
-      })
+      getUsers(id)(dispatch)
     }
   }, [id])
 
@@ -55,7 +35,7 @@ const RoomInfo = () => {
     dispatch(openUserDetail(user.id, user.account, user.icon))
   }
 
-  const userIcons = users
+  const userIcons = (users?.users || [])
     .slice(0, 10)
     .map((u, i) => <img key={i} src={u.icon} onClick={() => clickUser(u)} />)
 
@@ -75,13 +55,16 @@ const RoomInfo = () => {
       </div>
       <span className="room-name">{name}</span>
       <div className="room-users">
-        <Person />
-        <div className="count">{count}</div>
+        <div className="room-users-info" onClick={() => setOpen(true)}>
+          <Person />
+          <div className="count">{users?.count || 0}</div>
+        </div>
         <div className="users">{userIcons}</div>
       </div>
       <div className={expandClassName.join(' ')} onClick={onExpandClick}>
         <ExpandMore className="icon" />
       </div>
+      <ModalUsersList open={open} onClose={() => setOpen(false)} roomId={id} />
     </Wrap>
   )
 }
@@ -104,6 +87,12 @@ const Wrap = styled.div`
   .room-users {
     display: flex;
     align-items: center;
+    .room-users-info {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
     .count {
       padding: 0 0 0 4px;
     }
