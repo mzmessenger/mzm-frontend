@@ -31,7 +31,7 @@ const ModalUsersList = ({ open, onClose, roomId }: Props) => {
       const wrapRect = listWrapRef.current.getBoundingClientRect()
       const bottomRect = listBottomRef.current.getBoundingClientRect()
       const margin = 10
-      if (bottomRect.top - wrapRect.bottom < margin) {
+      if (bottomRect.top - wrapRect.bottom <= margin) {
         setLoading(true)
         getNextUsers(roomId)(dispatch, store.getState).then(() =>
           setLoading(false)
