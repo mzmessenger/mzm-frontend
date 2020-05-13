@@ -127,9 +127,8 @@ const Wrap = styled.div`
   }
 
   .room-icon {
-    cursor: pointer;
     color: var(--color-on-guide);
-    margin: 0 8px 0;
+    margin: 0 8px 0 0;
     img {
       width: 20px;
       height: 20px;

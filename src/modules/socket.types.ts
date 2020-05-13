@@ -24,6 +24,7 @@ type Message = {
 }
 
 export type ReceiveMessage =
+  | { cmd: 'client:reload' }
   | {
       cmd: 'message:receive'
       message: Message

@@ -92,6 +92,8 @@ const onMessage = async (
       dispatch(reloadMessage(parsed.room))
     } else if (parsed.cmd === 'rooms:sort:success') {
       setRoomOrder(parsed.roomOrder)(dispatch, getState)
+    } else if (parsed.cmd === 'client:reload') {
+      location.reload()
     }
   } catch (e) {
     console.error(e)
