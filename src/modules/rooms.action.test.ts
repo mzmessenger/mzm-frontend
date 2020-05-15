@@ -8,7 +8,10 @@ import { RoomsActions } from './rooms.types'
 import { UIActions } from './ui.types'
 
 test('changeRoom', async () => {
-  const socket = { send: jest.fn() }
+  const socket = {
+    send: jest.fn(),
+    readyState: WebSocket.OPEN
+  }
   const dispatch = jest.fn()
   const getState = () => ({
     socket: {
@@ -53,7 +56,10 @@ test('changeRoom', async () => {
 })
 
 test('changeRoom not enter', async () => {
-  const socket = { send: jest.fn() }
+  const socket = {
+    send: jest.fn(),
+    readyState: WebSocket.OPEN
+  }
   const dispatch = jest.fn()
   const getState = () => ({
     socket: {
@@ -83,7 +89,10 @@ test('changeRoom not enter', async () => {
 })
 
 test('enterRoom already entered', async () => {
-  const socket = { send: jest.fn() }
+  const socket = {
+    send: jest.fn(),
+    readyState: WebSocket.OPEN
+  }
   const dispatch = jest.fn()
   const getState = () => ({
     socket: {
@@ -128,7 +137,10 @@ test('enterRoom already entered', async () => {
 })
 
 test('enterRoom does not enter', async () => {
-  const socket = { send: jest.fn() }
+  const socket = {
+    send: jest.fn(),
+    readyState: WebSocket.OPEN
+  }
 
   const dispatch = jest.fn()
   const getState = () => ({
@@ -162,7 +174,10 @@ test('receiveMessage', async () => {
   const room = 'roomid'
 
   const dispatch = jest.fn()
-  const socket = { send: jest.fn() }
+  const socket = {
+    send: jest.fn(),
+    readyState: WebSocket.OPEN
+  }
   const getState = () => ({
     rooms: {
       currentRoomId: room
