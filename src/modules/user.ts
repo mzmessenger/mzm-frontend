@@ -21,7 +21,10 @@ export const reducer = (
         signupAccount: action.payload.account
       }
     }
-    case UserActions.Logout:
+    case UserActions.Logout: {
+      location.href = '/auth/logout'
+      return { ...state, login: false }
+    }
     case UserActions.Remove:
       return { ...initState, login: false }
     case UserActions.SetMe:

@@ -1,5 +1,5 @@
 export const sendSocket = (socket: WebSocket, message: SendSocketMessage) => {
-  if (!socket) {
+  if (!socket || socket.readyState !== WebSocket.OPEN) {
     return
   }
   socket.send(JSON.stringify(message))

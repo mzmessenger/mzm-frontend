@@ -24,9 +24,16 @@ import {
   updateIine
 } from '../modules/messages'
 import { logout } from '../modules/user'
+import { UserAction } from './user.types'
+
+const DEFAULT_INTERVAL = 1000
+const RECONNECT_DECAY = 1.5
 
 export const initState: SocketState = {
-  socket: null
+  socket: null,
+  reconnectInterval: 0,
+  reconnectAttempts: 0,
+  reconnectTimer: null
 }
 
 export const reducer = (
@@ -35,13 +42,32 @@ export const reducer = (
 ): SocketState => {
   switch (action.type) {
     case SocketActions.Init: {
-      if (state.socket) {
-        state.socket.close()
-      }
       const socket = action.payload
+      return { ...state, socket: socket }
+    }
+    case SocketActions.Open: {
+      if (state.reconnectTimer) {
+        clearTimeout(state.reconnectTimer)
+      }
       return {
         ...state,
-        socket: socket
+        reconnectInterval: 0,
+        reconnectAttempts: 0,
+        reconnectTimer: null
+      }
+    }
+    case SocketActions.Close: {
+      const reconnectInterval =
+        state.reconnectInterval <= 0
+          ? DEFAULT_INTERVAL
+          : state.reconnectInterval *
+            Math.floor(Math.pow(RECONNECT_DECAY, state.reconnectAttempts))
+
+      return {
+        ...state,
+        reconnectInterval,
+        reconnectAttempts: state.reconnectAttempts + 1,
+        reconnectTimer: action.payload.timer
       }
     }
     default:
@@ -92,18 +118,24 @@ const onMessage = async (
       dispatch(reloadMessage(parsed.room))
     } else if (parsed.cmd === 'rooms:sort:success') {
       setRoomOrder(parsed.roomOrder)(dispatch, getState)
+    } else if (parsed.cmd === 'client:reload') {
+      location.reload()
     }
   } catch (e) {
     console.error(e)
   }
 }
 
-export const initSocket = (
+export const connect = (
   url: string,
   history: ReturnType<typeof useHistory>
 ) => {
-  return (dispatch: Dispatch, getState: () => State) => {
+  return (
+    dispatch: Dispatch<SocketAction | UserAction>,
+    getState: () => State
+  ) => {
     const ws = new WebSocket(url)
+    dispatch({ type: SocketActions.Init, payload: ws })
 
     ws.addEventListener('open', () => {
       const state = getState()
@@ -115,7 +147,7 @@ export const initSocket = (
       } else {
         sendSocket(ws, { cmd: SendSocketCmd.ROOMS_GET })
       }
-      dispatch({ type: SocketActions.Init, payload: ws })
+      dispatch({ type: SocketActions.Open })
     })
 
     ws.addEventListener('message', (e) => {
@@ -127,11 +159,21 @@ export const initSocket = (
     })
 
     ws.addEventListener('close', () => {
-      initSocket(url, history)
+      const timer = setTimeout(() => {
+        connect(url, history)(dispatch, getState)
+      }, getState().socket.reconnectInterval)
+
+      dispatch({ type: SocketActions.Close, payload: { timer } })
     })
 
     ws.addEventListener('error', () => {
-      ws.close()
+      if (
+        ws.readyState !== WebSocket.CLOSING &&
+        ws.readyState !== WebSocket.CLOSED
+      ) {
+        ws.close()
+      }
+
       dispatch(logout())
     })
   }
