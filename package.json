@@ -8,7 +8,7 @@
     "format": "prettier --write src/**/*.{ts,tsx}",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx src/",
     "pretest": "npm run lint",
-    "test": "jest",
+    "test": "jest --maxWorkers=75%",
     "build": "webpack",
     "build:prod": "webpack --mode=production"
   },
