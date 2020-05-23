@@ -54,14 +54,16 @@ module.exports = {
   },
   plugins: [
     new WorkerPlugin({ globalObject: 'self' }),
-    new CopyPlugin([
-      { from: path.join(SRC_PATH, 'index.html'), to: DEST_PATH },
-      { from: path.join(SRC_PATH, 'manifest.json'), to: DEST_PATH },
-      {
-        from: path.join(SRC_PATH, 'assets', 'icons'),
-        to: path.join(DEST_PATH, 'assets', 'icons')
-      }
-    ]),
+    new CopyPlugin({
+      patterns: [
+        { from: path.join(SRC_PATH, 'index.html'), to: DEST_PATH },
+        { from: path.join(SRC_PATH, 'manifest.json'), to: DEST_PATH },
+        {
+          from: path.join(SRC_PATH, 'assets', 'icons'),
+          to: path.join(DEST_PATH, 'assets', 'icons')
+        }
+      ]
+    }),
     new workboxPlugin.GenerateSW({
       offlineGoogleAnalytics: true,
       exclude: [/^manifest.json$/, /\.(?:js|css)$/],
