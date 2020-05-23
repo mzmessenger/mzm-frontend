@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import CreateIcon from '@material-ui/icons/Create'
 import ThumbUpIcon from '@material-ui/icons/ThumbUp'
 import { sanitize } from '../lib/sanitize'
+import { isReplied } from '../lib/util'
 import { State, store } from '../modules/index'
 import { startToEdit } from '../modules/ui'
 import { incrementIine } from '../modules/socket'
@@ -47,6 +48,7 @@ const PresentationalMessage = ({
       : 'YYYY/MM/DD HH:mm:ss'
   )
   const account = userAccount ? userAccount : userId
+  const replied = isReplied(myAccount, message)
 
   useEffect(() => {
     let timer = null
@@ -62,8 +64,19 @@ const PresentationalMessage = ({
     }
   }, [beforeIine, iine])
 
+  let className = ''
+  if (replied) {
+    className += ' replied'
+  }
+  if (iine >= 20) {
+    className += ' iine-max'
+  }
+  if (iineAction) {
+    className += ' kururi'
+  }
+
   return (
-    <MessageWrap className={iineAction ? 'kururi' : ''}>
+    <MessageWrap className={className}>
       <img className="user-icon" src={icon} />
       <div className="header">
         <div className="account">{account}</div>
@@ -141,6 +154,16 @@ const MessageWrap = styled.div`
     'icon message-body'
     'icon message-footer';
 
+  &.iine-max {
+    color: hsl(0, 0%, 0%);
+    background: #fdd;
+  }
+
+  &.replied {
+    color: var(--color-on-replied);
+    background: var(--color-replied);
+  }
+
   .header,
   .user-icon {
     margin: 4px 0 0 0;
@@ -151,9 +174,11 @@ const MessageWrap = styled.div`
     display: flex;
     .iine {
       display: flex;
-      margin-left: 16px;
+      align-items: center;
+      margin-left: 8px;
       .num {
-        margin-left: 4px;
+        margin-left: 6px;
+        color: #2789ff;
       }
     }
     .actions {
@@ -166,6 +191,7 @@ const MessageWrap = styled.div`
       cursor: pointer;
       svg {
         font-size: 1rem;
+        opacity: 0.7;
       }
     }
     time {

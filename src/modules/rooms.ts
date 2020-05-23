@@ -1,5 +1,10 @@
 import { Dispatch } from 'redux'
-import { sendSocket, SendSocketMessage, SendSocketCmd } from '../lib/util'
+import {
+  sendSocket,
+  SendSocketMessage,
+  SendSocketCmd,
+  isReplied
+} from '../lib/util'
 import { State } from './index'
 import { sortRoom } from './socket'
 import {
@@ -41,6 +46,7 @@ export const reducer = (
             name: r.name,
             iconUrl: r.iconUrl,
             unread: r.unread,
+            replied: r.replied,
             messages: [],
             loading: false,
             receivedMessages: false,
@@ -111,16 +117,23 @@ export const reducer = (
     case RoomsActions.ReceiveMessage: {
       const isCurrent = action.payload.room === state.currentRoomId
       const room = state.rooms.byId[action.payload.room]
+      const replied = isReplied(action.payload.account, action.payload.message)
 
-      room.loading = false
-      room.messages = [...room.messages, action.payload.message]
-      if (!isCurrent) {
-        room.unread++
+      state.rooms.byId[action.payload.room] = {
+        ...room,
+        messages: [...room.messages, action.payload.messageId],
+        loading: false,
+        unread: isCurrent ? room.unread : room.unread + 1,
+        replied: replied ? room.replied + 1 : room.replied
       }
+      state.rooms.allIds = [...state.rooms.allIds]
 
       return {
         ...state,
-        scrollTargetIndex: 'bottom'
+        scrollTargetIndex:
+          action.payload.room === state.currentRoomId
+            ? 'bottom'
+            : state.scrollTargetIndex
       }
     }
     case RoomsActions.ReceiveMessages: {
@@ -155,8 +168,10 @@ export const reducer = (
     case RoomsActions.AlreadyRead: {
       state.rooms.byId[action.payload.room] = {
         ...state.rooms.byId[action.payload.room],
-        unread: 0
+        unread: 0,
+        replied: 0
       }
+      state.rooms.allIds = [...state.rooms.allIds]
       return { ...state }
     }
     case RoomsActions.ReloadMessages: {
@@ -330,7 +345,11 @@ export const changeRoomOrder = (roomOrder: string[]) => {
   }
 }
 
-export const receiveMessage = (messageId: string, room: string) => {
+export const receiveMessage = (
+  messageId: string,
+  message: string,
+  room: string
+) => {
   return async (dispatch: Dispatch<RoomsAction>, getState: () => State) => {
     // 現在みている部屋だったら既読フラグを返す
     if (room === getState().rooms.currentRoomId) {
@@ -339,8 +358,10 @@ export const receiveMessage = (messageId: string, room: string) => {
     return dispatch({
       type: RoomsActions.ReceiveMessage,
       payload: {
-        message: messageId,
-        room: room
+        messageId: messageId,
+        message: message,
+        room: room,
+        account: getState().user.me.account
       }
     })
   }

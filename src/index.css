@@ -19,6 +19,8 @@
   --color-input: hsl(0, 100%, 100%, 0.9);
   --color-border: #5c6069;
   --color-border-clipper: #39f;
+  --color-replied: #ffc;
+  --color-on-replied: hsl(0, 0%, 0%);
 
   --mobile-menu-width: 70vw;
   --z-index-overlay: 1200;

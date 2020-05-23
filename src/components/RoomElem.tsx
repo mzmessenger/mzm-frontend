@@ -6,15 +6,26 @@ type Props = {
   name: string
   iconUrl: string
   unread: number
+  replied: number
   current: boolean
   onClick: (e: React.MouseEvent) => void
 }
 
-const RoomElem = ({ name, iconUrl, unread, current, onClick }: Props) => {
+const RoomElem = ({
+  name,
+  iconUrl,
+  unread,
+  replied,
+  current,
+  onClick
+}: Props) => {
   const className = current ? 'current' : ''
   const unreadClass = ['unread']
   if (unread > 0) {
     unreadClass.push('show')
+    if (replied > 0) {
+      unreadClass.push('replied')
+    }
   }
 
   return (
@@ -68,6 +79,10 @@ const RoomWrap = styled.div`
     font-weight: bold;
     &.show {
       display: inline-block;
+    }
+    &.replied {
+      color: var(--color-on-replied);
+      background: var(--color-replied);
     }
   }
 `

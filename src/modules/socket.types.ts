@@ -31,6 +31,14 @@ type Message = {
   icon: string
 }
 
+type Room = {
+  id: string
+  name: string
+  iconUrl: string
+  unread: number
+  replied: number
+}
+
 export type ReceiveMessage =
   | { cmd: 'client:reload' }
   | {
@@ -40,7 +48,7 @@ export type ReceiveMessage =
     }
   | {
       cmd: 'rooms'
-      rooms: { id: string; name: string; iconUrl: string; unread: number }[]
+      rooms: Room[]
       roomOrder: string[]
     }
   | {
