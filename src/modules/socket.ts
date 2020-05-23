@@ -91,7 +91,11 @@ const onMessage = async (
       )(dispatch, getState)
     } else if (parsed.cmd === 'message:receive') {
       addMessage(parsed.message)(dispatch).then(() => {
-        receiveMessage(parsed.message.id, parsed.room)(dispatch, getState)
+        receiveMessage(
+          parsed.message.id,
+          parsed.message.message,
+          parsed.room
+        )(dispatch, getState)
       })
     } else if (parsed.cmd === 'message:modify') {
       modifyMessage(parsed.message)(dispatch).then(() => {

@@ -22,6 +22,7 @@ export type Room = {
   name: string
   iconUrl: string
   unread: number
+  replied: number
   messages: string[]
   loading: boolean
   receivedMessages: boolean
@@ -33,6 +34,7 @@ export type ReceiveRoom = {
   name: string
   iconUrl: string
   unread: number
+  replied: number
 }
 
 export type RoomsState = {
@@ -79,7 +81,12 @@ export type RoomsAction =
     }
   | {
       type: typeof RoomsActions.ReceiveMessage
-      payload: { message: string; room: string }
+      payload: {
+        messageId: string
+        message: string
+        room: string
+        account: string
+      }
     }
   | {
       type: typeof RoomsActions.EnterRoomSuccess

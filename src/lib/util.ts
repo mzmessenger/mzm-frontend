@@ -51,3 +51,7 @@ export type SendSocketMessage =
       room: string
       id?: string
     }
+
+export const isReplied = (account: string, message: string) => {
+  return new RegExp(`([\\s]+|^)@${account}(?:[^a-z]|$)`).test(message)
+}

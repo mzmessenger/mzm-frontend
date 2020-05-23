@@ -52,6 +52,7 @@ const DropZone = ({
       <RoomElem
         name={room.name}
         unread={room.unread}
+        replied={room.replied}
         iconUrl={room.iconUrl}
         current={room.id === currentRoomId}
         onClick={(e) => onClick(e, room)}

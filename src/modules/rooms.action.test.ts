@@ -184,6 +184,11 @@ test('receiveMessage', async () => {
     },
     socket: {
       socket
+    },
+    user: {
+      me: {
+        account: 'account'
+      }
     }
   })
 
@@ -196,7 +201,11 @@ test('receiveMessage', async () => {
     createdAt: new Date().toString()
   }
 
-  await action.receiveMessage(message.id, room)(dispatch, getState as any)
+  await action.receiveMessage(
+    message.id,
+    message.message,
+    room
+  )(dispatch, getState as any)
 
   // 同じ部屋なら既読処理が呼ばれる
   expect(socket.send.mock.calls.length).toBe(1)
