@@ -7,13 +7,8 @@ import {
 } from '../lib/util'
 import { State } from './index'
 import { sortRoom } from './socket'
-import {
-  RoomsActions,
-  RoomsAction,
-  ReceiveRoom,
-  RoomsState,
-  Room
-} from './rooms.types'
+import { ReceiveRoom } from './socket.types'
+import { RoomsActions, RoomsAction, RoomsState, Room } from './rooms.types'
 import { closeMenu } from './ui'
 
 const splited = location.pathname.split('/')
