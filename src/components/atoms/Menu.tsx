@@ -9,6 +9,8 @@ import ResizerX from '../atoms/ResizerX'
 import MenuIcon from './MobileMenuIcon'
 import Rooms from '../Rooms'
 import RoomNavi from '../RoomNavi'
+import SearchInput from '../SearchInput'
+import SearchResult from '../SearchResults'
 
 const WIDTH_KEY = 'mzm:menu:width'
 const MIN_WIDTH = 240
@@ -17,6 +19,7 @@ const Menu = () => {
   const dispatch = useDispatch()
   const menuStatus = useSelector((state: State) => state.ui.menuStatus)
   const device = useSelector((state: State) => state.ui.device)
+  const query = useSelector((state: State) => state.search.query)
   const className = menuStatus === 'open' ? 'open' : ''
   const [width, _setWidth] = useState(
     localStorage.getItem(WIDTH_KEY)
@@ -48,8 +51,14 @@ const Menu = () => {
           <div className="space"></div>
           <Settings className="settings" onClick={clickSettings} />
         </div>
-        <RoomNavi />
-        <Rooms />
+        <SearchInput />
+        {query && <SearchResult />}
+        {!query && (
+          <div>
+            <RoomNavi />
+            <Rooms />
+          </div>
+        )}
       </Wrap>
     </>
   )

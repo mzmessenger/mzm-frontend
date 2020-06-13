@@ -50,7 +50,8 @@ export const reducer = (
             messages: [],
             loading: false,
             receivedMessages: false,
-            existHistory: false
+            existHistory: false,
+            status: r.status
           }
           state.rooms.byId[r.id] = room
         }
@@ -197,6 +198,14 @@ export const reducer = (
       state.users.byId[action.payload.room] = {
         ...users,
         users: [...users.users, ...action.payload.users]
+      }
+      return { ...state }
+    }
+    case RoomsActions.SetRoomStatus: {
+      const room = state.rooms.byId[action.payload.id]
+      state.rooms.byId[action.payload.id] = {
+        ...room,
+        status: action.payload.status
       }
       return { ...state }
     }
@@ -510,4 +519,11 @@ export const uploadIcon = (name: string, blob: Blob) => {
 
     return res
   }
+}
+
+export const setRoomStatus = (
+  id: string,
+  status: 'open' | 'close'
+): RoomsAction => {
+  return { type: RoomsActions.SetRoomStatus, payload: { id, status } }
 }

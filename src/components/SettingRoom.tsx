@@ -2,13 +2,14 @@ import React, { useState, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import DirectionsRun from '@material-ui/icons/DirectionsRun'
-import Home from '@material-ui/icons/Home'
 import { WIDTH_MOBILE } from '../lib/constants'
 import { State, store } from '../modules/index'
 import { exitRoom, uploadIcon } from '../modules/rooms'
+import Home from '@material-ui/icons/Home'
 import DropImage from './atoms/DropImage'
 import Button from './atoms/Button'
 import ModalIcon from './atoms/ModalIcon'
+import SettingRoomStatus from './SettingRoomStatus'
 
 const IconImage = ({ iconUrl }: { iconUrl: string }) => {
   return iconUrl ? <img src={iconUrl} /> : <Home />
@@ -18,13 +19,14 @@ const RoomSetting = () => {
   const dispatch = useDispatch()
   const id = useSelector((state: State) => state.rooms.currentRoomId)
   const _name = useSelector((state: State) => state.rooms.currentRoomName)
-  const byId = useSelector((state: State) => state.rooms.rooms.byId)
+  const room = useSelector((state: State) => state.rooms.rooms.byId[id])
   const [image, setImage] = useState('')
   const [open, setOpen] = useState(false)
   const [edit, setEdit] = useState(false)
 
   const name = _name || ''
-  const iconUrl = byId[id]?.iconUrl
+  const iconUrl = room?.iconUrl
+  const isGeneral = name === 'general'
 
   const onClick = () => {
     exitRoom(id)(dispatch, store.getState)
@@ -106,7 +108,13 @@ const RoomSetting = () => {
               )}
             </div>
           </div>
-          {name !== 'general' && (
+
+          {!isGeneral && (
+            <div className="room-status">
+              <SettingRoomStatus />
+            </div>
+          )}
+          {!isGeneral && (
             <div className="exit" onClick={onClick}>
               <Button>
                 <DirectionsRun className="icon" />
@@ -164,7 +172,7 @@ const Wrap = styled.div`
 
   .room-info {
     flex: 1;
-    ul {
+    > ul {
       list-style-type: none;
       margin: 0;
       padding: 0;
@@ -193,10 +201,13 @@ const Wrap = styled.div`
     }
   }
 
+  .room-status,
   .exit {
     border-top: 1px solid var(--color-border);
     margin-top: 32px;
+  }
 
+  .exit {
     .icon {
       margin-right: 8px;
     }

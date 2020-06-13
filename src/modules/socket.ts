@@ -226,3 +226,21 @@ export const sortRoom = (roomOrder: string[]) => {
     })
   }
 }
+
+export const openRoom = (roomId: string) => {
+  return async (_dispatch: Dispatch, getState: () => State) => {
+    sendSocket(getState().socket.socket, {
+      cmd: SendSocketCmd.ROOMS_OPEN,
+      roomId
+    })
+  }
+}
+
+export const closeRoom = (roomId: string) => {
+  return async (_dispatch: Dispatch, getState: () => State) => {
+    sendSocket(getState().socket.socket, {
+      cmd: SendSocketCmd.ROOMS_CLOSE,
+      roomId
+    })
+  }
+}

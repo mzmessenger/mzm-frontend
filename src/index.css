@@ -67,3 +67,7 @@ h4 {
 #root {
   display: flex;
 }
+
+button {
+  cursor: pointer;
+}

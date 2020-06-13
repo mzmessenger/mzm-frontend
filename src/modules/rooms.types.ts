@@ -27,6 +27,7 @@ export type Room = {
   loading: boolean
   receivedMessages: boolean
   existHistory: boolean
+  status: 'open' | 'close'
 }
 
 export type ReceiveRoom = {
@@ -35,6 +36,7 @@ export type ReceiveRoom = {
   iconUrl: string
   unread: number
   replied: number
+  status: 'open' | 'close'
 }
 
 export type RoomsState = {
@@ -71,7 +73,8 @@ export const RoomsActions = {
   CloseSetting: 'roomAction:closeSetting',
   SetIcon: 'roomAction:setIcon',
   SetRoomUsers: 'roomAction:setRoomUsers',
-  SetNextRoomUsers: 'roomAction:setNextRoomUsers'
+  SetNextRoomUsers: 'roomAction:setNextRoomUsers',
+  SetRoomStatus: 'roomAction:setRoomStatus'
 } as const
 
 export type RoomsAction =
@@ -148,4 +151,8 @@ export type RoomsAction =
   | {
       type: typeof RoomsActions.SetNextRoomUsers
       payload: { room: string; users: RoomUser[] }
+    }
+  | {
+      type: typeof RoomsActions.SetRoomStatus
+      payload: { id: string; status: 'open' | 'close' }
     }
