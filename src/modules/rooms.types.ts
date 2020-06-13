@@ -1,3 +1,5 @@
+import { ReceiveRoom } from './socket.types'
+
 export type Message = {
   id: string
   userId: string
@@ -27,15 +29,6 @@ export type Room = {
   loading: boolean
   receivedMessages: boolean
   existHistory: boolean
-  status: 'open' | 'close'
-}
-
-export type ReceiveRoom = {
-  id: string
-  name: string
-  iconUrl: string
-  unread: number
-  replied: number
   status: 'open' | 'close'
 }
 
