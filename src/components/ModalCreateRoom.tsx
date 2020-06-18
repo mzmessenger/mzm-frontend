@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { store } from '../modules/index'
 import { createRoom } from '../modules/rooms'
 import Button from './atoms/Button'
+import TransparentButton from './atoms/TransparentButton'
 import Modal, { ModalProps } from './atoms/Modal'
 import InputText from './atoms/InputText'
 
@@ -49,13 +50,9 @@ const ModalCraeteRoom = ({ open, onClose }: Props) => {
           <p style={{ display: error ? 'block' : 'none' }}>{error}</p>
         </div>
         <Buttons>
-          <Button
-            className="cancel"
-            onClick={onClose}
-            style={{ marginRight: '5px' }}
-          >
+          <TransparentButton className="cancel" onClick={onClose}>
             キャンセル
-          </Button>
+          </TransparentButton>
           <Button type="submit">送信</Button>
         </Buttons>
       </ModalInner>
@@ -88,7 +85,6 @@ const Buttons = styled.div`
     width: 100px;
   }
   button.cancel {
-    border-color: transparent;
-    background-color: transparent;
+    margin-right: 5px;
   }
 `

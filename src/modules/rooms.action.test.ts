@@ -4,7 +4,7 @@ jest.mock('../lib/markdown', () => ({
 
 import { SendSocketCmd } from '../lib/util'
 import * as action from './rooms'
-import { RoomsActions } from './rooms.types'
+import { RoomsActions, Room } from './rooms.types'
 import { UIActions } from './ui.types'
 
 test('changeRoom', async () => {
@@ -13,6 +13,18 @@ test('changeRoom', async () => {
     readyState: WebSocket.OPEN
   }
   const dispatch = jest.fn()
+  const room001: Room = {
+    id: '001',
+    name: 'test',
+    messages: [],
+    loading: false,
+    receivedMessages: false,
+    existHistory: false,
+    unread: 0,
+    replied: 0,
+    status: 'close',
+    iconUrl: null
+  }
   const getState = () => ({
     socket: {
       socket
@@ -20,15 +32,7 @@ test('changeRoom', async () => {
     rooms: {
       rooms: {
         byId: {
-          '001': {
-            id: '001',
-            name: 'test',
-            messages: [],
-            loading: false,
-            receivedMessages: false,
-            existHistory: false,
-            unread: 0
-          }
+          '001': room001
         },
         allIds: ['001']
       }
@@ -75,7 +79,8 @@ test('changeRoom not enter', async () => {
             loading: false,
             receivedMessages: false,
             existHistory: false,
-            unread: 0
+            unread: 0,
+            status: 'close'
           }
         },
         allIds: ['001']

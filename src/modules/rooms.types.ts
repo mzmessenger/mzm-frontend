@@ -1,3 +1,5 @@
+import { ReceiveRoom } from './socket.types'
+
 export type Message = {
   id: string
   userId: string
@@ -27,14 +29,7 @@ export type Room = {
   loading: boolean
   receivedMessages: boolean
   existHistory: boolean
-}
-
-export type ReceiveRoom = {
-  id: string
-  name: string
-  iconUrl: string
-  unread: number
-  replied: number
+  status: 'open' | 'close'
 }
 
 export type RoomsState = {
@@ -71,7 +66,8 @@ export const RoomsActions = {
   CloseSetting: 'roomAction:closeSetting',
   SetIcon: 'roomAction:setIcon',
   SetRoomUsers: 'roomAction:setRoomUsers',
-  SetNextRoomUsers: 'roomAction:setNextRoomUsers'
+  SetNextRoomUsers: 'roomAction:setNextRoomUsers',
+  SetRoomStatus: 'roomAction:setRoomStatus'
 } as const
 
 export type RoomsAction =
@@ -148,4 +144,8 @@ export type RoomsAction =
   | {
       type: typeof RoomsActions.SetNextRoomUsers
       payload: { room: string; users: RoomUser[] }
+    }
+  | {
+      type: typeof RoomsActions.SetRoomStatus
+      payload: { id: string; status: 'open' | 'close' }
     }

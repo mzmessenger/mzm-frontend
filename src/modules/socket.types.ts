@@ -31,12 +31,13 @@ type Message = {
   icon: string
 }
 
-type Room = {
+export type ReceiveRoom = {
   id: string
   name: string
   iconUrl: string
   unread: number
   replied: number
+  status: 'open' | 'close'
 }
 
 export type ReceiveMessage =
@@ -48,7 +49,7 @@ export type ReceiveMessage =
     }
   | {
       cmd: 'rooms'
-      rooms: Room[]
+      rooms: ReceiveRoom[]
       roomOrder: string[]
     }
   | {

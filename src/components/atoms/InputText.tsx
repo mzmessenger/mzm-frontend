@@ -10,7 +10,7 @@ const InputText = ({
   value: string
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
   error?: boolean
-  style?: any
+  style?: React.CSSProperties
 }) => {
   return (
     <Wrap style={style} className={error ? 'error' : ''}>

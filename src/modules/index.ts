@@ -9,6 +9,8 @@ import { reducer as userReducer } from './user'
 import { UserState } from './user.types'
 import { reducer as uiReducer } from './ui'
 import { UIState } from './ui.types'
+import { reducer as searchReducer } from './search'
+import { SearchState } from './search.types'
 
 export type State = {
   socket: SocketState
@@ -16,6 +18,7 @@ export type State = {
   messages: MessagesState
   user: UserState
   ui: UIState
+  search: SearchState
 }
 
 export const reducer = combineReducers({
@@ -23,7 +26,8 @@ export const reducer = combineReducers({
   rooms: roomsReducer,
   messages: messagesReducer,
   user: userReducer,
-  ui: uiReducer
+  ui: uiReducer,
+  search: searchReducer
 })
 
 export const store = createStore(reducer)

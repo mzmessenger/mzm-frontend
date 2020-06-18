@@ -10,6 +10,8 @@ export const SendSocketCmd = {
   ROOMS_ENTER: 'rooms:enter',
   ROOMS_READ: 'rooms:read',
   ROOMS_SORT: 'rooms:sort',
+  ROOMS_OPEN: 'rooms:open',
+  ROOMS_CLOSE: 'rooms:close',
   MESSAGE_SEND: 'message:send',
   MESSAGE_IINE: 'message:iine',
   MESSAGE_MODIFY: 'message:modify',
@@ -50,6 +52,14 @@ export type SendSocketMessage =
       cmd: typeof SendSocketCmd.MESSAGES_ROOM
       room: string
       id?: string
+    }
+  | {
+      cmd: typeof SendSocketCmd.ROOMS_OPEN
+      roomId: string
+    }
+  | {
+      cmd: typeof SendSocketCmd.ROOMS_CLOSE
+      roomId: string
     }
 
 export const isReplied = (account: string, message: string) => {
