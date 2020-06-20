@@ -32,6 +32,25 @@ r.br = () => ''
 r.image = escapeTxt
 r.text = escapeTxt
 
+const originalLink = r.link.bind(r)
+r.link = (href, title, text) => {
+  const url = new URL(href)
+
+  if (
+    url.host === location.host &&
+    url.pathname !== '/' &&
+    escape(href) === text
+  ) {
+    return originalLink(
+      href,
+      title,
+      text.slice(text.indexOf(escape('/rooms')))
+    ).replace('<a ', `<a class="mzm-room-link" `)
+  }
+
+  return originalLink(href, title, text)
+}
+
 // @todo
 r.checkbox = (checked: boolean) => {
   return `<span class="check">${checked ? '[x]' : '[ ]'}</span>`
