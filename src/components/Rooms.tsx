@@ -115,6 +115,8 @@ export default Rooms
 const Wrap = styled.div`
   padding: 5px 0;
   cursor: pointer;
+  overflow-y: scroll;
+  flex: 1;
 
   .dropzone.over {
     box-shadow: inset 0 2px 2px rgba(255, 100, 100, 0.8);

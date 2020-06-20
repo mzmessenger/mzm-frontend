@@ -22,7 +22,7 @@ const RoomContent = () => {
   const SettingRoom = lazy(() => import('./SettingRoom'))
 
   return (
-    <Wrap>
+    <Wrap className="room-content">
       <RoomInfo />
       {expand ? <SettingRoom /> : <ContentMessage />}
     </Wrap>
@@ -32,6 +32,7 @@ export default RoomContent
 
 const Wrap = styled.div`
   flex: 1;
+  max-width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;

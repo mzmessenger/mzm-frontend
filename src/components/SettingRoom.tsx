@@ -86,7 +86,7 @@ const RoomSetting = () => {
                 </li>
                 <li>
                   <h4>部屋名</h4>
-                  <span>{name}</span>
+                  <span className="room-name">{name}</span>
                 </li>
               </ul>
             </div>
@@ -182,6 +182,9 @@ const Wrap = styled.div`
     }
     span {
       font-size: 16px;
+    }
+    .room-name {
+      word-break: break-word;
     }
   }
 

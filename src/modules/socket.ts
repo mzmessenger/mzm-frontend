@@ -1,7 +1,12 @@
 import { Dispatch } from 'redux'
 import { useHistory } from 'react-router-dom'
 import { State } from './index'
-import { sendSocket, SendSocketMessage, SendSocketCmd } from '../lib/util'
+import {
+  sendSocket,
+  SendSocketMessage,
+  SendSocketCmd,
+  getRoomName
+} from '../lib/util'
 import {
   SocketState,
   SocketAction,
@@ -15,7 +20,8 @@ import {
   enterSuccess,
   alreadyRead,
   reloadMessage,
-  setRoomOrder
+  setRoomOrder,
+  changeRoom
 } from '../modules/rooms'
 import {
   addMessages,
@@ -111,10 +117,15 @@ const onMessage = async (
         })(dispatch)
       })
     } else if (parsed.cmd === 'rooms:enter:success') {
-      if (history.location.pathname !== parsed.name) {
+      const currentPathRoomName = getRoomName(history.location.pathname)
+      if (currentPathRoomName !== parsed.name) {
         history.push(`/rooms/${parsed.name}`)
+        changeRoom(parsed.id)(dispatch, getState)
       }
       enterSuccess(parsed.id, parsed.name, parsed.iconUrl)(dispatch, getState)
+    } else if (parsed.cmd === 'rooms:enter:fail') {
+      history.push('/')
+      sendSocket(getState().socket.socket, { cmd: SendSocketCmd.ROOMS_GET })
     } else if (parsed.cmd === 'rooms:read') {
       dispatch(alreadyRead(parsed.room))
     } else if (parsed.cmd === 'message:iine') {

@@ -33,7 +33,6 @@ export default Header
 const Wrap = styled.header`
   height: var(--header-height);
   padding: 0 16px;
-  max-width: 100vw;
   display: flex;
   align-items: center;
   color: var(--color-on-surface);

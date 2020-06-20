@@ -20,7 +20,7 @@ const Menu = () => {
   const menuStatus = useSelector((state: State) => state.ui.menuStatus)
   const device = useSelector((state: State) => state.ui.device)
   const query = useSelector((state: State) => state.search.query)
-  const className = menuStatus === 'open' ? 'open' : ''
+  const className = menuStatus === 'open' ? 'menu open' : 'menu'
   const [width, _setWidth] = useState(
     localStorage.getItem(WIDTH_KEY)
       ? parseInt(localStorage.getItem(WIDTH_KEY), 10)
@@ -28,6 +28,9 @@ const Menu = () => {
   )
 
   const setWidth = (w: number) => {
+    if (w < MIN_WIDTH) {
+      w = MIN_WIDTH
+    }
     _setWidth(w)
     localStorage.setItem(WIDTH_KEY, `${w}`)
   }
@@ -36,37 +39,48 @@ const Menu = () => {
   const clickSettings = () => dispatch(openSettings())
 
   return (
-    <>
+    <Wrap className={className} style={{ width: isMobile ? MIN_WIDTH : width }}>
       <ResizerX
         style={{ display: isMobile ? 'none' : '' }}
         width={width}
         setWidth={setWidth}
       />
-      <Wrap
-        className={className}
-        style={{ minWidth: isMobile ? MIN_WIDTH : width }}
-      >
-        <div className="header">
+      <div className="wrapper">
+        <header className="header">
           <MenuIcon onClick={onClickMenu} />
           <div className="space"></div>
           <Settings className="settings" onClick={clickSettings} />
-        </div>
+        </header>
         <SearchInput />
-        {query && <SearchResult />}
-        {!query && (
-          <div>
-            <RoomNavi />
-            <Rooms />
-          </div>
-        )}
-      </Wrap>
-    </>
+        <div className="contents">
+          {query && <SearchResult />}
+          {!query && (
+            <>
+              <RoomNavi />
+              <Rooms />
+            </>
+          )}
+        </div>
+      </div>
+    </Wrap>
   )
 }
 export default Menu
 
 const Wrap = styled.div`
-  color: var(--color-on-surface);
+  max-width: 50%;
+  min-width: 300px;
+  height: 100%;
+  display: flex;
+
+  > .wrapper {
+    flex: 1;
+    color: var(--color-on-surface);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
 
   .header {
     height: var(--header-height);
@@ -74,6 +88,13 @@ const Wrap = styled.div`
     justify-content: flex-end;
     align-items: center;
     display: none;
+  }
+
+  .contents {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 
   &.open {
