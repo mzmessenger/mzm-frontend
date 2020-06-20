@@ -63,6 +63,9 @@ const RoomWrap = styled.div`
   }
   .room-name {
     flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
   &.current {
     background: var(--color-surface);

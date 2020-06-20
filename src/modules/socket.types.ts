@@ -65,6 +65,12 @@ export type ReceiveMessage =
       iconUrl: string
     }
   | {
+      cmd: 'rooms:enter:fail'
+      id: string | null
+      name: string | null
+      reason: string
+    }
+  | {
       cmd: 'message:modify'
       message: Message
       room: string

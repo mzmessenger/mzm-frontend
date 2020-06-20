@@ -37,6 +37,7 @@ const ResizerX = ({
 
   return (
     <Wrap
+      className="resizer-x"
       style={style}
       draggable={true}
       onDragStart={onDragStart}
@@ -48,7 +49,7 @@ const ResizerX = ({
 export default ResizerX
 
 const Wrap = styled.div`
-  width: 8px;
+  min-width: 8px;
   height: 100%;
   cursor: col-resize;
   content: '';

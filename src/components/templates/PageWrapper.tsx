@@ -2,16 +2,18 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { State } from '../../modules/index'
-import Body from '../atoms/Body'
+import { WIDTH_MOBILE } from '../../lib/constants'
 import Header from '../atoms/Header'
 
 const PageWrapper = ({ children }: { children?: React.ReactNode }) => {
   const overlay = useSelector((state: State) => state.ui.overlay)
+  const menuStatus = useSelector((state: State) => state.ui.menuStatus)
+  const classNames = menuStatus === 'open' ? ['body open'] : ['body']
 
   return (
     <Wrap>
       <Header />
-      <Body>{children}</Body>
+      <div className={classNames.join(' ')}>{children}</div>
       {overlay && <div className="overlay" />}
     </Wrap>
   )
@@ -19,8 +21,7 @@ const PageWrapper = ({ children }: { children?: React.ReactNode }) => {
 export default PageWrapper
 
 const Wrap = styled.div`
-  height: 100vh;
-  width: 100vw;
+  width: 100%;
   display: flex;
   flex-direction: column;
 
@@ -33,5 +34,18 @@ const Wrap = styled.div`
     background-color: hsl(0, 0%, 7%);
     opacity: 0.5;
     z-index: var(--z-index-overlay);
+  }
+
+  > .body {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    overflow: hidden;
+  }
+
+  @media (max-width: ${WIDTH_MOBILE}px) {
+    .body {
+      overflow: auto;
+    }
   }
 `

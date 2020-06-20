@@ -54,6 +54,7 @@ const RoomInfo = () => {
         <RoomIcon iconUrl={iconUrl} />
       </div>
       <span className="room-name">{name}</span>
+      <div className="space"></div>
       <div className="room-users">
         <div className="room-users-info" onClick={() => setOpen(true)}>
           <Person />
@@ -78,10 +79,17 @@ const Wrap = styled.div`
   color: var(--color-on-guide);
   border-bottom: 1px solid var(--color-border);
 
-  .room-name {
+  .space {
     flex: 1;
+  }
+
+  .room-name {
     font-size: 18px;
     line-height: 30px;
+    max-width: 400px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .room-users {

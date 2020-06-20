@@ -1,6 +1,10 @@
 import React, { useRef, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
+import { store } from '../../modules/index'
+import { enterRoom } from '../../modules/rooms'
+import { getRoomName } from '../../lib/util'
 
 type Props = {
   className?: string
@@ -9,6 +13,7 @@ type Props = {
 }
 
 const MessageBody = ({ className, message, html }: Props) => {
+  const dispatch = useDispatch()
   const history = useHistory()
   const messageEl = useRef(null)
 
@@ -21,6 +26,8 @@ const MessageBody = ({ className, message, html }: Props) => {
       const url = new URL(href)
       if (url.host === location.host) {
         history.push(url.pathname)
+        const roomName = getRoomName(url.pathname)
+        enterRoom(roomName)(dispatch, store.getState)
       } else {
         window.open(url.href, '_blank')
       }

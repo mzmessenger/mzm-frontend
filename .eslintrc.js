@@ -3,6 +3,7 @@ module.exports = {
   plugins: ['@typescript-eslint', 'react', 'jest'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
+    ecmaVersion: 2019,
     ecmaFeatures: {
       jsx: true
     },

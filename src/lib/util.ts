@@ -65,3 +65,8 @@ export type SendSocketMessage =
 export const isReplied = (account: string, message: string) => {
   return new RegExp(`([\\s]+|^)@${account}(?:[^a-z]|$)`).test(message)
 }
+
+export const getRoomName = (path: string) => {
+  const roomName = path.match(/rooms\/(.+)($|\/)/) && RegExp.$1
+  return roomName
+}
