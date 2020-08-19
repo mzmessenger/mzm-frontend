@@ -26,7 +26,7 @@ const MessageBody = ({ className, message, html }: Props) => {
       const url = new URL(href)
       if (url.host === location.host) {
         history.push(url.pathname)
-        const roomName = getRoomName(url.pathname)
+        const roomName = getRoomName(decodeURIComponent(url.pathname))
         enterRoom(roomName)(dispatch, store.getState)
       } else {
         window.open(url.href, '_blank')
