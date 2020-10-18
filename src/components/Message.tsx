@@ -10,14 +10,18 @@ import { State, store } from '../modules/index'
 import { startToEdit } from '../modules/ui'
 import { incrementIine } from '../modules/socket'
 import MessageBody from './atoms/MessageBody'
+import MessageVote from './atoms/MessageVote'
+import { Message } from '../type'
 
 type Props = {
+  id: string
   message: string
   iine: number
   html: string
   userId: string
   userAccount: string
   icon: string
+  vote?: Message['vote']
   updated: boolean
   createdAt: string
   beforeIine: number
@@ -27,12 +31,14 @@ type Props = {
 }
 
 const PresentationalMessage = ({
+  id,
   message,
   iine,
   html,
   userId,
   userAccount,
   icon,
+  vote,
   updated,
   createdAt,
   beforeIine,
@@ -92,6 +98,7 @@ const PresentationalMessage = ({
         <time>{date}</time>
       </div>
       <MessageBody className="body" message={message} html={sanitize(html)} />
+      {vote && <MessageVote messageId={id} className="vote" vote={vote} />}
       <div className="footer">
         {updated && <div className="updated">(編集済み)</div>}
       </div>
@@ -124,12 +131,14 @@ const Message = ({ id }: { id: string }) => {
 
   return (
     <PresentationalMessage
+      id={messageObj.id}
       message={messageObj.message}
       iine={messageObj.iine}
       html={messageObj.html}
       userId={messageObj.userId}
       userAccount={messageObj.userAccount}
       icon={messageObj.icon}
+      vote={messageObj.vote}
       updated={messageObj.updated}
       createdAt={messageObj.createdAt}
       beforeIine={prevIineRef.current}
@@ -152,6 +161,7 @@ const MessageWrap = styled.div`
   grid-template-areas:
     'icon message-header'
     'icon message-body'
+    'icon message-vote'
     'icon message-footer';
 
   &.iine-max {
@@ -202,6 +212,10 @@ const MessageWrap = styled.div`
 
   .body {
     grid-area: message-body;
+  }
+
+  .vote {
+    grid-area: message-vote;
   }
 
   .user-icon {

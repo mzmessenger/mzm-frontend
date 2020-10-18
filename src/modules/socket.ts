@@ -3,15 +3,12 @@ import { useHistory } from 'react-router-dom'
 import { State } from './index'
 import {
   sendSocket,
-  SendSocketMessage,
-  SendSocketCmd,
   getRoomName
 } from '../lib/util'
 import {
   SocketState,
   SocketAction,
   SocketActions,
-  ReceiveMessage
 } from './socket.types'
 import {
   receiveRooms,
@@ -27,10 +24,16 @@ import {
   addMessages,
   addMessage,
   modifyMessage,
-  updateIine
+  updateIine,
+  setVoteAnswers
 } from '../modules/messages'
 import { logout } from '../modules/user'
 import { UserAction } from './user.types'
+import {
+  ReceiveSocketMessage,
+  SendSocketMessage,
+  SendSocketCmd
+} from '../type'
 
 const DEFAULT_INTERVAL = 1000
 const RECONNECT_DECAY = 1.5
@@ -88,7 +91,7 @@ const onMessage = async (
   history: ReturnType<typeof useHistory>
 ) => {
   try {
-    const parsed: ReceiveMessage = JSON.parse(e.data)
+    const parsed: ReceiveSocketMessage = JSON.parse(e.data)
     if (parsed.cmd === 'rooms') {
       receiveRooms(
         parsed.rooms,
@@ -135,6 +138,8 @@ const onMessage = async (
       setRoomOrder(parsed.roomOrder)(dispatch, getState)
     } else if (parsed.cmd === 'client:reload') {
       location.reload()
+    } else if (parsed.cmd === 'vote:answers') {
+      setVoteAnswers(parsed.messageId, parsed.answers)(dispatch)
     }
   } catch (e) {
     console.error(e)
@@ -197,27 +202,30 @@ export const connect = (
 export const sendMessage = (
   message: string,
   roomId: string,
-  socket: WebSocket
+  vote?: { questions: { text: string }[] }
 ) => {
-  const send: SendSocketMessage = {
-    cmd: SendSocketCmd.MESSAGE_SEND,
-    message: message,
-    room: roomId
+  return async (_dispatch: Dispatch, getState: () => State) => {
+    const send: SendSocketMessage = {
+      cmd: SendSocketCmd.MESSAGE_SEND,
+      message: message,
+      room: roomId
+    }
+    if (vote) {
+      send.vote = vote
+    }
+    sendSocket(getState().socket.socket, send)
   }
-  sendSocket(socket, send)
 }
 
-export const sendModifyMessage = (
-  message: string,
-  messageId: string,
-  socket: WebSocket
-) => {
-  const send: SendSocketMessage = {
-    cmd: SendSocketCmd.MESSAGE_MODIFY,
-    message: message,
-    id: messageId
+export const sendModifyMessage = (message: string, messageId: string) => {
+  return async (_dispatch: Dispatch, getState: () => State) => {
+    const send: SendSocketMessage = {
+      cmd: SendSocketCmd.MESSAGE_MODIFY,
+      message: message,
+      id: messageId
+    }
+    sendSocket(getState().socket.socket, send)
   }
-  sendSocket(socket, send)
 }
 
 export const incrementIine = (messageId: string) => {

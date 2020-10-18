@@ -1,17 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
-import { State } from '../modules/index'
+import Add from '@material-ui/icons/Add'
+import { State, store } from '../modules/index'
 import { sendMessage, sendModifyMessage } from '../modules/socket'
 import { inputMessage, modifyMessage, endToEdit } from '../modules/ui'
 import Button from './atoms/Button'
 import ResizerY from './atoms/ResizerY'
+import TextArea from './atoms/TextArea'
+import VoteMessageBox from './VoteMessageBox'
 
 const HEIGHT_KEY = 'mzm:input:height'
 
 const InputArea = () => {
   const currentRoomId = useSelector((state: State) => state.rooms.currentRoomId)
-  const socket = useSelector((state: State) => state.socket.socket)
   const txt = useSelector((state: State) => state.ui.txt)
   const editTxt = useSelector((state: State) => state.ui.editTxt)
   const editId = useSelector((state: State) => state.ui.editId)
@@ -26,6 +28,7 @@ const InputArea = () => {
       ? parseInt(localStorage.getItem(HEIGHT_KEY), 10)
       : 68
   )
+  const [showVote, setShowVote] = useState(false)
 
   const setHeight = (h: number) => {
     _setHeight(h)
@@ -40,10 +43,10 @@ const InputArea = () => {
 
   const submit = () => {
     if (inputMode === 'normal') {
-      sendMessage(txt, currentRoomId, socket)
+      sendMessage(txt, currentRoomId)(dispatch, store.getState)
       dispatch(inputMessage(''))
     } else if (inputMode === 'edit') {
-      sendModifyMessage(editTxt, editId, socket)
+      sendModifyMessage(editTxt, editId)(dispatch, store.getState)
       dispatch(endToEdit())
     }
     setRows(1)
@@ -56,8 +59,8 @@ const InputArea = () => {
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.shiftKey && e.keyCode === 13) {
-      submit()
       e.preventDefault()
+      submit()
       return
     }
   }
@@ -80,17 +83,27 @@ const InputArea = () => {
   return (
     <Wrap style={{ minHeight: height }}>
       <ResizerY height={height} setHeight={setHeight} />
+      {showVote && (
+        <VoteMessageBox
+          onSave={() => setShowVote(false)}
+          onCancel={() => setShowVote(false)}
+        />
+      )}
       <div className={classNames.join(' ')}>
+        <div className="attach-wrap">
+          <button className="attach-button" onClick={() => setShowVote(true)}>
+            <Add />
+          </button>
+        </div>
         <form onSubmit={handleSubmit}>
-          <div className="text-area-wrap">
-            <textarea
-              rows={rows}
-              value={inputMode === 'edit' ? editTxt : txt}
-              onChange={onChange}
-              onKeyDown={onKeyDown}
-              ref={textareaRef}
-            />
-          </div>
+          <TextArea
+            className="text-area-wrap"
+            value={inputMode === 'edit' ? editTxt : txt}
+            rows={rows}
+            onKeyDown={onKeyDown}
+            onChange={onChange}
+            ref={textareaRef}
+          />
           <div className="button-area">
             <div style={{ flex: '1' }}></div>
             {inputMode === 'edit' && (
@@ -108,6 +121,7 @@ const InputArea = () => {
 export default InputArea
 
 const Wrap = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   padding: 0 15px;
@@ -116,9 +130,11 @@ const Wrap = styled.div`
   .form-wrap {
     padding: 10px 0;
     flex: 1;
+    display: flex;
   }
 
   form {
+    flex: 1;
     height: 100%;
     display: flex;
     justify-content: center;
@@ -131,25 +147,25 @@ const Wrap = styled.div`
     }
   }
 
+  .attach-wrap {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+
+    .attach-button {
+      border-radius: 50%;
+      padding: 0px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
   .text-area-wrap {
     height: 100%;
     flex: 1;
-    border-radius: 5px;
-    background-color: var(--color-input-background);
-    display: flex;
     margin-right: 10px;
-
-    textarea {
-      min-height: 2em;
-      color: var(--color-input);
-      background-color: transparent;
-      font-size: 14px;
-      resize: none;
-      border: none;
-      appearance: none;
-      padding: 10px;
-      flex: 1;
-    }
   }
 
   .button-area {

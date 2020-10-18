@@ -1,3 +1,5 @@
+import { Message, VoteAnswer } from '../type'
+
 export type MessagesState = {
   messages: {
     byId: {
@@ -5,25 +7,24 @@ export type MessagesState = {
     }
     allIds: string[]
   }
+  voteAnswers: {
+    byId: {
+      [key: string]: {
+        [key: number]: VoteAnswer[]
+      }
+    }
+  }
 }
 
-export type Message = {
-  id: string
-  userId: string
-  icon: string
-  userAccount: string
-  message: string
-  iine: number
-  html?: string
-  updated: boolean
-  createdAt: string
-}
 
 export const MessagesActions = {
   AddMessages: 'messageAction:addMessages',
   AddMessage: 'messageAction:addMessage',
   ModifyMessageSuccess: 'messageAction:modifyMessageSuccess',
-  UpdateIine: 'roomAction:UpdateIine'
+  UpdateIine: 'messageAction:updateIine',
+  SetVoteAnswers: 'messageAction:setVoteAnswers',
+  SendVoteAnswer: 'messageAction:sendVoteAnswer',
+  RemoveVoteAnswer: 'messageAction:removeVoteAnswer'
 } as const
 
 export type MessagesAction =
@@ -44,5 +45,30 @@ export type MessagesAction =
       payload: {
         message: string
         iine: number
+      }
+    }
+  | {
+      type: typeof MessagesActions.SetVoteAnswers
+      payload: {
+        messageId: string
+        answers: {
+          [key: number]: VoteAnswer[]
+        }
+      }
+    }
+  | {
+      type: typeof MessagesActions.SendVoteAnswer
+      payload: {
+        messageId: string,
+        userId: string,
+        vote: VoteAnswer
+      }
+    }
+  | {
+      type: typeof MessagesActions.RemoveVoteAnswer
+      payload: {
+        messageId: string,
+        userId: string
+        index: number
       }
     }

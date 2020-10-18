@@ -6,6 +6,8 @@
   --color-base: hsl(0, 0%, 0%);
   --color-background: #222429;
   --color-on-background: #e1e1e1;
+  --color-background-secondary: rgb(47, 49, 54);
+  --color-on-background-secondary: hsl(0, 100%, 100%, 0.9);
   --color-surface: hsla(0, 100%, 100%, 0.1);
   --color-on-surface: #e1e1e1;
   --color-guide: hsl(0, 0%, 16.5%);
@@ -21,6 +23,9 @@
   --color-border-clipper: #39f;
   --color-replied: #ffc;
   --color-on-replied: hsl(0, 0%, 0%);
+  --color-vote-ok: #4fbb00;
+  --color-vote-ng: #e10101;
+  --color-vote-na: #f89406;
 
   --mobile-menu-width: 70vw;
   --z-index-overlay: 1200;

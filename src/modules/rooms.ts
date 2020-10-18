@@ -1,15 +1,17 @@
 import { Dispatch } from 'redux'
 import {
   sendSocket,
-  SendSocketMessage,
-  SendSocketCmd,
   isReplied
 } from '../lib/util'
 import { State } from './index'
 import { sortRoom } from './socket'
-import { ReceiveRoom } from './socket.types'
 import { RoomsActions, RoomsAction, RoomsState, Room } from './rooms.types'
 import { closeMenu } from './ui'
+import {
+  ReceiveRoom,
+  SendSocketMessage,
+  SendSocketCmd,
+} from '../type'
 
 const splited = location.pathname.split('/')
 const initCurrentRoomName = splited[1] === 'rooms' ? splited[2] : ''
