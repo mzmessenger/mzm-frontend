@@ -51,7 +51,7 @@
     "@material-ui/icons": "^4.9.1",
     "comlink": "^4.3.0",
     "dayjs": "^1.8.33",
-    "dompurify": "^2.0.12",
+    "dompurify": "^2.0.17",
     "highlight.js": "^10.1.2",
     "marked": "^1.1.1",
     "normalize.css": "^8.0.1",
